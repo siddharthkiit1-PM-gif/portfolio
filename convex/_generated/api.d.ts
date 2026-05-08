@@ -10,6 +10,8 @@
 
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
+import type * as media from "../media.js";
+import type * as seed from "../seed.js";
 import type * as siteContent from "../siteContent.js";
 import type * as users from "../users.js";
 
@@ -22,6 +24,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   http: typeof http;
+  media: typeof media;
+  seed: typeof seed;
   siteContent: typeof siteContent;
   users: typeof users;
 }>;
