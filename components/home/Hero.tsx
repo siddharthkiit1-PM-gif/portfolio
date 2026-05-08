@@ -1,17 +1,10 @@
 import { EditableText } from "@/components/editable/EditableText";
+import { HeroBackground } from "@/components/three/HeroBackground";
 
 export function Hero() {
   return (
     <section className="relative isolate min-h-[100svh] overflow-hidden bg-[#05060a] text-white">
-      {/* Static gradient stand-in for the future WebGL orb (Phase 3). */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-[55%] top-[35%] -z-10 size-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-50 blur-[60px]"
-        style={{
-          background:
-            "conic-gradient(from 120deg, #7c3aed, #06b6d4, #f472b6, #7c3aed)",
-        }}
-      />
+      <HeroBackground />
 
       <div className="relative max-w-[880px] px-10 pt-32">
         <EditableText
