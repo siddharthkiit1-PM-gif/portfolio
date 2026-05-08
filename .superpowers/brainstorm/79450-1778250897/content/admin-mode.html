@@ -1,0 +1,98 @@
+<h2>Admin mode — same page, edit-in-place</h2>
+<p class="subtitle">Same hero, but you're logged in. Hover any block → dotted outline + pencil. Click → inline editor. The "EDITING" badge top-left tells you which mode you're in. Toggle off anytime.</p>
+
+<div class="mockup">
+  <div class="mockup-header">localhost:3000 · siddharthagrawal.com · <strong style="color:#a78bfa;">ADMIN</strong></div>
+  <div class="mockup-body" style="padding:0;">
+    <div style="background:#05060a;color:#fff;font-family:'Inter',-apple-system,sans-serif;min-height:520px;position:relative;overflow:hidden;">
+
+      <!-- Same orb -->
+      <div style="position:absolute;top:35%;left:55%;width:520px;height:520px;border-radius:50%;background:conic-gradient(from 120deg, #7c3aed, #06b6d4, #f472b6, #7c3aed);filter:blur(60px);opacity:.45;transform:translate(-50%,-50%);"></div>
+
+      <!-- ADMIN BADGE -->
+      <div style="position:absolute;top:14px;left:14px;z-index:5;display:flex;gap:6px;align-items:center;padding:6px 12px;border-radius:999px;background:#a78bfa;color:#0a0a0f;font-size:10px;font-weight:600;letter-spacing:1.5px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:#0a0a0f;display:inline-block;"></span> EDITING · LIVE
+      </div>
+
+      <!-- Top nav (admin variant has +Add buttons) -->
+      <div style="position:relative;display:flex;justify-content:space-between;align-items:center;padding:20px 32px;font-size:13px;letter-spacing:.3px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,#a78bfa,#22d3ee);"></div>
+          <span style="font-weight:500;">Siddharth Agrawal</span>
+        </div>
+        <div style="display:flex;gap:24px;color:rgba(255,255,255,.7);">
+          <span>Work</span><span>Writing</span><span>Talks</span><span>About</span><span>Contact</span>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div style="padding:7px 14px;border:1px solid #a78bfa;border-radius:999px;font-size:12px;color:#a78bfa;">+ Add Project</div>
+          <div style="padding:7px 14px;border-radius:999px;font-size:12px;background:#fff;color:#000;font-weight:500;">View as visitor</div>
+        </div>
+      </div>
+
+      <!-- Hero text WITH edit affordances -->
+      <div style="position:relative;padding:80px 40px 0 40px;max-width:880px;">
+
+        <!-- Editable: status label -->
+        <div style="position:relative;display:inline-block;padding:6px 10px;margin:-6px -10px 18px -10px;border:1px dashed rgba(167,139,250,.6);border-radius:6px;">
+          <div style="font-size:11px;letter-spacing:4px;color:rgba(255,255,255,.5);">PRODUCT MANAGER · BUILDER · 2018 — NOW</div>
+          <div style="position:absolute;top:-10px;right:-10px;width:22px;height:22px;border-radius:50%;background:#a78bfa;display:flex;align-items:center;justify-content:center;color:#0a0a0f;font-size:11px;">✎</div>
+        </div>
+
+        <!-- Editable: headline (currently being edited - shows toolbar) -->
+        <div style="position:relative;padding:14px;margin:-14px;border:1.5px solid #a78bfa;border-radius:10px;background:rgba(167,139,250,.04);">
+          <!-- Tiptap-style floating toolbar -->
+          <div style="position:absolute;top:-44px;left:0;background:#1a1a23;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 8px;display:flex;gap:4px;font-size:11px;box-shadow:0 10px 30px rgba(0,0,0,.5);">
+            <span style="padding:4px 8px;background:rgba(255,255,255,.08);border-radius:4px;">B</span>
+            <span style="padding:4px 8px;">I</span>
+            <span style="padding:4px 8px;">H1</span>
+            <span style="padding:4px 8px;">Link</span>
+            <span style="padding:4px 8px;color:#a78bfa;">Gradient</span>
+            <span style="padding:4px 8px;opacity:.5;">| Cmd+S to save</span>
+          </div>
+          <div style="font-size:62px;font-weight:300;line-height:1.0;letter-spacing:-2.5px;">
+            I build products<br/>
+            <em style="font-weight:400;font-style:normal;background:linear-gradient(90deg,#a78bfa 20%,#22d3ee 60%,#f472b6);-webkit-background-clip:text;color:transparent;">people actually use.<span style="display:inline-block;width:2px;height:48px;background:#a78bfa;margin-left:4px;vertical-align:middle;animation:blink 1s infinite;"></span></em>
+          </div>
+        </div>
+
+        <!-- Editable: subtext (hover state) -->
+        <div style="position:relative;margin-top:30px;padding:10px;margin:22px -10px -10px -10px;border:1px dashed rgba(255,255,255,.15);border-radius:6px;">
+          <div style="font-size:16px;line-height:1.55;color:rgba(255,255,255,.75);max-width:560px;font-weight:300;">
+            PM at the intersection of AI, health, and consumer. Twelve products shipped, three from zero. Currently building healthcoach-ai. This site is the working file.
+          </div>
+          <div style="position:absolute;top:6px;right:6px;display:flex;gap:4px;font-size:10px;color:rgba(255,255,255,.5);">
+            <span style="padding:3px 7px;background:rgba(255,255,255,.06);border-radius:4px;">✎ Edit</span>
+          </div>
+        </div>
+
+        <!-- CTAs (each editable) -->
+        <div style="margin-top:34px;display:flex;gap:12px;align-items:center;">
+          <div style="padding:13px 22px;border-radius:999px;background:#fff;color:#000;font-size:13px;font-weight:500;border:1px dashed transparent;position:relative;">
+            View selected work →
+          </div>
+          <div style="padding:13px 22px;border-radius:999px;border:1px solid rgba(255,255,255,.2);color:#fff;font-size:13px;">Book a call</div>
+          <div style="margin-left:14px;display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.5);"><span style="width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block;"></span>Open to senior PM roles</div>
+        </div>
+      </div>
+
+      <!-- Motion video card with replace affordance -->
+      <div style="position:absolute;bottom:40px;right:32px;width:280px;height:160px;border-radius:14px;background:linear-gradient(135deg,#1f2937,#0f172a);border:1.5px dashed rgba(167,139,250,.5);overflow:hidden;">
+        <div style="position:absolute;top:6px;right:6px;padding:4px 8px;border-radius:4px;background:rgba(167,139,250,.9);color:#0a0a0f;font-size:9px;font-weight:600;z-index:2;">↑ Drop video to replace</div>
+        <div style="padding:10px 14px;display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.6);">
+          <span>● HEALTHCOACH-AI</span><span>0:24</span>
+        </div>
+        <div style="margin:0 14px;height:90px;border-radius:8px;background:repeating-linear-gradient(90deg,rgba(34,211,238,.15) 0 4px,transparent 4px 12px);"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:24px;">Edit affordance hierarchy:</p>
+<ul style="font-size:13.5px;line-height:1.7;color:#444;">
+  <li><strong>Default state (admin logged in):</strong> dotted ghost outlines on all editable blocks, only visible on hover.</li>
+  <li><strong>Active edit:</strong> solid purple border, Tiptap floating toolbar (bold/italic/heading/link/gradient-style), Cmd+S saves.</li>
+  <li><strong>Media blocks:</strong> drop file directly onto the block → uploads to Convex storage → Mux transcodes video → swap is instant.</li>
+  <li><strong>"View as visitor"</strong> button toggles all affordances off so you can preview the public experience.</li>
+  <li><strong>Public visitor:</strong> sees zero affordances. Identical to today's mockup.</li>
+  <li><strong>Auth:</strong> only your email/Google account can flip into admin mode. Convex Auth + email allowlist.</li>
+</ul>

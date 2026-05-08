@@ -1,0 +1,70 @@
+<h2>Pick a visual direction</h2>
+<p class="subtitle">Each direction has a different "feel" — click the one that matches how you want hiring managers to remember you. We can blend later.</p>
+
+<div class="cards" data-multiselect>
+
+  <!-- A: Cinematic Editorial (Emergent-inspired) -->
+  <div class="card" data-choice="cinematic" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0f;color:#fff;padding:24px;font-family:'Inter',sans-serif;position:relative;overflow:hidden;min-height:220px;">
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at top right, rgba(120,80,255,0.35), transparent 60%), radial-gradient(ellipse at bottom left, rgba(0,200,255,0.25), transparent 55%);"></div>
+      <div style="position:relative;">
+        <div style="font-size:9px;letter-spacing:3px;opacity:.5;margin-bottom:14px;">SIDDHARTH AGRAWAL — PM</div>
+        <div style="font-size:30px;font-weight:300;line-height:1.05;letter-spacing:-1px;">I build products<br/><em style="font-weight:400;background:linear-gradient(90deg,#a78bfa,#22d3ee);-webkit-background-clip:text;color:transparent;">people actually use.</em></div>
+        <div style="margin-top:18px;height:54px;background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08);border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:10px;opacity:.7;">▶ Auto-playing project reel</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A · Cinematic Editorial</h3>
+      <p>Dark canvas, soft gradients, autoplaying video reels, large display type. Emergent-inspired. <strong>Memorable, premium, "founder-y."</strong> Risk: can feel over-designed for conservative recruiters.</p>
+    </div>
+  </div>
+
+  <!-- B: Precision Minimal (Linear / Vercel / Lee Robinson) -->
+  <div class="card" data-choice="precision" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fafafa;color:#111;padding:24px;font-family:'Inter',sans-serif;min-height:220px;border-bottom:1px solid #eee;">
+      <div style="font-size:11px;letter-spacing:1px;color:#666;margin-bottom:10px;display:flex;justify-content:space-between;"><span>SA</span><span style="color:#111;">Work · Writing · About</span></div>
+      <div style="font-size:24px;font-weight:600;line-height:1.15;letter-spacing:-0.5px;color:#111;margin-top:18px;">Product manager.<br/><span style="color:#888;font-weight:400;">Shipped 0→1 at 3 startups. Now exploring AI tools.</span></div>
+      <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div style="height:40px;background:#fff;border:1px solid #e5e5e5;border-radius:6px;"></div>
+        <div style="height:40px;background:#fff;border:1px solid #e5e5e5;border-radius:6px;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B · Precision Minimal</h3>
+      <p>Light or dark, monochrome, sharp typography, subtle motion only. Linear/Vercel/Lee Robinson school. <strong>Reads as senior, taste-forward, technical.</strong> Risk: can feel "another dev portfolio."</p>
+    </div>
+  </div>
+
+  <!-- C: Editorial Magazine (Stripe-meets-NYT) -->
+  <div class="card" data-choice="editorial" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fff8f0;color:#1a1a1a;padding:24px;font-family:Georgia,serif;min-height:220px;">
+      <div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:#b45309;margin-bottom:14px;">Vol. 01 — Product</div>
+      <div style="font-size:32px;font-weight:700;line-height:1.0;letter-spacing:-1px;">Notes from a PM<br/>building in public.</div>
+      <div style="margin-top:16px;font-size:11px;color:#666;line-height:1.5;column-count:2;column-gap:14px;">A working portfolio of three years, twelve products, and the decisions behind them — including the ones that didn't ship. Each project a chapter, with the numbers and the regrets included.</div>
+    </div>
+    <div class="card-body">
+      <h3>C · Editorial Magazine</h3>
+      <p>Serif display type, warm paper tones, long-form treatment, content-as-hero. <strong>Says "I can write, I can think."</strong> Strongest for senior PM. Risk: less "modern web," motion plays a smaller role.</p>
+    </div>
+  </div>
+
+  <!-- D: Spatial Experimental (Awwwards / Bruno Simon / Igloo Inc) -->
+  <div class="card" data-choice="spatial" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:linear-gradient(160deg,#020617,#0f172a);color:#fff;padding:24px;font-family:'Space Grotesk','Inter',sans-serif;min-height:220px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:30%;left:60%;width:140px;height:140px;border-radius:50%;background:conic-gradient(from 90deg,#22d3ee,#a78bfa,#f472b6,#22d3ee);filter:blur(2px);opacity:.55;"></div>
+      <div style="position:absolute;top:40%;left:50%;width:120px;height:120px;border-radius:50%;background:#020617;"></div>
+      <div style="position:relative;">
+        <div style="font-size:10px;letter-spacing:2px;opacity:.6;">[ scroll ↓ to enter ]</div>
+        <div style="font-size:28px;font-weight:700;line-height:1.05;letter-spacing:-1px;margin-top:60px;">Hello.<br/>I'm a builder.</div>
+        <div style="margin-top:14px;font-size:10px;opacity:.55;">WebGL · scroll-driven · 3D scenes</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D · Spatial / Experimental</h3>
+      <p>WebGL/Three.js, scroll-driven 3D, custom cursor, ambient sound option. Awwwards-tier. <strong>Maximum memorability.</strong> Risk: heavy, slow on mobile, can feel like style over substance to a senior recruiter.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:24px;">My recommendation for your audience: <strong>B (Precision Minimal) as the structural base, with motion-video moments from A on hero/case studies.</strong> Ship-able, recruiter-friendly, still feels premium. But click whatever you actually want — including "blend X + Y."</p>
