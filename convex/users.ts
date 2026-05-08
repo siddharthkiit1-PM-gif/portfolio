@@ -1,4 +1,4 @@
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
@@ -36,6 +36,27 @@ export const ensureUserRecord = mutation({
       email: args.email.toLowerCase(),
       name: args.name,
       role,
+      createdAt: Date.now(),
+    });
+  },
+});
+
+/** Test-only: ensure a users row exists with admin role. Used by E2E. */
+export const testEnsureAdmin = internalMutation({
+  args: { email: v.string() },
+  handler: async (ctx, { email }) => {
+    const norm = email.toLowerCase();
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("by_email", (q) => q.eq("email", norm))
+      .unique();
+    if (existing) {
+      await ctx.db.patch(existing._id, { role: "admin" });
+      return existing._id;
+    }
+    return ctx.db.insert("users", {
+      email: norm,
+      role: "admin",
       createdAt: Date.now(),
     });
   },
