@@ -3,6 +3,7 @@ import "./globals.css";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { Providers } from "./providers";
 import { AdminBar } from "@/components/admin/AdminBar";
+import { SiteNav } from "@/components/nav/SiteNav";
 
 export const metadata: Metadata = {
   title: "Siddharth Agrawal — Portfolio",
@@ -16,6 +17,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <body className="antialiased bg-black text-white">
           <Providers>
             <AdminBar />
+            <SiteNav />
             {children}
           </Providers>
         </body>
