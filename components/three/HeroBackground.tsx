@@ -1,27 +1,19 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import { useReducedMotion } from "@/lib/motion/useReducedMotion";
+import { useDeviceTier } from "@/lib/motion/useDeviceTier";
 import { HeroOrbFallback } from "./HeroOrbFallback";
+import type { CinemaHeroCanvasProps } from "./CinemaHeroCanvas";
 
-const HeroOrbCanvas = dynamic(
-  () => import("./HeroOrbCanvas").then((m) => m.HeroOrbCanvas),
+const CinemaHeroCanvas = dynamic(
+  () => import("./CinemaHeroCanvas").then((m) => m.CinemaHeroCanvas),
   { ssr: false, loading: () => <HeroOrbFallback /> },
 );
 
-export function HeroBackground() {
-  const reduced = useReducedMotion();
-  const [isMobile, setIsMobile] = useState(false);
+type Props = Omit<CinemaHeroCanvasProps, "tier">;
 
-  useEffect(() => {
-    const mql = window.matchMedia("(max-width: 767px)");
-    setIsMobile(mql.matches);
-    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mql.addEventListener("change", onChange);
-    return () => mql.removeEventListener("change", onChange);
-  }, []);
-
-  if (reduced || isMobile) return <HeroOrbFallback />;
-  return <HeroOrbCanvas />;
+export function HeroBackground(props: Props) {
+  const tier = useDeviceTier();
+  if (tier === "static") return <HeroOrbFallback />;
+  return <CinemaHeroCanvas tier={tier} {...props} />;
 }
