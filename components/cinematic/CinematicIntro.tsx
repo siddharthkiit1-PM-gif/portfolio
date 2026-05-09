@@ -41,6 +41,7 @@ export function CinematicIntro() {
     healthWord: useRef<HTMLSpanElement>(null),
     consumerWord: useRef<HTMLSpanElement>(null),
     nameLine: useRef<HTMLDivElement>(null),
+    builtBy: useRef<HTMLDivElement>(null),
     chapter: useRef<HTMLDivElement>(null),
     centerDot: useRef<HTMLDivElement>(null),
     glow: useRef<HTMLDivElement>(null),
@@ -86,6 +87,7 @@ export function CinematicIntro() {
       refs.builtAcross.current,
       refs.nameLine.current,
     ], { opacity: 0, y: 80, scale: 0.92, filter: "blur(24px)" });
+    gsap.set(refs.builtBy.current, { opacity: 0, y: 12, letterSpacing: "0.5em" });
     gsap.set([refs.aiWord.current, refs.healthWord.current, refs.consumerWord.current], {
       opacity: 0, y: 16, filter: "blur(8px)",
     });
@@ -129,6 +131,7 @@ export function CinematicIntro() {
       refs.builtAcross.current,
       refs.nameLine.current,
     ], { opacity: 0, y: 80, scale: 0.92, filter: "blur(24px)" });
+    gsap.set(refs.builtBy.current, { opacity: 0, y: 12, letterSpacing: "0.5em" });
     gsap.set([refs.aiWord.current, refs.healthWord.current, refs.consumerWord.current], {
       opacity: 0, y: 16, filter: "blur(8px)",
     });
@@ -268,6 +271,17 @@ export function CinematicIntro() {
       B.finalImpact + 0.05,
     );
 
+    // 15.2s: "BUILT BY" credit eyebrow rises above the name with its
+    // letter-spacing collapsing from 0.5em → 0.3em — the slow tracking
+    // settle reads like a closing title card.
+    tl.to(refs.builtBy.current, {
+      opacity: 0.7,
+      y: 0,
+      letterSpacing: "0.3em",
+      duration: 1.2,
+      ease: "power2.out",
+    }, B.finalImpact + 1.2);
+
     // 17–22s: dwell. Soft sine drift on name. Slow vignette release. Weight settles.
     tl.to(stage, { "--ka-wght": 360, duration: 2.0, ease: "power2.out" }, B.decay);
     tl.fromTo(refs.nameLine.current,
@@ -278,9 +292,9 @@ export function CinematicIntro() {
 
     // 21s: chapter label fades back to context.
     tl.to(refs.chapter.current, { opacity: 0.6, duration: 1, ease: "power2.out" }, B.end - 1);
-  }, [finish, refs.aiWord, refs.buildWord, refs.builtAcross, refs.centerDot, refs.chapter,
-      refs.consumerWord, refs.flash, refs.glow, refs.healthWord, refs.iWord, refs.leakL,
-      refs.leakR, refs.nameLine, refs.peopleLine, refs.productsWord, refs.vignette]);
+  }, [finish, refs.aiWord, refs.buildWord, refs.builtAcross, refs.builtBy, refs.centerDot,
+      refs.chapter, refs.consumerWord, refs.flash, refs.glow, refs.healthWord, refs.iWord,
+      refs.leakL, refs.leakR, refs.nameLine, refs.peopleLine, refs.productsWord, refs.vignette]);
 
   // ESC / Enter handlers
   useEffect(() => {
@@ -452,6 +466,20 @@ export function CinematicIntro() {
                 lineHeight: 0.95,
               }}
             >
+              <div
+                ref={refs.builtBy}
+                style={{
+                  fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                  fontSize: "clamp(10px, 1vw, 14px)",
+                  fontWeight: 400,
+                  letterSpacing: "0.3em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.7)",
+                  marginBottom: "clamp(20px, 2vw, 36px)",
+                }}
+              >
+                A film built by
+              </div>
               <ChromaticGhost amount={0.3}>Siddharth</ChromaticGhost>{" "}
               <ChromaticGhost amount={0.45}>
                 <FlowingWord>Agrawal.</FlowingWord>
