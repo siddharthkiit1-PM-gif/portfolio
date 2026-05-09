@@ -83,13 +83,15 @@ export function HeroPinController(p: Props) {
       // morphRef + paletteShiftRef stay at 0 (already their initial value).
       tl.to(p.chapterLabelRef.current, { textContent: "00 · ENTER", duration: 0.05 }, 0);
 
-      // 20–50%: character peel + first morph stage (orb → liquid)
+      // 20–50%: character peel + first morph stage (orb → liquid).
+      // expo.out gives the chars a sharp, weighty release — like ink flicked
+      // off a brush — instead of the lazy power2 curve.
       tl.to(chars, {
         x: () => gsap.utils.random(-60, 90),
         y: () => gsap.utils.random(-30, 30),
         rotation: () => gsap.utils.random(-18, 18),
         opacity: 0.35,
-        ease: "power2.out",
+        ease: "expo.out",
         stagger: { each: 0.005, from: "random" },
         duration: 0.28,
       }, 0.20);
@@ -97,26 +99,37 @@ export function HeroPinController(p: Props) {
       tl.to(p.ctaGroupRef.current, { opacity: 0, duration: 0.15 }, 0.20);
       tl.to(p.statusPillRef.current, { opacity: 0, duration: 0.15 }, 0.20);
 
-      // 20–55%: morph 0 → 0.5 (sphere → capsule, palette stays violet→cyan)
-      tl.to(morphRef, { current: 0.5, duration: 0.35, ease: "none" }, 0.20);
+      // 20–55%: morph 0 → 0.5 (sphere → capsule).
+      // power2.inOut adds anticipation/settle — the surface looks like it
+      // gathers itself before reshaping rather than scrubbing linearly.
+      tl.to(morphRef, { current: 0.5, duration: 0.35, ease: "power2.inOut" }, 0.20);
 
-      // 45–65%: kinetic line reveal
+      // 45–65%: kinetic line reveal (sharper, more theatrical entrance)
       tl.to(p.kineticLineRef.current, {
         opacity: 1, y: 0,
-        duration: 0.18, ease: "power2.out",
+        duration: 0.18, ease: "expo.out",
       }, 0.45);
       tl.to(p.chapterLabelRef.current, { textContent: "02 · WHAT", duration: 0.05 }, 0.47);
 
-      // 55–85%: morph 0.5 → 1.0 + chrome palette (capsule → portrait silhouette)
-      tl.to(morphRef, { current: 1.0, duration: 0.30, ease: "none" }, 0.55);
-      tl.to(paletteShiftRef, { current: 1.0, duration: 0.30, ease: "none" }, 0.55);
+      // 55–85%: morph 0.5 → 1.0 + chrome palette (capsule → portrait silhouette).
+      // expo.inOut makes the climax feel decisive — slow viscous build, hard
+      // settle into chrome — the signature beat of the sequence.
+      tl.to(morphRef, { current: 1.0, duration: 0.30, ease: "expo.inOut" }, 0.55);
+      tl.to(paletteShiftRef, { current: 1.0, duration: 0.30, ease: "power3.in" }, 0.55);
       tl.to(p.kineticLineRef.current, { opacity: 0, duration: 0.15 }, 0.65);
       tl.to(p.chapterLabelRef.current, { textContent: "03 · YOU", duration: 0.05 }, 0.70);
 
-      // 72–85%: name coalesce, headline chars fade out
-      tl.to(p.nameRef.current, { opacity: 1, y: 0, duration: 0.13, ease: "power2.out" }, 0.72);
+      // 72–85%: name coalesce — scale anticipation 0.96 → 1 with expo.out
+      // gives the type a subtle "snap into focus" feel.
+      tl.fromTo(
+        p.nameRef.current,
+        { opacity: 0, y: 20, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.16, ease: "expo.out" },
+        0.72,
+      );
       tl.to(chars, { opacity: 0, duration: 0.10 }, 0.75);
-      tl.to(p.ctaGroupRef.current, { opacity: 1, x: 0, duration: 0.13, stagger: 0.06 }, 0.78);
+      // back.out spring on CTA group — small overshoot reads as confidence.
+      tl.to(p.ctaGroupRef.current, { opacity: 1, x: 0, duration: 0.16, ease: "back.out(1.4)", stagger: 0.06 }, 0.78);
       tl.to(p.statusPillRef.current, { opacity: 1, duration: 0.10 }, 0.82);
 
       // 85–100%: PORTRAIT DWELL — chrome silhouette holds, viewer rests on the
@@ -130,6 +143,16 @@ export function HeroPinController(p: Props) {
       // portrait state persists across the full dwell window.
       tl.to(morphRef, { current: 1.0, duration: 0.15, ease: "none" }, 0.85);
       tl.to(paletteShiftRef, { current: 1.0, duration: 0.15, ease: "none" }, 0.85);
+
+      // Subtle parallax drift on the name during dwell — keeps the climax
+      // feeling alive instead of frozen, in the spirit of Apple hero shots
+      // that always have residual breathing motion.
+      tl.fromTo(
+        p.nameRef.current,
+        { y: 0 },
+        { y: -4, duration: 0.15, ease: "sine.inOut" },
+        0.86,
+      );
     }, root);
 
     return () => {

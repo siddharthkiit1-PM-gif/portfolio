@@ -1,7 +1,8 @@
 "use client";
 
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
-import { EffectComposer, Bloom, DepthOfField } from "@react-three/postprocessing";
+import { EffectComposer, Bloom, DepthOfField, Vignette, Noise, ChromaticAberration } from "@react-three/postprocessing";
+import { BlendFunction } from "postprocessing";
 import { Component, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import * as THREE from "three";
@@ -71,6 +72,7 @@ function OrbMesh({ tier, morphRef, paletteShiftRef, paused }: CanvasProps) {
       uPointer: { value: new THREE.Vector2(0, 0) },
       uMorph: { value: 0 },
       uPaletteShift: { value: 0 },
+      uBreath: { value: 0 },
       uPortraitMask: { value: portraitMask },
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -100,6 +102,9 @@ function OrbMesh({ tier, morphRef, paletteShiftRef, paused }: CanvasProps) {
     uniforms.uPointer.value.copy(currentPointer.current);
     uniforms.uMorph.value = morphRef.current;
     uniforms.uPaletteShift.value = paletteShiftRef.current;
+    // Slow sine breath drives the orb's pre-morph idle motion. Gated to
+    // intro inside the shader (see breathGate in scene()).
+    uniforms.uBreath.value = Math.sin(uniforms.uTime.value * 1.6);
   });
 
   return (
@@ -201,14 +206,24 @@ export function CinemaHeroCanvas({ tier, morphRef, paletteShiftRef }: CinemaHero
           {resolvedTier !== "low" && (
             <EffectComposer>
               <Bloom
-                intensity={resolvedTier === "high" ? 0.95 : 0.55}
-                luminanceThreshold={0.6}
-                luminanceSmoothing={0.2}
+                intensity={resolvedTier === "high" ? 1.05 : 0.6}
+                luminanceThreshold={0.55}
+                luminanceSmoothing={0.25}
                 mipmapBlur
               />
               {resolvedTier === "high" ? (
                 <DepthOfField focusDistance={0.0} focalLength={0.02} bokehScale={3} />
               ) : <></>}
+              {resolvedTier === "high" ? (
+                <ChromaticAberration
+                  blendFunction={BlendFunction.NORMAL}
+                  offset={[0.0008, 0.0012]}
+                  radialModulation={false}
+                  modulationOffset={0}
+                />
+              ) : <></>}
+              <Vignette eskil={false} offset={0.18} darkness={0.85} />
+              <Noise premultiply blendFunction={BlendFunction.SCREEN} opacity={resolvedTier === "high" ? 0.12 : 0.08} />
             </EffectComposer>
           )}
         </Canvas>
