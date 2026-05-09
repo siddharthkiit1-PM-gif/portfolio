@@ -410,7 +410,7 @@ export function CinematicIntro() {
               <FlowingWord ref={refs.productsWord}>products</FlowingWord>
             </div>
 
-            {/* Line 2: people actually use. */}
+            {/* Line 2: customers actually use. — recruiter-grade resolve, B2B revenue posture */}
             <div
               ref={refs.peopleLine}
               className="absolute inset-x-0 top-1/2 -translate-y-1/2"
@@ -423,10 +423,10 @@ export function CinematicIntro() {
                 fontStyle: "italic",
               }}
             >
-              <FlowingWord>people&nbsp;actually&nbsp;use.</FlowingWord>
+              <FlowingWord>customers&nbsp;actually&nbsp;use.</FlowingWord>
             </div>
 
-            {/* Line 3: Built across AI, health, and consumer. */}
+            {/* Line 3: Build across Data, AI, and users. — domain triplet mapped to resume voice */}
             <div
               ref={refs.builtAcross}
               className="absolute inset-x-0 top-1/2 -translate-y-1/2"
@@ -439,17 +439,17 @@ export function CinematicIntro() {
                 color: "rgba(255,255,255,0.92)",
               }}
             >
-              Built across{" "}
+              Build across{" "}
               <span ref={refs.aiWord} style={{ display: "inline-block", color: "#a78bfa", fontWeight: 600 }}>
-                AI
+                Data
               </span>
               ,{" "}
               <span ref={refs.healthWord} style={{ display: "inline-block", color: "#22d3ee", fontWeight: 600 }}>
-                health
+                AI
               </span>
               , and{" "}
               <span ref={refs.consumerWord} style={{ display: "inline-block", color: "#f472b6", fontWeight: 600 }}>
-                consumer
+                users
               </span>
               .
             </div>
@@ -478,7 +478,7 @@ export function CinematicIntro() {
                   marginBottom: "clamp(20px, 2vw, 36px)",
                 }}
               >
-                Built by
+                Portfolio crafted and built by
               </div>
               <ChromaticGhost amount={0.3}>Siddharth</ChromaticGhost>{" "}
               <ChromaticGhost amount={0.45}>
