@@ -40,6 +40,7 @@ export function Hero() {
   const ctaGroupRef = useRef<HTMLDivElement>(null);
   const statusPillRef = useRef<HTMLDivElement>(null);
   const chapterLabelRef = useRef<HTMLDivElement>(null);
+  const impactChyronRef = useRef<HTMLDivElement>(null);
 
   const cinemaActive = tier !== "static";
 
@@ -124,6 +125,8 @@ export function Hero() {
           <EditableText page="home" slot="hero.statusPill" fallback="Open to senior PM roles" as="span" singleLine />
         </div>
       </div>
+
+      <ImpactChyron ref={impactChyronRef} />
     </div>
   );
 
@@ -155,7 +158,7 @@ export function Hero() {
 
       <HeroResponsiveLayout
         viewport={viewport}
-        silhouette={<ImpactChyron />}
+        silhouette={null}
         copy={copy}
       />
 
@@ -172,6 +175,7 @@ export function Hero() {
           ctaGroupRef={ctaGroupRef as React.RefObject<HTMLElement>}
           statusPillRef={statusPillRef as React.RefObject<HTMLElement>}
           chapterLabelRef={chapterLabelRef as React.RefObject<HTMLElement>}
+          impactChyronRef={impactChyronRef as React.RefObject<HTMLElement>}
         />
       )}
 

@@ -32,6 +32,7 @@ type Props = HeroPinHandles & {
   ctaGroupRef: React.RefObject<HTMLElement>;
   statusPillRef: React.RefObject<HTMLElement>;
   chapterLabelRef: React.RefObject<HTMLElement>;
+  impactChyronRef: React.RefObject<HTMLElement>;
 };
 
 export function HeroPinController(p: Props) {
@@ -59,6 +60,17 @@ export function HeroPinController(p: Props) {
       gsap.set(p.sublineRef.current, { opacity: 0.78 });
       gsap.set(p.ctaGroupRef.current, { opacity: 1, x: 0 });
       gsap.set(p.statusPillRef.current, { opacity: 1 });
+      // Impact chyron starts hidden and reveals during the dwell beat —
+      // narrative arc: name climax → "here are the receipts" → CTAs.
+      const chyronRows = p.impactChyronRef.current?.querySelectorAll(
+        "[data-impact-row]",
+      );
+      if (p.impactChyronRef.current) {
+        gsap.set(p.impactChyronRef.current, { opacity: 0 });
+      }
+      if (chyronRows) {
+        gsap.set(chyronRows, { opacity: 0, y: 14 });
+      }
 
       // Music-video text axis state, scoped to the hero <section>:
       //   --ka-split  chromatic-aberration offset in px (number)
@@ -100,13 +112,15 @@ export function HeroPinController(p: Props) {
       tl.to(root, { "--ka-wght": 460, duration: 0.30, ease: "expo.inOut" }, 0.50);
       tl.to(root, { "--ka-wght": 360, duration: 0.18, ease: "expo.out" }, 0.80);
 
-      // 20–50%: character peel + first morph stage (orb → liquid).
-      // expo.out gives the chars a sharp, weighty release — like ink flicked
-      // off a brush — instead of the lazy power2 curve.
+      // 20–50%: character peel. Tight ranges so chars NEVER drift far enough
+      // to collide with the kinetic line / name lines below. Previous
+      // -60..90 / -30..30 / -18..18 caused visible overlap with the next
+      // line — looked like a render bug. New ranges keep the peel feeling
+      // like a confident shake, not an explosion.
       tl.to(chars, {
-        x: () => gsap.utils.random(-60, 90),
-        y: () => gsap.utils.random(-30, 30),
-        rotation: () => gsap.utils.random(-18, 18),
+        x: () => gsap.utils.random(-20, 30),
+        y: () => gsap.utils.random(-10, 10),
+        rotation: () => gsap.utils.random(-8, 8),
         opacity: 0.35,
         ease: "expo.out",
         stagger: { each: 0.005, from: "random" },
@@ -142,6 +156,10 @@ export function HeroPinController(p: Props) {
         0.45,
       );
       tl.to(root, { "--ka-split": 0.25, duration: 0.18, ease: "power2.inOut" }, 0.53);
+      // Fade chars out earlier (was 0.75) so the canvas is clean before the
+      // kinetic line peaks. With the tighter peel range, chars also no longer
+      // need to linger to "tell the story" — the kinetic line takes over.
+      tl.to(chars, { opacity: 0, duration: 0.10 }, 0.55);
       tl.to(p.kineticLineRef.current, { opacity: 0, duration: 0.15 }, 0.65);
       tl.to(p.chapterLabelRef.current, { textContent: "03 · YOU", duration: 0.05 }, 0.70);
 
@@ -159,18 +177,33 @@ export function HeroPinController(p: Props) {
       // because the name is the climax, but still well under reading-noise.
       tl.to(root, { "--ka-split": 1.6, duration: 0.05, ease: "power3.out" }, 0.72);
       tl.to(root, { "--ka-split": 0.12, duration: 0.16, ease: "power2.out" }, 0.77);
-      tl.to(chars, { opacity: 0, duration: 0.10 }, 0.75);
       // back.out spring on CTA group — small overshoot reads as confidence.
       tl.to(p.ctaGroupRef.current, { opacity: 1, x: 0, duration: 0.16, ease: "back.out(1.4)", stagger: 0.06 }, 0.78);
       tl.to(p.statusPillRef.current, { opacity: 1, duration: 0.10 }, 0.82);
 
-      // 85–100%: PORTRAIT DWELL — chrome silhouette holds, viewer rests on the
-      // resolved identity for ~15% of pin scroll before un-pin. Per user
-      // direction: the personal mark (logo / portrait) lingers at the climax.
+      // 85–100%: DWELL + RECEIPTS — viewer rests on the resolved identity
+      // and the impact chyron lands as the post-climax beat. Narrative arc:
+      //   name climax → "here are the receipts" → CTAs / status.
+      // Container fades in at 0.84, rows stagger in at 0.86 with a subtle
+      // expo.out lift so each number "stamps" rather than fades.
       tl.to(p.chapterLabelRef.current, {
-        textContent: "PRODUCT MANAGER · BUILDER · 2018 — NOW",
+        textContent: "04 · RECEIPTS",
         duration: 0.05,
-      }, 0.86);
+      }, 0.84);
+      tl.to(p.impactChyronRef.current, {
+        opacity: 1,
+        duration: 0.10,
+        ease: "power2.out",
+      }, 0.84);
+      if (chyronRows && chyronRows.length > 0) {
+        tl.to(chyronRows, {
+          opacity: 1,
+          y: 0,
+          duration: 0.20,
+          ease: "expo.out",
+          stagger: 0.07,
+        }, 0.86);
+      }
       // Explicit no-op tween keeps the timeline alive through 1.0 so the
       // resolved warp state persists across the full dwell window.
       tl.to(warpRef, { current: 1.0, duration: 0.15, ease: "none" }, 0.85);

@@ -1,121 +1,94 @@
 /**
- * ImpactChyron — recruiter-grade scan layer.
+ * ImpactChyron — recruiter-grade scan layer, choreographed into the scroll.
  *
- * Two mono lines between hairlines. Top line carries the three headline
- * numbers (revenue · retention · leverage); bottom line answers
- * "where & at what scope". Every figure is sourced verbatim from the
- * resume so the chyron passes a recruiter sniff test on its own — the
- * "no-interview-still-convinced" test.
+ * Three rows between hairlines. Each row carries one resume-grounded
+ * outcome (revenue · retention · leverage). Lives inside the copy column
+ * below the CTAs and animates in during the post-climax dwell so the
+ * narrative arc reads:
  *
- * Intentionally calm: no chromatic split, no gradient flow, no scroll-
- * driven choreography. The cinematic copy is the show; this is the
- * exec-summary chyron underneath.
+ *   name climax  →  "here are the receipts"  →  CTAs
  *
- * Sourced from /Users/siddharthagrawal/.../Siddharth_Agrawal_Resume.pdf:
+ * Rows expose `data-impact-row` so HeroPinController can stagger their
+ * reveal at the dwell beat (~0.86). For static / reduced-motion users
+ * the rows are visible at first paint — gsap.set in HeroPinController
+ * only hides them when the cinematic timeline mounts.
+ *
+ * Sourced verbatim from /Users/siddharthagrawal/.../Siddharth_Agrawal_Resume.pdf:
  *   • $100K ARR · 0 → 1 ← "Launched market insight signals from 0→1
  *     — 30+ enterprise customers, $100K ARR"
- *   • +18% RETENTION  ← "Ran 25+ customer interviews … shipped
+ *   • +18% retention ← "Ran 25+ customer interviews … shipped
  *     prioritised fixes that drove an 18% lift in retention"
- *   • 98% OPS CUT VIA AI ← "Built AI-assisted threshold workflow …
+ *   • 98% ops cut via AI ← "Built AI-assisted threshold workflow …
  *     reduced manual effort by 98%"
  */
+
+import { forwardRef } from "react";
 
 const MONO: React.CSSProperties = {
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
 };
 
-export function ImpactChyron() {
+const ROWS: Array<{ value: string; meta: string }> = [
+  { value: "$100K ARR", meta: "0 → 1 · Market insight signals" },
+  { value: "+18% retention", meta: "25+ customer interviews" },
+  { value: "98% ops cut", meta: "AI-assisted workflow" },
+];
+
+export const ImpactChyron = forwardRef<HTMLDivElement>(function ImpactChyron(_, ref) {
   return (
-    <div className="flex h-full w-full items-center">
-      <div className="w-full max-w-[440px]">
-        <div
-          className="text-[10px] text-white/45"
-          style={{ ...MONO, letterSpacing: "0.32em", textTransform: "uppercase" }}
-        >
-          Selected impact
-        </div>
-        <div
-          aria-hidden
-          className="mt-3 h-px w-full"
-          style={{ background: "rgba(255,255,255,0.14)" }}
-        />
-        <ul className="flex flex-col gap-4 py-5">
-          <li className="flex items-baseline justify-between gap-6">
+    <div
+      ref={ref}
+      data-impact-chyron
+      className="mt-10 max-w-[640px]"
+    >
+      <div
+        className="text-[10px] text-white/45"
+        style={{ ...MONO, letterSpacing: "0.32em", textTransform: "uppercase" }}
+      >
+        Selected impact
+      </div>
+      <div
+        aria-hidden
+        className="mt-3 h-px w-full"
+        style={{ background: "rgba(255,255,255,0.14)" }}
+      />
+      <ul className="flex flex-col gap-3 py-4 sm:gap-4 sm:py-5">
+        {ROWS.map((row) => (
+          <li
+            key={row.value}
+            data-impact-row
+            className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1"
+          >
             <span
-              className="text-[18px] tracking-tight text-white sm:text-[20px] lg:text-[22px]"
-              style={{
-                fontVariantNumeric: "tabular-nums",
-                fontWeight: 500,
-              }}
+              className="text-[20px] tracking-tight text-white sm:text-[22px] lg:text-[24px]"
+              style={{ fontVariantNumeric: "tabular-nums", fontWeight: 500 }}
             >
-              $100K ARR
+              {row.value}
             </span>
             <span
-              className="text-right text-[10px] text-white/55"
-              style={{
-                ...MONO,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-              }}
-            >
-              0 → 1 · Market insight signals
-            </span>
-          </li>
-          <li className="flex items-baseline justify-between gap-6">
-            <span
-              className="text-[18px] tracking-tight text-white sm:text-[20px] lg:text-[22px]"
-              style={{
-                fontVariantNumeric: "tabular-nums",
-                fontWeight: 500,
-              }}
-            >
-              +18% retention
-            </span>
-            <span
-              className="text-right text-[10px] text-white/55"
+              className="text-[10px] text-white/55 sm:text-[10.5px]"
               style={{
                 ...MONO,
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
               }}
             >
-              25+ customer interviews
+              {row.meta}
             </span>
           </li>
-          <li className="flex items-baseline justify-between gap-6">
-            <span
-              className="text-[18px] tracking-tight text-white sm:text-[20px] lg:text-[22px]"
-              style={{
-                fontVariantNumeric: "tabular-nums",
-                fontWeight: 500,
-              }}
-            >
-              98% ops cut
-            </span>
-            <span
-              className="text-right text-[10px] text-white/55"
-              style={{
-                ...MONO,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-              }}
-            >
-              AI-assisted workflow
-            </span>
-          </li>
-        </ul>
-        <div
-          aria-hidden
-          className="h-px w-full"
-          style={{ background: "rgba(255,255,255,0.14)" }}
-        />
-        <div
-          className="mt-4 text-[10px] text-white/45"
-          style={{ ...MONO, letterSpacing: "0.28em", textTransform: "uppercase" }}
-        >
-          6sense · 30+ enterprise customers
-        </div>
+        ))}
+      </ul>
+      <div
+        aria-hidden
+        className="h-px w-full"
+        style={{ background: "rgba(255,255,255,0.14)" }}
+      />
+      <div
+        className="mt-3 text-[10px] text-white/45"
+        style={{ ...MONO, letterSpacing: "0.28em", textTransform: "uppercase" }}
+      >
+        6sense · 30+ enterprise customers
       </div>
     </div>
   );
-}
+});
