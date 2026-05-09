@@ -41,7 +41,7 @@ export function Hero() {
           fontVariationSettings: '"wght" var(--ka-wght, 320)',
         }}
       >
-        <ChromaticText amount={1.2}>
+        <ChromaticText amount={0.35}>
           <EditableText page="home" slot="hero.headlineTop" fallback="I build products" as="span" singleLine />
         </ChromaticText>
         <br />
@@ -77,8 +77,8 @@ export function Hero() {
           fontVariationSettings: '"wght" var(--ka-wght, 300)',
         }}
       >
-        <ChromaticText amount={0.6}>Siddharth</ChromaticText>{" "}
-        <ChromaticText amount={1.6}>
+        <ChromaticText amount={0.25}>Siddharth</ChromaticText>{" "}
+        <ChromaticText amount={0.5}>
           <span style={{ fontWeight: 500 }}>
             <FlowingGradientText>Agrawal.</FlowingGradientText>
           </span>

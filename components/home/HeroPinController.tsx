@@ -129,15 +129,16 @@ export function HeroPinController(p: Props) {
       // 50–95%: warp 0.4 → 1.0 (full warp speed; chrome silhouette resolves
       // at the focal point as part of the same uniform curve).
       tl.to(warpRef, { current: 1.0, duration: 0.45, ease: "expo.inOut" }, 0.50);
-      // Chromatic split blooms during the warp acceleration — peak ~5px at
-      // the moment the kinetic line enters, then settles back near zero.
+      // Chromatic split flickers during the warp acceleration — peak ~2px at
+      // the moment the kinetic line enters, then settles back near zero so the
+      // copy stays clean and readable instead of reading as a typo.
       tl.fromTo(
         root,
         { "--ka-split": 0 },
-        { "--ka-split": 5, duration: 0.10, ease: "power3.out" },
+        { "--ka-split": 2, duration: 0.08, ease: "power3.out" },
         0.45,
       );
-      tl.to(root, { "--ka-split": 1.2, duration: 0.18, ease: "power2.inOut" }, 0.55);
+      tl.to(root, { "--ka-split": 0.3, duration: 0.18, ease: "power2.inOut" }, 0.53);
       tl.to(p.kineticLineRef.current, { opacity: 0, duration: 0.15 }, 0.65);
       tl.to(p.chapterLabelRef.current, { textContent: "03 · YOU", duration: 0.05 }, 0.70);
 
@@ -151,8 +152,10 @@ export function HeroPinController(p: Props) {
         { opacity: 1, y: 0, scale: 1, duration: 0.16, ease: "expo.out" },
         0.72,
       );
-      tl.to(root, { "--ka-split": 7, duration: 0.06, ease: "power3.out" }, 0.72);
-      tl.to(root, { "--ka-split": 0.6, duration: 0.18, ease: "power2.out" }, 0.78);
+      // Brief impact pulse on the name — bigger than the headline pulse
+      // because the name is the climax, but still well under reading-noise.
+      tl.to(root, { "--ka-split": 3, duration: 0.05, ease: "power3.out" }, 0.72);
+      tl.to(root, { "--ka-split": 0.15, duration: 0.16, ease: "power2.out" }, 0.77);
       tl.to(chars, { opacity: 0, duration: 0.10 }, 0.75);
       // back.out spring on CTA group — small overshoot reads as confidence.
       tl.to(p.ctaGroupRef.current, { opacity: 1, x: 0, duration: 0.16, ease: "back.out(1.4)", stagger: 0.06 }, 0.78);
