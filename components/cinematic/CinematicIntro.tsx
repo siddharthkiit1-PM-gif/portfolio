@@ -478,7 +478,7 @@ export function CinematicIntro() {
                   marginBottom: "clamp(20px, 2vw, 36px)",
                 }}
               >
-                A film built by
+                Built by
               </div>
               <ChromaticGhost amount={0.3}>Siddharth</ChromaticGhost>{" "}
               <ChromaticGhost amount={0.45}>
