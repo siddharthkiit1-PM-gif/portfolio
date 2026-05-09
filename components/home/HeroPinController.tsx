@@ -18,8 +18,7 @@ const PIN_VH: Record<Exclude<DeviceTier, "static">, number> = {
 };
 
 export type HeroPinHandles = {
-  morphRef: React.MutableRefObject<number>;
-  paletteShiftRef: React.MutableRefObject<number>;
+  warpRef: React.MutableRefObject<number>;
 };
 
 type Props = HeroPinHandles & {
@@ -36,8 +35,7 @@ type Props = HeroPinHandles & {
 };
 
 export function HeroPinController(p: Props) {
-  const morphRef = p.morphRef;
-  const paletteShiftRef = p.paletteShiftRef;
+  const warpRef = p.warpRef;
   const splitRef = useRef<SplitText | null>(null);
 
   useLayoutEffect(() => {
@@ -99,10 +97,8 @@ export function HeroPinController(p: Props) {
       tl.to(p.ctaGroupRef.current, { opacity: 0, duration: 0.15 }, 0.20);
       tl.to(p.statusPillRef.current, { opacity: 0, duration: 0.15 }, 0.20);
 
-      // 20–55%: morph 0 → 0.5 (sphere → capsule).
-      // power2.inOut adds anticipation/settle — the surface looks like it
-      // gathers itself before reshaping rather than scrubbing linearly.
-      tl.to(morphRef, { current: 0.5, duration: 0.35, ease: "power2.inOut" }, 0.20);
+      // 20–50%: warp 0 → 0.4 (camera starts pulling forward, gentle stream).
+      tl.to(warpRef, { current: 0.4, duration: 0.30, ease: "power2.inOut" }, 0.20);
 
       // 45–65%: kinetic line reveal (sharper, more theatrical entrance)
       tl.to(p.kineticLineRef.current, {
@@ -111,11 +107,9 @@ export function HeroPinController(p: Props) {
       }, 0.45);
       tl.to(p.chapterLabelRef.current, { textContent: "02 · WHAT", duration: 0.05 }, 0.47);
 
-      // 55–85%: morph 0.5 → 1.0 + chrome palette (capsule → portrait silhouette).
-      // expo.inOut makes the climax feel decisive — slow viscous build, hard
-      // settle into chrome — the signature beat of the sequence.
-      tl.to(morphRef, { current: 1.0, duration: 0.30, ease: "expo.inOut" }, 0.55);
-      tl.to(paletteShiftRef, { current: 1.0, duration: 0.30, ease: "power3.in" }, 0.55);
+      // 50–95%: warp 0.4 → 1.0 (full warp speed; chrome silhouette resolves
+      // at the focal point as part of the same uniform curve).
+      tl.to(warpRef, { current: 1.0, duration: 0.45, ease: "expo.inOut" }, 0.50);
       tl.to(p.kineticLineRef.current, { opacity: 0, duration: 0.15 }, 0.65);
       tl.to(p.chapterLabelRef.current, { textContent: "03 · YOU", duration: 0.05 }, 0.70);
 
@@ -140,9 +134,8 @@ export function HeroPinController(p: Props) {
         duration: 0.05,
       }, 0.86);
       // Explicit no-op tween keeps the timeline alive through 1.0 so the
-      // portrait state persists across the full dwell window.
-      tl.to(morphRef, { current: 1.0, duration: 0.15, ease: "none" }, 0.85);
-      tl.to(paletteShiftRef, { current: 1.0, duration: 0.15, ease: "none" }, 0.85);
+      // resolved warp state persists across the full dwell window.
+      tl.to(warpRef, { current: 1.0, duration: 0.15, ease: "none" }, 0.85);
 
       // Subtle parallax drift on the name during dwell — keeps the climax
       // feeling alive instead of frozen, in the spirit of Apple hero shots

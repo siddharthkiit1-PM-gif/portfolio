@@ -32,26 +32,25 @@ class CanvasErrorBoundary extends Component<
   }
 }
 
-const STEP_COUNT: Record<Exclude<DeviceTier, "static">, number> = {
-  high: 80,
-  mid: 60,
-  low: 40,
+const STAR_COUNT: Record<Exclude<DeviceTier, "static">, number> = {
+  high: 2700,
+  mid: 1400,
+  low: 700,
 };
 
 function buildFragment(tier: Exclude<DeviceTier, "static">): string {
-  const steps = STEP_COUNT[tier];
+  const stars = STAR_COUNT[tier];
   const bloomFake = tier === "low" ? "#define BLOOM_FAKE\n" : "";
-  return `${bloomFake}#define STEPS ${steps}\n${cinemaOrbFragment}`;
+  return `${bloomFake}#define STAR_COUNT ${stars}\n${cinemaOrbFragment}`;
 }
 
 type CanvasProps = {
   tier: Exclude<DeviceTier, "static">;
-  morphRef: React.MutableRefObject<number>;
-  paletteShiftRef: React.MutableRefObject<number>;
+  warpRef: React.MutableRefObject<number>;
   paused: boolean;
 };
 
-function OrbMesh({ tier, morphRef, paletteShiftRef, paused }: CanvasProps) {
+function OrbMesh({ tier, warpRef, paused }: CanvasProps) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const { size } = useThree();
   const targetPointer = useRef(new THREE.Vector2(0, 0));
@@ -70,9 +69,7 @@ function OrbMesh({ tier, morphRef, paletteShiftRef, paused }: CanvasProps) {
       uTime: { value: 0 },
       uResolution: { value: new THREE.Vector2(size.width, size.height) },
       uPointer: { value: new THREE.Vector2(0, 0) },
-      uMorph: { value: 0 },
-      uPaletteShift: { value: 0 },
-      uBreath: { value: 0 },
+      uWarp: { value: 0 },
       uPortraitMask: { value: portraitMask },
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -100,11 +97,7 @@ function OrbMesh({ tier, morphRef, paletteShiftRef, paused }: CanvasProps) {
     uniforms.uTime.value += dt;
     currentPointer.current.lerp(targetPointer.current, Math.min(1, dt * 4));
     uniforms.uPointer.value.copy(currentPointer.current);
-    uniforms.uMorph.value = morphRef.current;
-    uniforms.uPaletteShift.value = paletteShiftRef.current;
-    // Slow sine breath drives the orb's pre-morph idle motion. Gated to
-    // intro inside the shader (see breathGate in scene()).
-    uniforms.uBreath.value = Math.sin(uniforms.uTime.value * 1.6);
+    uniforms.uWarp.value = warpRef.current;
   });
 
   return (
@@ -123,11 +116,10 @@ function OrbMesh({ tier, morphRef, paletteShiftRef, paused }: CanvasProps) {
 
 export type CinemaHeroCanvasProps = {
   tier: Exclude<DeviceTier, "static">;
-  morphRef: React.MutableRefObject<number>;
-  paletteShiftRef: React.MutableRefObject<number>;
+  warpRef: React.MutableRefObject<number>;
 };
 
-export function CinemaHeroCanvas({ tier, morphRef, paletteShiftRef }: CinemaHeroCanvasProps) {
+export function CinemaHeroCanvas({ tier, warpRef }: CinemaHeroCanvasProps) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(true);
   const [resolvedTier, setResolvedTier] = useState<DeviceTier>(tier);
@@ -202,7 +194,7 @@ export function CinemaHeroCanvas({ tier, morphRef, paletteShiftRef }: CinemaHero
             });
           }}
         >
-          <OrbMesh tier={resolvedTier} morphRef={morphRef} paletteShiftRef={paletteShiftRef} paused={!visible} />
+          <OrbMesh tier={resolvedTier} warpRef={warpRef} paused={!visible} />
           {resolvedTier !== "low" && (
             <EffectComposer>
               <Bloom

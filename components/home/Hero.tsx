@@ -13,8 +13,7 @@ export function Hero() {
   const tier = useDeviceTier();
   const viewport = useViewportClass();
 
-  const morphRef = useRef(0);
-  const paletteShiftRef = useRef(0);
+  const warpRef = useRef(0);
 
   const rootRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -78,7 +77,7 @@ export function Hero() {
       className="relative isolate min-h-[100dvh] overflow-hidden bg-[#05060a] text-white"
       style={{ touchAction: "pan-y" }}
     >
-      <HeroBackground morphRef={morphRef} paletteShiftRef={paletteShiftRef} />
+      <HeroBackground warpRef={warpRef} />
 
       <HeroResponsiveLayout
         viewport={viewport}
@@ -90,8 +89,7 @@ export function Hero() {
         <HeroPinController
           tier={tier as "high" | "mid" | "low"}
           viewport={viewport}
-          morphRef={morphRef}
-          paletteShiftRef={paletteShiftRef}
+          warpRef={warpRef}
           rootRef={rootRef as React.RefObject<HTMLElement>}
           headlineRef={headlineRef as React.RefObject<HTMLElement>}
           kineticLineRef={kineticLineRef as React.RefObject<HTMLElement>}
