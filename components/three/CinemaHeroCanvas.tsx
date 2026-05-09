@@ -2,12 +2,34 @@
 
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { EffectComposer, Bloom, DepthOfField } from "@react-three/postprocessing";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Component, useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import * as THREE from "three";
 import { TextureLoader } from "three";
 import { cinemaOrbFragment, cinemaOrbVertex } from "./cinemaOrbShader";
 import type { DeviceTier } from "@/lib/motion/useDeviceTier";
 import { downgradeTier } from "@/lib/motion/useDeviceTier";
+import { HeroOrbFallback } from "./HeroOrbFallback";
+
+class CanvasErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch() {
+    // Swallow; fallback rendered below.
+  }
+  render() {
+    if (this.state.hasError) return <HeroOrbFallback />;
+    return this.props.children;
+  }
+}
 
 const STEP_COUNT: Record<Exclude<DeviceTier, "static">, number> = {
   high: 80,
@@ -156,27 +178,41 @@ export function CinemaHeroCanvas({ tier, morphRef, paletteShiftRef }: CinemaHero
       className="pointer-events-none absolute inset-0 -z-10"
       style={{ transform: "translateZ(0)", backfaceVisibility: "hidden" }}
     >
-      <Canvas
-        dpr={dprCap}
-        gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
-        camera={{ position: [0, 0, 1] }}
-        frameloop={visible ? "always" : "never"}
-      >
-        <OrbMesh tier={resolvedTier} morphRef={morphRef} paletteShiftRef={paletteShiftRef} paused={!visible} />
-        {resolvedTier !== "low" && (
-          <EffectComposer>
-            <Bloom
-              intensity={resolvedTier === "high" ? 0.95 : 0.55}
-              luminanceThreshold={0.6}
-              luminanceSmoothing={0.2}
-              mipmapBlur
-            />
-            {resolvedTier === "high" ? (
-              <DepthOfField focusDistance={0.0} focalLength={0.02} bokehScale={3} />
-            ) : <></>}
-          </EffectComposer>
-        )}
-      </Canvas>
+      <CanvasErrorBoundary>
+        <Canvas
+          dpr={dprCap}
+          gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
+          camera={{ position: [0, 0, 1] }}
+          frameloop={visible ? "always" : "never"}
+          onCreated={({ gl }) => {
+            // Guard against null context attributes (older Safari, GPU sandboxing,
+            // second-mount in Chromium) which crash EffectComposer's alpha read.
+            if (gl.getContextAttributes() == null) {
+              throw new Error("WebGL context attributes unavailable");
+            }
+            gl.domElement.addEventListener("webglcontextlost", (e) => {
+              e.preventDefault();
+              downgradeTier(resolvedTier);
+              setResolvedTier("static");
+            });
+          }}
+        >
+          <OrbMesh tier={resolvedTier} morphRef={morphRef} paletteShiftRef={paletteShiftRef} paused={!visible} />
+          {resolvedTier !== "low" && (
+            <EffectComposer>
+              <Bloom
+                intensity={resolvedTier === "high" ? 0.95 : 0.55}
+                luminanceThreshold={0.6}
+                luminanceSmoothing={0.2}
+                mipmapBlur
+              />
+              {resolvedTier === "high" ? (
+                <DepthOfField focusDistance={0.0} focalLength={0.02} bokehScale={3} />
+              ) : <></>}
+            </EffectComposer>
+          )}
+        </Canvas>
+      </CanvasErrorBoundary>
     </div>
   );
 }
