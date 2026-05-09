@@ -14,8 +14,20 @@ function probeWebGL2(): boolean {
   }
 }
 
+function readTierOverride(): DeviceTier | null {
+  if (typeof window === "undefined") return null;
+  const v = new URLSearchParams(window.location.search).get("cinemaTier");
+  if (v === "high" || v === "mid" || v === "low" || v === "static") return v;
+  return null;
+}
+
 function compute(): DeviceTier {
   if (typeof window === "undefined") return "static";
+
+  // Test/debug override: ?cinemaTier=low pins the tier, bypassing the device
+  // gates and the post-mount FPS probe. This makes e2e tests deterministic.
+  const override = readTierOverride();
+  if (override) return override;
 
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "static";
   if (!probeWebGL2()) return "static";

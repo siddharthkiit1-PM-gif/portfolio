@@ -13,7 +13,17 @@ export default defineConfig({
     baseURL,
     trace: "on-first-retry",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        // Smaller viewport for the WebGL hero — full HD saturates the V8 main
+        // thread on dev hardware long enough for CDP evaluate calls to time out.
+        viewport: { width: 800, height: 600 },
+      },
+    },
+  ],
   webServer: {
     command: `pnpm next dev -p ${PORT}`,
     url: baseURL,

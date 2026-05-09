@@ -147,8 +147,14 @@ export function CinemaHeroCanvas({ tier, warpRef }: CinemaHeroCanvasProps) {
     return () => io.disconnect();
   }, []);
 
-  // 1s FPS probe; downgrade if avg dt > tier budget
+  // 1s FPS probe; downgrade if avg dt > tier budget. Skipped when the tier was
+  // pinned via ?cinemaTier= (e2e tests / debug) so the canvas stays mounted at
+  // the requested tier.
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("cinemaTier")) return;
+    }
     const budget = resolvedTier === "high" ? 18 : resolvedTier === "mid" ? 25 : 36; // ms
     let frames = 0;
     let total = 0;
@@ -200,6 +206,9 @@ export function CinemaHeroCanvas({ tier, warpRef }: CinemaHeroCanvasProps) {
             }
             gl.domElement.addEventListener("webglcontextlost", (e) => {
               e.preventDefault();
+              // Honor the explicit ?cinemaTier= override — don't auto-downgrade.
+              const params = new URLSearchParams(window.location.search);
+              if (params.get("cinemaTier")) return;
               downgradeTier(resolvedTier);
               setResolvedTier("static");
             });
