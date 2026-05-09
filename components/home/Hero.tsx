@@ -2,19 +2,34 @@
 
 import { useRef } from "react";
 import { EditableText } from "@/components/editable/EditableText";
-import { HeroBackground } from "@/components/three/HeroBackground";
 import { HeroPinController } from "./HeroPinController";
 import { HeroResponsiveLayout } from "./HeroResponsiveLayout";
 import { HeroChapterLabel } from "./HeroChapterLabel";
 import { ChromaticText } from "./ChromaticText";
 import { FlowingGradientText } from "./FlowingGradientText";
+import { ImpactChyron } from "./ImpactChyron";
 import { useDeviceTier } from "@/lib/motion/useDeviceTier";
 import { useViewportClass } from "@/lib/motion/useViewportClass";
 
+/**
+ * Hero — cinema without the nebula.
+ *
+ * Scroll-pinned chromatic + flowing-gradient typography over a calm
+ * CSS backdrop (deep navy + a single soft cool vignette + a faint
+ * hairline grid). The WebGL orb / constellation / bloom stack has
+ * been retired so the scroll feels lighter and the chromatic split
+ * is the only effect carrying the cinematic weight.
+ *
+ * Right column hosts the ImpactChyron — a calm recruiter scan layer
+ * that stays readable through the entire pin and answers the "what
+ * have you actually shipped?" question without making the user wait
+ * for the choreography to resolve.
+ */
 export function Hero() {
   const tier = useDeviceTier();
   const viewport = useViewportClass();
 
+  // Kept for plumbing compatibility with HeroPinController; no orb to drive.
   const warpRef = useRef(0);
 
   const rootRef = useRef<HTMLElement>(null);
@@ -47,7 +62,7 @@ export function Hero() {
         <br />
         <em className="not-italic" style={{ fontWeight: 500, fontVariationSettings: '"wght" calc(var(--ka-wght, 320) + 200)' }}>
           <FlowingGradientText>
-            <EditableText page="home" slot="hero.headlineBottom" fallback="people actually use." as="span" singleLine />
+            <EditableText page="home" slot="hero.headlineBottom" fallback="customers actually use." as="span" singleLine />
           </FlowingGradientText>
         </em>
       </h1>
@@ -61,11 +76,19 @@ export function Hero() {
           fontVariationSettings: '"wght" var(--ka-wght, 300)',
         }}
       >
-        Built across{" "}
+        Build across{" "}
         <FlowingGradientText gradient="linear-gradient(90deg, #a78bfa 0%, #22d3ee 50%, #f472b6 100%)">
+          <span style={{ fontWeight: 600 }}>Data</span>
+        </FlowingGradientText>
+        ,{" "}
+        <FlowingGradientText gradient="linear-gradient(90deg, #22d3ee 0%, #a78bfa 50%, #f472b6 100%)">
           <span style={{ fontWeight: 600 }}>AI</span>
         </FlowingGradientText>
-        , health, and consumer.
+        , and{" "}
+        <FlowingGradientText gradient="linear-gradient(90deg, #f472b6 0%, #a78bfa 50%, #22d3ee 100%)">
+          <span style={{ fontWeight: 600 }}>users</span>
+        </FlowingGradientText>
+        .
       </div>
 
       <h2
@@ -86,7 +109,7 @@ export function Hero() {
       </h2>
 
       <p ref={sublineRef} className="mt-6 max-w-[560px] text-base font-light leading-[1.55] text-white/75 lg:text-lg">
-        <EditableText page="home" slot="hero.subtext" fallback="PM at the intersection of AI, health, and consumer." as="span" />
+        <EditableText page="home" slot="hero.subtext" fallback="PM crafting products at the intersection of Data, AI, and users." as="span" />
       </p>
 
       <div ref={ctaGroupRef} className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -110,11 +133,29 @@ export function Hero() {
       className="relative isolate min-h-[100dvh] overflow-hidden bg-[#05060a] text-white"
       style={{ touchAction: "pan-y" }}
     >
-      <HeroBackground warpRef={warpRef} />
+      {/* Quiet backdrop — no WebGL. A single cool vignette where the orb used
+          to sit gives depth; a faint hairline grid keeps the dark calm without
+          letting it read as flat. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at 65% 45%, rgba(64,132,200,0.12) 0%, rgba(64,132,200,0.04) 35%, transparent 65%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg, rgba(255,255,255,0.022) 0 1px, transparent 1px 80px), repeating-linear-gradient(90deg, rgba(255,255,255,0.022) 0 1px, transparent 1px 80px)",
+        }}
+      />
 
       <HeroResponsiveLayout
         viewport={viewport}
-        silhouette={<div className="h-full w-full" aria-hidden />}
+        silhouette={<ImpactChyron />}
         copy={copy}
       />
 

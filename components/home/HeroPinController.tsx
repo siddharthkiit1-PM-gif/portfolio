@@ -12,9 +12,9 @@ if (typeof window !== "undefined") {
 }
 
 const PIN_VH: Record<Exclude<DeviceTier, "static">, number> = {
-  high: 240,
-  mid: 190,
-  low: 150,
+  high: 120,
+  mid: 95,
+  low: 75,
 };
 
 export type HeroPinHandles = {
@@ -76,7 +76,7 @@ export function HeroPinController(p: Props) {
           pin: true,
           scrub: 1,
           snap: {
-            snapTo: [0, 0.20, 0.50, 0.70, 0.85, 1],
+            snapTo: [0, 0.50, 0.85, 1],
             duration: { min: 0.2, max: 0.4 },
             delay: 0.05,
             ease: "power2.inOut",
@@ -132,13 +132,16 @@ export function HeroPinController(p: Props) {
       // Chromatic split flickers during the warp acceleration — peak ~2px at
       // the moment the kinetic line enters, then settles back near zero so the
       // copy stays clean and readable instead of reading as a typo.
+      // Clamped peaks so chromatic ghosts never fan past readable. Previous
+      // values (2 and 3) created visible ghost text that read as a render bug;
+      // 1.2 and 1.6 keep the cinematic split feel without breaking legibility.
       tl.fromTo(
         root,
         { "--ka-split": 0 },
-        { "--ka-split": 2, duration: 0.08, ease: "power3.out" },
+        { "--ka-split": 1.2, duration: 0.08, ease: "power3.out" },
         0.45,
       );
-      tl.to(root, { "--ka-split": 0.3, duration: 0.18, ease: "power2.inOut" }, 0.53);
+      tl.to(root, { "--ka-split": 0.25, duration: 0.18, ease: "power2.inOut" }, 0.53);
       tl.to(p.kineticLineRef.current, { opacity: 0, duration: 0.15 }, 0.65);
       tl.to(p.chapterLabelRef.current, { textContent: "03 · YOU", duration: 0.05 }, 0.70);
 
@@ -154,8 +157,8 @@ export function HeroPinController(p: Props) {
       );
       // Brief impact pulse on the name — bigger than the headline pulse
       // because the name is the climax, but still well under reading-noise.
-      tl.to(root, { "--ka-split": 3, duration: 0.05, ease: "power3.out" }, 0.72);
-      tl.to(root, { "--ka-split": 0.15, duration: 0.16, ease: "power2.out" }, 0.77);
+      tl.to(root, { "--ka-split": 1.6, duration: 0.05, ease: "power3.out" }, 0.72);
+      tl.to(root, { "--ka-split": 0.12, duration: 0.16, ease: "power2.out" }, 0.77);
       tl.to(chars, { opacity: 0, duration: 0.10 }, 0.75);
       // back.out spring on CTA group — small overshoot reads as confidence.
       tl.to(p.ctaGroupRef.current, { opacity: 1, x: 0, duration: 0.16, ease: "back.out(1.4)", stagger: 0.06 }, 0.78);
