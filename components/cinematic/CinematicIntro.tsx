@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import gsap from "gsap";
 import { CinematicScore } from "./cinematicScore";
@@ -69,6 +69,36 @@ export function CinematicIntro() {
     setShowGate(true);
   }, []);
 
+  // Pre-zero every animated element on mount so the gate splash sits on a
+  // clean black canvas. Without this, the white flash element (bg-white +
+  // mix-blend-mode: screen, default opacity 1) and the light leaks paint
+  // the entire viewport white before any GSAP timeline runs.
+  useLayoutEffect(() => {
+    if (phase !== "gate") return;
+    const stage = stageRef.current;
+    if (!stage) return;
+    gsap.set(stage, { "--ka-grad": "0%", "--ka-split": 0, "--ka-wght": 200 });
+    gsap.set([
+      refs.iWord.current,
+      refs.buildWord.current,
+      refs.productsWord.current,
+      refs.peopleLine.current,
+      refs.builtAcross.current,
+      refs.nameLine.current,
+    ], { opacity: 0, y: 80, scale: 0.92, filter: "blur(24px)" });
+    gsap.set([refs.aiWord.current, refs.healthWord.current, refs.consumerWord.current], {
+      opacity: 0, y: 16, filter: "blur(8px)",
+    });
+    gsap.set(refs.chapter.current, { opacity: 0, y: 8 });
+    gsap.set(refs.centerDot.current, { opacity: 0, scale: 0 });
+    gsap.set(refs.glow.current, { opacity: 0, scale: 0.6 });
+    gsap.set([refs.leakL.current, refs.leakR.current], { opacity: 0 });
+    gsap.set(refs.flash.current, { opacity: 0 });
+    gsap.set(refs.vignette.current, { opacity: 0.55 });
+    // refs are stable mutable objects; don't add to deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
+
   const finish = useCallback(() => {
     try {
       sessionStorage.setItem(SKIP_KEY, "1");
@@ -88,24 +118,8 @@ export function CinematicIntro() {
     const stage = stageRef.current;
     if (!stage) return;
 
-    const score = new CinematicScore();
-    scoreRef.current = score;
-    await score.start();
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        // Fade the whole overlay out and hand off to the scrolled site.
-        gsap.to(rootRef.current, {
-          opacity: 0,
-          duration: 1.2,
-          ease: "power2.inOut",
-          onComplete: finish,
-        });
-      },
-    });
-    tlRef.current = tl;
-
-    // Initial states ----------------------------------------------------
+    // Re-apply initial states (defense against any drift between the mount
+    // useLayoutEffect and this click).
     gsap.set(stage, { "--ka-grad": "0%", "--ka-split": 0, "--ka-wght": 200 });
     gsap.set([
       refs.iWord.current,
@@ -124,6 +138,28 @@ export function CinematicIntro() {
     gsap.set([refs.leakL.current, refs.leakR.current], { opacity: 0 });
     gsap.set(refs.flash.current, { opacity: 0 });
     gsap.set(refs.vignette.current, { opacity: 0.55 });
+
+    // Kick off the audio score in parallel — never block the visual film
+    // on audio init. If Tone.start() rejects (autoplay policy edge case)
+    // or reverb generation hangs, the visuals still play silently.
+    const score = new CinematicScore();
+    scoreRef.current = score;
+    score.start().catch(() => {
+      // Audio failed; carry on silently.
+    });
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        // Fade the whole overlay out and hand off to the scrolled site.
+        gsap.to(rootRef.current, {
+          opacity: 0,
+          duration: 1.2,
+          ease: "power2.inOut",
+          onComplete: finish,
+        });
+      },
+    });
+    tlRef.current = tl;
 
     // Continuous gradient flow underlay throughout the film.
     tl.to(stage, { "--ka-grad": "200%", duration: B.end, ease: "none" }, 0);
