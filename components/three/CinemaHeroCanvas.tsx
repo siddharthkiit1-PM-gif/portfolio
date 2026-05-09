@@ -8,6 +8,8 @@ import type { ReactNode } from "react";
 import * as THREE from "three";
 import { TextureLoader } from "three";
 import { cinemaOrbFragment, cinemaOrbVertex } from "./cinemaOrbShader";
+import { LensFlareMesh } from "./LensFlareMesh";
+import { Constellation } from "./Constellation";
 import type { DeviceTier } from "@/lib/motion/useDeviceTier";
 import { downgradeTier } from "@/lib/motion/useDeviceTier";
 import { HeroOrbFallback } from "./HeroOrbFallback";
@@ -49,6 +51,15 @@ type CanvasProps = {
   warpRef: React.MutableRefObject<number>;
   paused: boolean;
 };
+
+function CameraRoll({ warpRef }: { warpRef: React.MutableRefObject<number> }) {
+  const { camera } = useThree();
+  useFrame(() => {
+    // 0° at warp 0, 4° at warp 1. Negative z = clockwise from camera view in r3f.
+    camera.rotation.z = -warpRef.current * 4 * (Math.PI / 180);
+  });
+  return null;
+}
 
 function OrbMesh({ tier, warpRef, paused }: CanvasProps) {
   const matRef = useRef<THREE.ShaderMaterial>(null);
@@ -195,6 +206,9 @@ export function CinemaHeroCanvas({ tier, warpRef }: CinemaHeroCanvasProps) {
           }}
         >
           <OrbMesh tier={resolvedTier} warpRef={warpRef} paused={!visible} />
+          <CameraRoll warpRef={warpRef} />
+          <LensFlareMesh tier={resolvedTier} warpRef={warpRef} />
+          <Constellation tier={resolvedTier} warpRef={warpRef} />
           {resolvedTier !== "low" && (
             <EffectComposer>
               <Bloom
