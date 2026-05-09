@@ -8,8 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,7 +22,36 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* HD typography polish for the kinetic hero. */
+  font-feature-settings: "ss01", "cv11", "calt", "liga";
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* CSS @property registrations let GSAP animate custom properties through the
+ * compositor, not via JS layout reads. Each property has a typed value and an
+ * initial state so the browser can interpolate them cheaply. */
+@property --ka-split {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --ka-grad {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+@property --ka-wght {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 400;
+}
+@property --ka-wdth {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 100;
 }
 
 @layer utilities {

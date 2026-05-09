@@ -60,6 +60,14 @@ export function HeroPinController(p: Props) {
       gsap.set(p.ctaGroupRef.current, { opacity: 1, x: 0 });
       gsap.set(p.statusPillRef.current, { opacity: 1 });
 
+      // Music-video text axis state, scoped to the hero <section>:
+      //   --ka-split  chromatic-aberration offset in px (number)
+      //   --ka-grad   background-position-x for flowing gradients (percentage)
+      //   --ka-wght   variable font weight axis driving the breath
+      // These are all registered via @property in globals.css so the browser
+      // can interpolate them on the compositor without per-frame layout reads.
+      gsap.set(root, { "--ka-split": 0, "--ka-grad": "0%", "--ka-wght": 320 });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root,
@@ -80,6 +88,17 @@ export function HeroPinController(p: Props) {
       // mark stays for a deliberate beat before the cinematic motion starts.
       // morphRef + paletteShiftRef stay at 0 (already their initial value).
       tl.to(p.chapterLabelRef.current, { textContent: "00 · ENTER", duration: 0.05 }, 0);
+
+      // Continuous gradient flow underneath every other beat (0 → 200%).
+      // background-size is 300%, so this loops seamlessly through the visible
+      // window and keeps the type breathing in color the entire pin.
+      tl.fromTo(root, { "--ka-grad": "0%" }, { "--ka-grad": "200%", duration: 1, ease: "none" }, 0);
+
+      // Variable weight breath: 320 (light) → 460 (mid) on the build-up,
+      // releasing back to 360 during the resolve so the dwell reads calm.
+      tl.to(root, { "--ka-wght": 380, duration: 0.30, ease: "power2.inOut" }, 0.20);
+      tl.to(root, { "--ka-wght": 460, duration: 0.30, ease: "expo.inOut" }, 0.50);
+      tl.to(root, { "--ka-wght": 360, duration: 0.18, ease: "expo.out" }, 0.80);
 
       // 20–50%: character peel + first morph stage (orb → liquid).
       // expo.out gives the chars a sharp, weighty release — like ink flicked
@@ -110,17 +129,30 @@ export function HeroPinController(p: Props) {
       // 50–95%: warp 0.4 → 1.0 (full warp speed; chrome silhouette resolves
       // at the focal point as part of the same uniform curve).
       tl.to(warpRef, { current: 1.0, duration: 0.45, ease: "expo.inOut" }, 0.50);
+      // Chromatic split blooms during the warp acceleration — peak ~5px at
+      // the moment the kinetic line enters, then settles back near zero.
+      tl.fromTo(
+        root,
+        { "--ka-split": 0 },
+        { "--ka-split": 5, duration: 0.10, ease: "power3.out" },
+        0.45,
+      );
+      tl.to(root, { "--ka-split": 1.2, duration: 0.18, ease: "power2.inOut" }, 0.55);
       tl.to(p.kineticLineRef.current, { opacity: 0, duration: 0.15 }, 0.65);
       tl.to(p.chapterLabelRef.current, { textContent: "03 · YOU", duration: 0.05 }, 0.70);
 
       // 72–85%: name coalesce — scale anticipation 0.96 → 1 with expo.out
-      // gives the type a subtle "snap into focus" feel.
+      // gives the type a subtle "snap into focus" feel. The chromatic split
+      // pops to ~7px on the impact frame, then resolves clean — like a
+      // shutter snapping focus.
       tl.fromTo(
         p.nameRef.current,
         { opacity: 0, y: 20, scale: 0.96 },
         { opacity: 1, y: 0, scale: 1, duration: 0.16, ease: "expo.out" },
         0.72,
       );
+      tl.to(root, { "--ka-split": 7, duration: 0.06, ease: "power3.out" }, 0.72);
+      tl.to(root, { "--ka-split": 0.6, duration: 0.18, ease: "power2.out" }, 0.78);
       tl.to(chars, { opacity: 0, duration: 0.10 }, 0.75);
       // back.out spring on CTA group — small overshoot reads as confidence.
       tl.to(p.ctaGroupRef.current, { opacity: 1, x: 0, duration: 0.16, ease: "back.out(1.4)", stagger: 0.06 }, 0.78);

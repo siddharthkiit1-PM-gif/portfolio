@@ -6,6 +6,8 @@ import { HeroBackground } from "@/components/three/HeroBackground";
 import { HeroPinController } from "./HeroPinController";
 import { HeroResponsiveLayout } from "./HeroResponsiveLayout";
 import { HeroChapterLabel } from "./HeroChapterLabel";
+import { ChromaticText } from "./ChromaticText";
+import { FlowingGradientText } from "./FlowingGradientText";
 import { useDeviceTier } from "@/lib/motion/useDeviceTier";
 import { useViewportClass } from "@/lib/motion/useViewportClass";
 
@@ -30,26 +32,57 @@ export function Hero() {
     <div className="max-w-[640px]">
       <HeroChapterLabel ref={chapterLabelRef} defaultLabel="PRODUCT MANAGER · BUILDER · 2018 — NOW" />
 
-      <h1 ref={headlineRef} className="mt-6 text-[44px] leading-[1.05] tracking-[-1.5px] sm:text-[56px] lg:text-[62px] lg:tracking-[-2.5px] font-light text-white">
-        <EditableText page="home" slot="hero.headlineTop" fallback="I build products" as="span" singleLine />
+      <h1
+        ref={headlineRef}
+        className="mt-6 text-[44px] leading-[1.05] tracking-[-1.5px] sm:text-[56px] lg:text-[62px] lg:tracking-[-2.5px] text-white"
+        style={{
+          fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
+          fontWeight: 300,
+          fontVariationSettings: '"wght" var(--ka-wght, 320)',
+        }}
+      >
+        <ChromaticText amount={1.2}>
+          <EditableText page="home" slot="hero.headlineTop" fallback="I build products" as="span" singleLine />
+        </ChromaticText>
         <br />
-        <em
-          className="not-italic font-normal bg-clip-text text-transparent"
-          style={{ backgroundImage: "linear-gradient(90deg, #a78bfa 20%, #22d3ee 60%, #f472b6)" }}
-        >
-          <EditableText page="home" slot="hero.headlineBottom" fallback="people actually use." as="span" singleLine />
+        <em className="not-italic" style={{ fontWeight: 500, fontVariationSettings: '"wght" calc(var(--ka-wght, 320) + 200)' }}>
+          <FlowingGradientText>
+            <EditableText page="home" slot="hero.headlineBottom" fallback="people actually use." as="span" singleLine />
+          </FlowingGradientText>
         </em>
       </h1>
 
-      <div ref={kineticLineRef} className="mt-6 text-[36px] leading-tight tracking-[-1px] font-light text-white/85 lg:text-[48px]">
-        Built across <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(90deg, #a78bfa, #22d3ee)" }}>AI</span>, health, and consumer.
+      <div
+        ref={kineticLineRef}
+        className="mt-6 text-[36px] leading-tight tracking-[-1px] text-white/85 lg:text-[48px]"
+        style={{
+          fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
+          fontWeight: 300,
+          fontVariationSettings: '"wght" var(--ka-wght, 300)',
+        }}
+      >
+        Built across{" "}
+        <FlowingGradientText gradient="linear-gradient(90deg, #a78bfa 0%, #22d3ee 50%, #f472b6 100%)">
+          <span style={{ fontWeight: 600 }}>AI</span>
+        </FlowingGradientText>
+        , health, and consumer.
       </div>
 
-      <h2 ref={nameRef} className="mt-6 text-[44px] leading-none tracking-[-1.5px] font-light text-white sm:text-[64px] lg:text-[96px] lg:tracking-[-3.5px]">
-        Siddharth{" "}
-        <span className="font-normal bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(90deg, #a78bfa 20%, #22d3ee 60%, #f472b6)" }}>
-          Agrawal.
-        </span>
+      <h2
+        ref={nameRef}
+        className="mt-6 text-[44px] leading-none tracking-[-1.5px] text-white sm:text-[64px] lg:text-[96px] lg:tracking-[-3.5px]"
+        style={{
+          fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
+          fontWeight: 300,
+          fontVariationSettings: '"wght" var(--ka-wght, 300)',
+        }}
+      >
+        <ChromaticText amount={0.6}>Siddharth</ChromaticText>{" "}
+        <ChromaticText amount={1.6}>
+          <span style={{ fontWeight: 500 }}>
+            <FlowingGradientText>Agrawal.</FlowingGradientText>
+          </span>
+        </ChromaticText>
       </h2>
 
       <p ref={sublineRef} className="mt-6 max-w-[560px] text-base font-light leading-[1.55] text-white/75 lg:text-lg">
