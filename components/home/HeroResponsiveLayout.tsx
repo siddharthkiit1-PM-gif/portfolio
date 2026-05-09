@@ -22,9 +22,9 @@ export function HeroResponsiveLayout({ viewport, copy, silhouette }: Props) {
       );
     }
     return (
-      <div className="relative grid h-[100dvh] grid-cols-[minmax(560px,1fr)_minmax(0,1fr)] items-center gap-12 px-10">
+      <div className="relative grid h-[100dvh] grid-cols-[minmax(560px,1fr)_360px] items-start gap-12 px-10 pt-[8vh] xl:gap-16">
         <div className="relative z-10">{copy}</div>
-        <div className="relative h-full">{silhouette}</div>
+        <div className="relative flex h-full items-center justify-end pt-[2vh]">{silhouette}</div>
       </div>
     );
   }

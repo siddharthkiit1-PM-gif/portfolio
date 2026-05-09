@@ -32,7 +32,7 @@ type Props = HeroPinHandles & {
   ctaGroupRef: React.RefObject<HTMLElement>;
   statusPillRef: React.RefObject<HTMLElement>;
   chapterLabelRef: React.RefObject<HTMLElement>;
-  impactChyronRef: React.RefObject<HTMLElement>;
+  experienceRef: React.RefObject<HTMLElement>;
 };
 
 export function HeroPinController(p: Props) {
@@ -60,16 +60,16 @@ export function HeroPinController(p: Props) {
       gsap.set(p.sublineRef.current, { opacity: 0.78 });
       gsap.set(p.ctaGroupRef.current, { opacity: 1, x: 0 });
       gsap.set(p.statusPillRef.current, { opacity: 1 });
-      // Impact chyron starts hidden and reveals during the dwell beat —
-      // narrative arc: name climax → "here are the receipts" → CTAs.
-      const chyronRows = p.impactChyronRef.current?.querySelectorAll(
-        "[data-impact-row]",
+      // Experience starts hidden and reveals during the dwell beat —
+      // narrative arc: name climax → "here is the arc" → CTAs.
+      const experienceRows = p.experienceRef.current?.querySelectorAll(
+        "[data-experience-row]",
       );
-      if (p.impactChyronRef.current) {
-        gsap.set(p.impactChyronRef.current, { opacity: 0 });
+      if (p.experienceRef.current) {
+        gsap.set(p.experienceRef.current, { opacity: 0 });
       }
-      if (chyronRows) {
-        gsap.set(chyronRows, { opacity: 0, y: 14 });
+      if (experienceRows) {
+        gsap.set(experienceRows, { opacity: 0, y: 14 });
       }
 
       // Music-video text axis state, scoped to the hero <section>:
@@ -187,16 +187,16 @@ export function HeroPinController(p: Props) {
       // Container fades in at 0.84, rows stagger in at 0.86 with a subtle
       // expo.out lift so each number "stamps" rather than fades.
       tl.to(p.chapterLabelRef.current, {
-        textContent: "04 · RECEIPTS",
+        textContent: "04 · ARC",
         duration: 0.05,
       }, 0.84);
-      tl.to(p.impactChyronRef.current, {
+      tl.to(p.experienceRef.current, {
         opacity: 1,
         duration: 0.10,
         ease: "power2.out",
       }, 0.84);
-      if (chyronRows && chyronRows.length > 0) {
-        tl.to(chyronRows, {
+      if (experienceRows && experienceRows.length > 0) {
+        tl.to(experienceRows, {
           opacity: 1,
           y: 0,
           duration: 0.20,
