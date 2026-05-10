@@ -21,10 +21,14 @@ export function HeroResponsiveLayout({ viewport, copy, silhouette }: Props) {
         </div>
       );
     }
+    // pt is `clamp(16px, 3vh, 64px)` so the top inset breathes on tall
+    // displays but collapses on shorter laptop viewports (~700-800px) where
+    // the original `pt-[8vh]` was pushing the CTA pills past the visible
+    // bottom of the pinned 100dvh frame.
     return (
-      <div className="relative grid h-[100dvh] grid-cols-[minmax(560px,1fr)_360px] items-start gap-12 px-10 pt-[8vh] xl:gap-16">
+      <div className="relative grid h-[100dvh] grid-cols-[minmax(560px,1fr)_360px] items-start gap-12 px-10 pt-[clamp(16px,3vh,64px)] xl:gap-16">
         <div className="relative z-10">{copy}</div>
-        <div className="relative flex h-full items-center justify-end pt-[2vh]">{silhouette}</div>
+        <div className="relative flex h-full items-center justify-end">{silhouette}</div>
       </div>
     );
   }

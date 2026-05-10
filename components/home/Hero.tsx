@@ -104,7 +104,7 @@ export function Hero() {
 
       <h2
         ref={nameRef}
-        className="mt-6 text-[44px] leading-none tracking-[-1.5px] text-white sm:text-[64px] lg:text-[96px] lg:tracking-[-3.5px]"
+        className="mt-6 text-[44px] leading-none tracking-[-1.5px] text-white sm:text-[64px] lg:text-[clamp(64px,9vw,96px)] lg:tracking-[-3.5px]"
         style={{
           fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
           fontWeight: 300,
@@ -123,7 +123,7 @@ export function Hero() {
         <EditableText page="home" slot="hero.subtext" fallback="PM crafting products at the intersection of Data, AI, and users." as="span" />
       </p>
 
-      <div ref={ctaGroupRef} className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div ref={ctaGroupRef} className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
         <a href="#work" className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black text-center sm:text-left">
           <EditableText page="home" slot="hero.ctaPrimary" fallback="View selected work →" as="span" singleLine />
         </a>
