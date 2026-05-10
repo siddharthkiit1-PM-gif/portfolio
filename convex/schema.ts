@@ -79,6 +79,23 @@ export default defineSchema({
     title: v.string(),
     metric: v.string(),
     outcome: v.optional(v.string()),
+    // Optional so existing rows in production Convex continue to validate
+    // without a backfill. Components fall back to EXPERIENCE_ROLE_DEFAULTS
+    // when the live row is missing these.
+    location: v.optional(v.string()),
+    pillars: v.optional(
+      v.array(
+        v.object({
+          label: v.string(),
+          bullets: v.array(
+            v.object({
+              text: v.string(),
+              metric: v.optional(v.string()),
+            }),
+          ),
+        }),
+      ),
+    ),
     updatedAt: v.number(),
   })
     .index("by_order", ["order"])
