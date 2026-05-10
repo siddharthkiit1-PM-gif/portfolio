@@ -19,6 +19,12 @@ export type RoleDefault = {
   company: string;
   title: string;
   metric: string;
+  outcome?: string;
+  location?: string;
+  pillars?: {
+    label: string;
+    bullets: { text: string; metric?: string }[];
+  }[];
 };
 
 export const EXPERIENCE_ROLE_DEFAULTS: RoleDefault[] = [

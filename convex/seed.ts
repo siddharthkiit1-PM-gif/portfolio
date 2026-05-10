@@ -84,6 +84,11 @@ export const seedExperienceRoles = internalMutation({
         company: role.company,
         title: role.title,
         metric: role.metric,
+        outcome: role.outcome,
+        location: role.location,
+        pillars: role.pillars as unknown as
+          | { label: string; bullets: { text: string; metric?: string }[] }[]
+          | undefined,
         updatedAt: Date.now(),
       });
       inserted++;

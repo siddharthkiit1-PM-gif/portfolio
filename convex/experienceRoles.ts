@@ -27,6 +27,20 @@ export const upsert = mutation({
     title: v.string(),
     metric: v.string(),
     outcome: v.optional(v.string()),
+    location: v.optional(v.string()),
+    pillars: v.optional(
+      v.array(
+        v.object({
+          label: v.string(),
+          bullets: v.array(
+            v.object({
+              text: v.string(),
+              metric: v.optional(v.string()),
+            }),
+          ),
+        }),
+      ),
+    ),
   },
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
@@ -39,6 +53,8 @@ export const upsert = mutation({
         title: args.title,
         metric: args.metric,
         outcome: args.outcome,
+        location: args.location,
+        pillars: args.pillars,
         updatedAt: now,
       });
       return args.id;
@@ -50,6 +66,8 @@ export const upsert = mutation({
       title: args.title,
       metric: args.metric,
       outcome: args.outcome,
+      location: args.location,
+      pillars: args.pillars,
       updatedAt: now,
     });
   },
