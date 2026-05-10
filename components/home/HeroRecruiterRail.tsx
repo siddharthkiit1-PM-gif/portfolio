@@ -85,7 +85,7 @@ export function HeroRecruiterRail() {
             <EditableText
               page="home"
               slot="hero.recruiter.headline"
-              fallback="Looking for senior product manager?"
+              fallback="Looking for product manager?"
               as="span"
               singleLine
             />
