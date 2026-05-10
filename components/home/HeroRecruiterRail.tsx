@@ -63,7 +63,7 @@ export function HeroRecruiterRail() {
       }}
     >
       <div className="flex flex-col items-start gap-6">
-        <Monogram size={68} />
+        <Monogram size={76} photoSrc="/portrait/avatar.jpg" photoAlt="Siddharth Agrawal" />
 
         <div aria-hidden className="h-px w-12" style={{ background: HAIRLINE }} />
 
