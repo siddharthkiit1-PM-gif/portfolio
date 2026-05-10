@@ -13,7 +13,7 @@ export async function requireAdmin(ctx: MutationCtx | QueryCtx) {
   if (!identity?.email) throw new Error("No identity email");
   const userRow = await ctx.db
     .query("users")
-    .withIndex("by_email", (q) => q.eq("email", identity.email!.toLowerCase()))
+    .withIndex("email", (q) => q.eq("email", identity.email!.toLowerCase()))
     .unique();
   if (!userRow || userRow.role !== "admin") throw new Error("Forbidden");
   return userRow;

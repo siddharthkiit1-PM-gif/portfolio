@@ -10,7 +10,11 @@ export default defineSchema({
     name: v.optional(v.string()),
     role: v.union(v.literal("admin"), v.literal("viewer")),
     createdAt: v.number(),
-  }).index("by_email", ["email"]),
+  })
+    // Index name is "email" (not "by_email") because Convex Auth's
+    // `uniqueUserWithVerifiedEmail` looks up the users table via an index
+    // literally named "email". All in-repo callers use this same name.
+    .index("email", ["email"]),
 
   siteContent: defineTable({
     page: v.string(), // "home" | "about" | ...

@@ -23,7 +23,7 @@ export const ensureUserRecord = mutation({
     }
     const existing = await ctx.db
       .query("users")
-      .withIndex("by_email", (q) => q.eq("email", args.email.toLowerCase()))
+      .withIndex("email", (q) => q.eq("email", args.email.toLowerCase()))
       .unique();
 
     const role = isAdminEmail(args.email, getAllowlist()) ? "admin" : "viewer";
@@ -48,7 +48,7 @@ export const testEnsureAdmin = internalMutation({
     const norm = email.toLowerCase();
     const existing = await ctx.db
       .query("users")
-      .withIndex("by_email", (q) => q.eq("email", norm))
+      .withIndex("email", (q) => q.eq("email", norm))
       .unique();
     if (existing) {
       await ctx.db.patch(existing._id, { role: "admin" });
@@ -74,7 +74,7 @@ export const currentUser = query({
     if (!identity?.email) return null;
     const row = await ctx.db
       .query("users")
-      .withIndex("by_email", (q) => q.eq("email", identity.email!.toLowerCase()))
+      .withIndex("email", (q) => q.eq("email", identity.email!.toLowerCase()))
       .unique();
     return row;
   },
