@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { useReducedMotion } from "./useReducedMotion";
 
 export type CountUpParts = {
@@ -16,6 +16,10 @@ export type CountUpParts = {
  * Splits a display value like `"$500K"` into `{ prefix, number, suffix }`.
  * If no digits are present the entire string is returned as `prefix` and
  * `number` is 0 — the caller can then decide to skip the count animation.
+ *
+ * Note: thousands separators are not stripped. A value like `"1,200"` parses
+ * as `{ prefix: "", number: 1, suffix: ",200" }` since the regex stops at the
+ * first non-digit run after the leading digits.
  */
 export function parseCountUpValue(value: string): CountUpParts {
   const match = value.match(/^([^\d]*)(\d+)(.*)$/);
@@ -59,14 +63,15 @@ export function useCountUp<T extends HTMLElement = HTMLElement>(
   const { durationMs = 1200, delayMs = 0, threshold = 0.6 } = options;
   const reduced = useReducedMotion();
   const ref = useRef<T | null>(null);
-  const parts = parseCountUpValue(value);
+  const parts = useMemo(() => parseCountUpValue(value), [value]);
 
-  // When reduced motion is on, or the value contains no digits, render the
-  // final string immediately and skip the observer entirely.
+  // Skip the animation when reduced motion is on, when the value contains
+  // no digits, or when the target is 0.
   const skipAnimation = reduced || parts.number === 0;
-  const [display, setDisplay] = useState<string>(() =>
-    skipAnimation ? value : `${parts.prefix}0${parts.suffix}`,
-  );
+  // Initialize to the full value so SSR/first paint renders the real string
+  // (better for SEO/scrapers, and avoids a one-frame "$0K" flash for
+  // reduced-motion users before `useReducedMotion` flips post-mount).
+  const [display, setDisplay] = useState<string>(value);
 
   useEffect(() => {
     if (skipAnimation) {
@@ -75,6 +80,10 @@ export function useCountUp<T extends HTMLElement = HTMLElement>(
     }
     const el = ref.current;
     if (!el) return;
+
+    // Reset to the "0" representation before wiring up the observer so the
+    // animation starts from zero rather than from the full value.
+    setDisplay(`${parts.prefix}0${parts.suffix}`);
 
     let rafId = 0;
     let startTimeoutId: number | undefined;
@@ -117,11 +126,10 @@ export function useCountUp<T extends HTMLElement = HTMLElement>(
       if (startTimeoutId !== undefined) window.clearTimeout(startTimeoutId);
       if (rafId) cancelAnimationFrame(rafId);
     };
-    // value, durationMs, delayMs, threshold are stable per-mount in our
-    // call sites; intentionally excluding them keeps the animation from
-    // restarting on parent re-render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [skipAnimation]);
+    // Re-run when `value` or any animation option changes. This is the
+    // desired behavior for live admin edits: a new target value should
+    // restart the count-up animation against the fresh parts.
+  }, [skipAnimation, value, parts, durationMs, delayMs, threshold]);
 
   return { ref, display };
 }
