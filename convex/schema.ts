@@ -8,8 +8,20 @@ export default defineSchema({
   users: defineTable({
     email: v.string(),
     name: v.optional(v.string()),
-    role: v.union(v.literal("admin"), v.literal("viewer")),
-    createdAt: v.number(),
+    // `role` and `createdAt` are populated by `users.ensureUserRecord` right
+    // after Convex Auth's default `createOrUpdateUser` inserts the bare row
+    // with just `email`. They MUST stay optional here so the auth lib's
+    // initial insert validates against this schema. Code that reads these
+    // fields (e.g. `requireAdmin`) handles the absent case as "not admin".
+    role: v.optional(v.union(v.literal("admin"), v.literal("viewer"))),
+    createdAt: v.optional(v.number()),
+    // Convex Auth's default upsert may also write these standard OAuth-style
+    // fields. List them here so the schema accepts the row on first insert.
+    image: v.optional(v.string()),
+    emailVerificationTime: v.optional(v.number()),
+    phone: v.optional(v.string()),
+    phoneVerificationTime: v.optional(v.number()),
+    isAnonymous: v.optional(v.boolean()),
   })
     // Index name is "email" (not "by_email") because Convex Auth's
     // `uniqueUserWithVerifiedEmail` looks up the users table via an index
