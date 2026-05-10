@@ -1,5 +1,5 @@
 import { Hero } from "@/components/home/Hero";
-import { HeroCaseStudiesPlaceholder } from "@/components/home/HeroCaseStudiesPlaceholder";
+import { ExperienceSection } from "@/components/experience/ExperienceSection";
 import { ProjectGridPlaceholder } from "@/components/home/ProjectGridPlaceholder";
 import { AboutPreviewPlaceholder } from "@/components/home/AboutPreviewPlaceholder";
 import { ContactCTA } from "@/components/home/ContactCTA";
@@ -12,7 +12,7 @@ export default function HomePage() {
       <CinematicIntro />
       <Hero />
       <Reveal>
-        <HeroCaseStudiesPlaceholder />
+        <ExperienceSection animate={true} />
       </Reveal>
       <Reveal>
         <ProjectGridPlaceholder />

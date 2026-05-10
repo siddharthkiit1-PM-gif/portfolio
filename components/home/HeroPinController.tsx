@@ -32,7 +32,6 @@ type Props = HeroPinHandles & {
   ctaGroupRef: React.RefObject<HTMLElement>;
   statusPillRef: React.RefObject<HTMLElement>;
   chapterLabelRef: React.RefObject<HTMLElement>;
-  experienceRef: React.RefObject<HTMLElement>;
 };
 
 export function HeroPinController(p: Props) {
@@ -60,17 +59,6 @@ export function HeroPinController(p: Props) {
       gsap.set(p.sublineRef.current, { opacity: 0.78 });
       gsap.set(p.ctaGroupRef.current, { opacity: 1, x: 0 });
       gsap.set(p.statusPillRef.current, { opacity: 1 });
-      // Experience starts hidden and reveals during the dwell beat —
-      // narrative arc: name climax → "here is the arc" → CTAs.
-      const experienceRows = p.experienceRef.current?.querySelectorAll(
-        "[data-experience-row]",
-      );
-      if (p.experienceRef.current) {
-        gsap.set(p.experienceRef.current, { opacity: 0 });
-      }
-      if (experienceRows) {
-        gsap.set(experienceRows, { opacity: 0, y: 14 });
-      }
 
       // Music-video text axis state, scoped to the hero <section>:
       //   --ka-split  chromatic-aberration offset in px (number)
@@ -181,29 +169,11 @@ export function HeroPinController(p: Props) {
       tl.to(p.ctaGroupRef.current, { opacity: 1, x: 0, duration: 0.16, ease: "back.out(1.4)", stagger: 0.06 }, 0.78);
       tl.to(p.statusPillRef.current, { opacity: 1, duration: 0.10 }, 0.82);
 
-      // 85–100%: DWELL + RECEIPTS — viewer rests on the resolved identity
-      // and the impact chyron lands as the post-climax beat. Narrative arc:
-      //   name climax → "here are the receipts" → CTAs / status.
-      // Container fades in at 0.84, rows stagger in at 0.86 with a subtle
-      // expo.out lift so each number "stamps" rather than fades.
+      // 85–100%: DWELL — viewer rests on the resolved identity.
       tl.to(p.chapterLabelRef.current, {
         textContent: "04 · ARC",
         duration: 0.05,
       }, 0.84);
-      tl.to(p.experienceRef.current, {
-        opacity: 1,
-        duration: 0.10,
-        ease: "power2.out",
-      }, 0.84);
-      if (experienceRows && experienceRows.length > 0) {
-        tl.to(experienceRows, {
-          opacity: 1,
-          y: 0,
-          duration: 0.20,
-          ease: "expo.out",
-          stagger: 0.07,
-        }, 0.86);
-      }
       // Explicit no-op tween keeps the timeline alive through 1.0 so the
       // resolved warp state persists across the full dwell window.
       tl.to(warpRef, { current: 1.0, duration: 0.15, ease: "none" }, 0.85);

@@ -7,7 +7,6 @@ import { HeroResponsiveLayout } from "./HeroResponsiveLayout";
 import { HeroChapterLabel } from "./HeroChapterLabel";
 import { ChromaticText } from "./ChromaticText";
 import { FlowingGradientText } from "./FlowingGradientText";
-import { Experience } from "./Experience";
 import { HeroRecruiterRail } from "./HeroRecruiterRail";
 import { useDeviceTier } from "@/lib/motion/useDeviceTier";
 import { useViewportClass } from "@/lib/motion/useViewportClass";
@@ -43,19 +42,11 @@ export function Hero() {
   const ctaGroupRef = useRef<HTMLDivElement>(null);
   const statusPillRef = useRef<HTMLDivElement>(null);
   const chapterLabelRef = useRef<HTMLDivElement>(null);
-  const experienceRef = useRef<HTMLDivElement>(null);
 
   const cinemaActive = tier !== "static";
 
   const copy = (
-    // Wrapper is `relative` so Experience can be absolute-positioned at
-    // `top: 100%` below the CTAs without contributing to the copy column's
-    // layout height. On shorter viewports the cinematic typography stack
-    // (h1 + kinetic line + 96px name + subtext) plus Experience would push
-    // the CTAs past the bottom of the pinned section, where `overflow-hidden`
-    // clips them. Floating Experience out of flow keeps the CTAs anchored
-    // inside the visible viewport while preserving the dwell-beat reveal.
-    <div className="relative max-w-[640px]">
+    <div className="max-w-[640px]">
       <HeroChapterLabel ref={chapterLabelRef} defaultLabel="PRODUCT MANAGER · BUILDER · 2018 — NOW" />
 
       <h1
@@ -136,9 +127,6 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="absolute left-0 right-0 top-full">
-        <Experience ref={experienceRef} />
-      </div>
     </div>
   );
 
@@ -187,7 +175,6 @@ export function Hero() {
           ctaGroupRef={ctaGroupRef as React.RefObject<HTMLElement>}
           statusPillRef={statusPillRef as React.RefObject<HTMLElement>}
           chapterLabelRef={chapterLabelRef as React.RefObject<HTMLElement>}
-          experienceRef={experienceRef as React.RefObject<HTMLElement>}
         />
       )}
 
