@@ -64,6 +64,10 @@ export default defineSchema({
     email: v.string(),
     linkedinUrl: v.string(),
     resumeUrl: v.string(),
+    // Optional so existing rows (written before GitHub was a tracked field)
+    // continue to validate; the rail and admin form fall back to the literal
+    // until an admin saves a value.
+    githubUrl: v.optional(v.string()),
     phone: v.optional(v.string()),
     updatedAt: v.number(),
   }).index("by_key", ["key"]),

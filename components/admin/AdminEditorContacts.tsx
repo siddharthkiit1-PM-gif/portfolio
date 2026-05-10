@@ -34,6 +34,7 @@ const FALLBACK = {
   email: "hello@siddharthagrawal.com",
   linkedinUrl: "https://www.linkedin.com/in/siddharthagrawal18/?skipRedirect=true",
   resumeUrl: "/Siddharth_Agrawal_Resume.pdf",
+  githubUrl: "https://github.com/siddharthkiit1-PM-gif",
   phone: "",
 };
 
@@ -41,6 +42,7 @@ type FormState = {
   email: string;
   linkedinUrl: string;
   resumeUrl: string;
+  githubUrl: string;
   phone: string;
 };
 
@@ -71,6 +73,7 @@ function ContactsForm({ initial }: { initial: ContactsRow }) {
     email: initial?.email ?? FALLBACK.email,
     linkedinUrl: initial?.linkedinUrl ?? FALLBACK.linkedinUrl,
     resumeUrl: initial?.resumeUrl ?? FALLBACK.resumeUrl,
+    githubUrl: initial?.githubUrl ?? FALLBACK.githubUrl,
     phone: initial?.phone ?? FALLBACK.phone,
   }));
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">(
@@ -87,6 +90,7 @@ function ContactsForm({ initial }: { initial: ContactsRow }) {
         email: form.email.trim(),
         linkedinUrl: form.linkedinUrl.trim(),
         resumeUrl: form.resumeUrl.trim(),
+        githubUrl: form.githubUrl.trim() ? form.githubUrl.trim() : undefined,
         phone: form.phone.trim() ? form.phone.trim() : undefined,
       });
       setStatus("saved");
@@ -127,6 +131,13 @@ function ContactsForm({ initial }: { initial: ContactsRow }) {
         value={form.resumeUrl}
         onChange={(v) => setForm({ ...form, resumeUrl: v })}
         hint="Absolute URL or site-relative path (e.g. /Siddharth_Agrawal_Resume.pdf)"
+      />
+      <Field
+        label="GitHub URL (optional)"
+        id="contacts-github"
+        type="url"
+        value={form.githubUrl}
+        onChange={(v) => setForm({ ...form, githubUrl: v })}
       />
       <Field
         label="Phone (optional)"

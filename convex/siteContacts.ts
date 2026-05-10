@@ -20,6 +20,7 @@ export const upsert = mutation({
     email: v.string(),
     linkedinUrl: v.string(),
     resumeUrl: v.string(),
+    githubUrl: v.optional(v.string()),
     phone: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -35,6 +36,7 @@ export const upsert = mutation({
         email: args.email,
         linkedinUrl: args.linkedinUrl,
         resumeUrl: args.resumeUrl,
+        githubUrl: args.githubUrl,
         phone: args.phone,
         updatedAt: Date.now(),
       });
@@ -45,6 +47,7 @@ export const upsert = mutation({
       email: args.email,
       linkedinUrl: args.linkedinUrl,
       resumeUrl: args.resumeUrl,
+      githubUrl: args.githubUrl,
       phone: args.phone,
       updatedAt: Date.now(),
     });

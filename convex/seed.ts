@@ -52,6 +52,7 @@ export const seedSiteContacts = internalMutation({
       email: "hello@siddharthagrawal.com",
       linkedinUrl: "https://www.linkedin.com/in/siddharthagrawal18/?skipRedirect=true",
       resumeUrl: "/Siddharth_Agrawal_Resume.pdf",
+      githubUrl: "https://github.com/siddharthkiit1-PM-gif",
       updatedAt: Date.now(),
     });
     return { inserted: 1 as const };

@@ -22,7 +22,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { EditableText } from "@/components/editable/EditableText";
 import { Monogram } from "@/components/brand/Monogram";
-import { LinkedInIcon, ResumeIcon, EmailIcon } from "@/components/brand/SocialIcons";
+import { LinkedInIcon, ResumeIcon, EmailIcon, GitHubIcon } from "@/components/brand/SocialIcons";
 
 const MONO: React.CSSProperties = {
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
@@ -43,12 +43,14 @@ const HAIRLINE_FAINT = "rgba(255,255,255,0.08)";
 const EMAIL = "hello@siddharthagrawal.com";
 const LINKEDIN_URL = "https://www.linkedin.com/in/siddharthagrawal18/?skipRedirect=true";
 const RESUME_URL = "/Siddharth_Agrawal_Resume.pdf";
+const GITHUB_URL = "https://github.com/siddharthkiit1-PM-gif";
 
 export function HeroRecruiterRail() {
   const contacts = useQuery(api.siteContacts.get, {});
   const email = contacts?.email ?? EMAIL;
   const linkedinUrl = contacts?.linkedinUrl ?? LINKEDIN_URL;
   const resumeUrl = contacts?.resumeUrl ?? RESUME_URL;
+  const githubUrl = contacts?.githubUrl ?? GITHUB_URL;
 
   return (
     <aside
@@ -126,40 +128,56 @@ export function HeroRecruiterRail() {
           style={{ background: HAIRLINE_FAINT }}
         />
 
-        {/* Contact icon row — sharp glyphs in pill chips. Email keeps the
-            address visible for one-glance copy; LinkedIn + résumé collapse
-            to icon-only since their semantics are universal. */}
-        <div className="flex w-full items-center gap-2">
-          <a
-            href={linkedinUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            aria-label="LinkedIn"
-            className="inline-flex size-9 items-center justify-center rounded-full text-white/80 transition hover:text-white"
-            style={{
-              background: "rgba(255,255,255,0.04)",
-              border: `1px solid ${HAIRLINE_FAINT}`,
-            }}
-          >
-            <LinkedInIcon />
-          </a>
-          <a
-            href={resumeUrl}
-            target="_blank"
-            rel="noreferrer noopener"
-            aria-label="Résumé (PDF)"
-            className="inline-flex size-9 items-center justify-center rounded-full text-white/80 transition hover:text-white"
-            style={{
-              background: "rgba(255,255,255,0.04)",
-              border: `1px solid ${HAIRLINE_FAINT}`,
-            }}
-          >
-            <ResumeIcon />
-          </a>
+        {/* Contact links — icon-only chips on the top row (LinkedIn brand
+            mark, GitHub Octocat, résumé glyph) keep the social row scannable
+            at one glance. Email gets its own pill row below so the address
+            can stay readable without truncation. */}
+        <div className="flex w-full flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <a
+              href={linkedinUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="LinkedIn"
+              className="inline-flex size-9 items-center justify-center rounded-full text-white/80 transition hover:text-white"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: `1px solid ${HAIRLINE_FAINT}`,
+              }}
+            >
+              <LinkedInIcon />
+            </a>
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="GitHub"
+              className="inline-flex size-9 items-center justify-center rounded-full text-white/80 transition hover:text-white"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: `1px solid ${HAIRLINE_FAINT}`,
+              }}
+            >
+              <GitHubIcon />
+            </a>
+            <a
+              href={resumeUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="Résumé (PDF)"
+              className="inline-flex size-9 items-center justify-center rounded-full text-white/80 transition hover:text-white"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: `1px solid ${HAIRLINE_FAINT}`,
+              }}
+            >
+              <ResumeIcon />
+            </a>
+          </div>
           <a
             href={`mailto:${email}`}
             aria-label={`Email ${email}`}
-            className="inline-flex flex-1 items-center gap-2 rounded-full px-3 text-[12px] text-white/75 transition hover:text-white"
+            className="inline-flex w-full items-center gap-2 rounded-full px-3 text-[12px] text-white/75 transition hover:text-white"
             style={{
               background: "rgba(255,255,255,0.04)",
               border: `1px solid ${HAIRLINE_FAINT}`,
