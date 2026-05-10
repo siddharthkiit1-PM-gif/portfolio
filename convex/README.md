@@ -88,3 +88,27 @@ function handleButtonPress() {
 Use the Convex CLI to push your functions to a deployment. See everything
 the Convex CLI can do by running `npx convex -h` in your project root
 directory. To learn more, launch the docs with `npx convex docs`.
+
+## Tables
+
+### `siteContacts`
+
+Singleton table keyed by `key: "primary"`. Holds the contact endpoints surfaced in the hero recruiter rail.
+
+- Fields: `email`, `linkedinUrl`, `resumeUrl`, `phone?`, `updatedAt`, `key`.
+- Index: `by_key` (`["key"]`).
+- Public query: `siteContacts.get` (returns the singleton or null).
+- Admin mutation: `siteContacts.upsert` (inserts or patches).
+- Read sites: `components/home/HeroRecruiterRail.tsx` (with literal fallback for first paint / empty DB).
+- Seed: `seedSiteContacts` internal mutation in `convex/seed.ts`.
+
+### `experienceRoles`
+
+Ordered list of career-arc rows rendered in the experience section.
+
+- Fields: `order`, `dates`, `company`, `title`, `metric`, `outcome?`, `updatedAt`.
+- Indexes: `by_order` (`["order"]`), `by_company_dates` (`["company", "dates"]`).
+- Public query: `experienceRoles.list` (ordered ascending).
+- Admin mutations: `experienceRoles.upsert`, `experienceRoles.remove`, `experienceRoles.reorder({ orderedIds })`.
+- Read site: `components/home/Experience.tsx` (with `EXPERIENCE_ROLE_DEFAULTS` from `lib/defaults/experienceRoles.ts` as fallback).
+- Seed: `seedExperienceRoles` internal mutation in `convex/seed.ts`.

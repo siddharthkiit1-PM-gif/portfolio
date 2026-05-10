@@ -1,14 +1,12 @@
 import Link from "next/link";
+import { Monogram } from "@/components/brand/Monogram";
 import { StickyResumePill } from "./StickyResumePill";
 
 export function SiteNav() {
   return (
     <nav className="absolute inset-x-0 top-0 z-30 flex items-center justify-between px-8 py-5">
-      <Link href="/" className="flex items-center gap-2.5 text-sm">
-        <span
-          aria-hidden
-          className="inline-block size-5 rounded-md bg-gradient-to-br from-violet-400 to-cyan-400"
-        />
+      <Link href="/" className="flex items-center gap-3 text-sm" aria-label="Home — Siddharth Agrawal">
+        <Monogram size={32} />
         <span className="font-medium">Siddharth Agrawal</span>
       </Link>
       <div className="hidden gap-6 text-[13px] text-white/70 md:flex">

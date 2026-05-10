@@ -1,13 +1,18 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useAdmin } from "./AdminProvider";
 
 export function AdminBar() {
   const { isEditing, previewing, togglePreview } = useAdmin();
+  const pathname = usePathname();
 
   // Only render when admin (editing OR previewing).
   // Anonymous users and non-admins see nothing.
   if (!isEditing && !previewing) return null;
+
+  const onEditPage = pathname?.startsWith("/admin/edit");
 
   return (
     <div className="fixed top-3 left-3 z-50 flex items-center gap-2">
@@ -22,6 +27,14 @@ export function AdminBar() {
       >
         {previewing ? "Resume editing" : "View as visitor"}
       </button>
+      {!onEditPage && (
+        <Link
+          href="/admin/edit"
+          className="rounded-full border border-white/20 bg-white/5 px-3 py-1.5 font-mono text-[11px] tracking-wide text-white/80 backdrop-blur hover:bg-white/10"
+        >
+          Edit content
+        </Link>
+      )}
     </div>
   );
 }

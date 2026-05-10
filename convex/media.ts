@@ -1,19 +1,6 @@
-import { mutation, query, type MutationCtx, type QueryCtx } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import { getAuthUserId } from "@convex-dev/auth/server";
-
-async function requireAdmin(ctx: MutationCtx | QueryCtx) {
-  const authUserId = await getAuthUserId(ctx);
-  if (!authUserId) throw new Error("Not authenticated");
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity?.email) throw new Error("No identity email");
-  const userRow = await ctx.db
-    .query("users")
-    .withIndex("by_email", (q) => q.eq("email", identity.email!.toLowerCase()))
-    .unique();
-  if (!userRow || userRow.role !== "admin") throw new Error("Forbidden");
-  return userRow;
-}
+import { requireAdmin } from "./lib/auth";
 
 export const generateUploadUrl = mutation({
   args: {},

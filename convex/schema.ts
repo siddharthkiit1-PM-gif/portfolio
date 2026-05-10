@@ -39,4 +39,25 @@ export default defineSchema({
     statusPill: v.string(),
     updatedAt: v.number(),
   }).index("by_key", ["key"]),
+
+  siteContacts: defineTable({
+    key: v.literal("primary"),
+    email: v.string(),
+    linkedinUrl: v.string(),
+    resumeUrl: v.string(),
+    phone: v.optional(v.string()),
+    updatedAt: v.number(),
+  }).index("by_key", ["key"]),
+
+  experienceRoles: defineTable({
+    order: v.number(),
+    dates: v.string(),
+    company: v.string(),
+    title: v.string(),
+    metric: v.string(),
+    outcome: v.optional(v.string()),
+    updatedAt: v.number(),
+  })
+    .index("by_order", ["order"])
+    .index("by_company_dates", ["company", "dates"]),
 });

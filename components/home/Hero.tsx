@@ -7,7 +7,8 @@ import { HeroResponsiveLayout } from "./HeroResponsiveLayout";
 import { HeroChapterLabel } from "./HeroChapterLabel";
 import { ChromaticText } from "./ChromaticText";
 import { FlowingGradientText } from "./FlowingGradientText";
-import { ImpactChyron } from "./ImpactChyron";
+import { Experience } from "./Experience";
+import { HeroRecruiterRail } from "./HeroRecruiterRail";
 import { useDeviceTier } from "@/lib/motion/useDeviceTier";
 import { useViewportClass } from "@/lib/motion/useViewportClass";
 
@@ -20,10 +21,12 @@ import { useViewportClass } from "@/lib/motion/useViewportClass";
  * been retired so the scroll feels lighter and the chromatic split
  * is the only effect carrying the cinematic weight.
  *
- * Right column hosts the ImpactChyron — a calm recruiter scan layer
- * that stays readable through the entire pin and answers the "what
- * have you actually shipped?" question without making the user wait
- * for the choreography to resolve.
+ * Layout: cinematic copy column on the left, static HeroRecruiterRail on
+ * the right (monogram + recruiter pitch + contact strip). The rail does
+ * not animate with the scroll — it's the calm scan target a recruiter
+ * can read from frame 0. Below the CTAs, Experience replaces the old
+ * impact chyron and reveals at the dwell beat (~0.86) so the narrative
+ * arc reads: name climax → "here is the arc" → CTAs.
  */
 export function Hero() {
   const tier = useDeviceTier();
@@ -40,7 +43,7 @@ export function Hero() {
   const ctaGroupRef = useRef<HTMLDivElement>(null);
   const statusPillRef = useRef<HTMLDivElement>(null);
   const chapterLabelRef = useRef<HTMLDivElement>(null);
-  const impactChyronRef = useRef<HTMLDivElement>(null);
+  const experienceRef = useRef<HTMLDivElement>(null);
 
   const cinemaActive = tier !== "static";
 
@@ -126,7 +129,7 @@ export function Hero() {
         </div>
       </div>
 
-      <ImpactChyron ref={impactChyronRef} />
+      <Experience ref={experienceRef} />
     </div>
   );
 
@@ -158,7 +161,7 @@ export function Hero() {
 
       <HeroResponsiveLayout
         viewport={viewport}
-        silhouette={null}
+        silhouette={<HeroRecruiterRail />}
         copy={copy}
       />
 
@@ -175,7 +178,7 @@ export function Hero() {
           ctaGroupRef={ctaGroupRef as React.RefObject<HTMLElement>}
           statusPillRef={statusPillRef as React.RefObject<HTMLElement>}
           chapterLabelRef={chapterLabelRef as React.RefObject<HTMLElement>}
-          impactChyronRef={impactChyronRef as React.RefObject<HTMLElement>}
+          experienceRef={experienceRef as React.RefObject<HTMLElement>}
         />
       )}
 
