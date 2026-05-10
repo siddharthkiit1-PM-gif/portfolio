@@ -19,6 +19,7 @@ import { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Doc, Id } from "@/convex/_generated/dataModel";
+import type { RolePillar } from "@/lib/defaults/experienceRoles";
 
 const MONO: React.CSSProperties = {
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
@@ -32,8 +33,10 @@ type Draft = {
   dates: string;
   company: string;
   title: string;
+  location: string;
   metric: string;
   outcome: string;
+  pillars: RolePillar[];
 };
 
 function toDraft(r: Role): Draft {
@@ -41,8 +44,16 @@ function toDraft(r: Role): Draft {
     dates: r.dates,
     company: r.company,
     title: r.title,
+    location: r.location ?? "",
     metric: r.metric,
     outcome: r.outcome ?? "",
+    pillars: (r.pillars ?? []).map((p) => ({
+      label: p.label,
+      bullets: p.bullets.map((b) => ({
+        text: b.text,
+        metric: b.metric,
+      })),
+    })),
   };
 }
 
@@ -51,8 +62,10 @@ function isDirty(draft: Draft, role: Role): boolean {
     draft.dates !== role.dates ||
     draft.company !== role.company ||
     draft.title !== role.title ||
+    (draft.location ?? "") !== (role.location ?? "") ||
     draft.metric !== role.metric ||
-    (draft.outcome ?? "") !== (role.outcome ?? "")
+    (draft.outcome ?? "") !== (role.outcome ?? "") ||
+    JSON.stringify(draft.pillars) !== JSON.stringify(role.pillars ?? [])
   );
 }
 
@@ -126,6 +139,7 @@ export function AdminEditorRoles() {
   }
 
   async function onSave(role: Role, draft: Draft) {
+    const trimmedLocation = draft.location.trim();
     await upsert({
       id: role._id,
       order: role.order,
@@ -134,6 +148,8 @@ export function AdminEditorRoles() {
       title: draft.title,
       metric: draft.metric,
       outcome: draft.outcome.trim() ? draft.outcome.trim() : undefined,
+      location: trimmedLocation ? trimmedLocation : undefined,
+      pillars: draft.pillars.length > 0 ? draft.pillars : undefined,
     });
   }
 
@@ -245,7 +261,12 @@ function RoleRow(props: {
         />
       </div>
 
-      <div className="mt-3">
+      <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-[1fr_1fr]">
+        <RoleField
+          label="Location (optional)"
+          value={draft.location}
+          onChange={(v) => setDraft({ ...draft, location: v })}
+        />
         <RoleField
           label="Outcome (optional)"
           value={draft.outcome}
@@ -253,6 +274,12 @@ function RoleRow(props: {
           textarea
         />
       </div>
+
+      <PillarEditor
+        pillars={draft.pillars}
+        onChange={(next) => setDraft({ ...draft, pillars: next })}
+      />
+
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <button
@@ -326,6 +353,261 @@ function RoleRow(props: {
         </button>
       </div>
     </li>
+  );
+}
+
+function PillarEditor(props: {
+  pillars: RolePillar[];
+  onChange: (next: RolePillar[]) => void;
+}) {
+  const { pillars, onChange } = props;
+
+  function addPillar() {
+    onChange([...pillars, { label: "", bullets: [] }]);
+  }
+
+  function removePillar(pi: number) {
+    onChange(pillars.filter((_, i) => i !== pi));
+  }
+
+  function movePillar(pi: number, direction: -1 | 1) {
+    const target = pi + direction;
+    if (target < 0 || target >= pillars.length) return;
+    const next = pillars.slice();
+    [next[pi], next[target]] = [next[target], next[pi]];
+    onChange(next);
+  }
+
+  function updatePillarLabel(pi: number, label: string) {
+    onChange(
+      pillars.map((p, i) => (i === pi ? { ...p, label } : p)),
+    );
+  }
+
+  function addBullet(pi: number) {
+    onChange(
+      pillars.map((p, i) =>
+        i === pi ? { ...p, bullets: [...p.bullets, { text: "" }] } : p,
+      ),
+    );
+  }
+
+  function removeBullet(pi: number, bi: number) {
+    onChange(
+      pillars.map((p, i) =>
+        i === pi
+          ? { ...p, bullets: p.bullets.filter((_, j) => j !== bi) }
+          : p,
+      ),
+    );
+  }
+
+  function moveBullet(pi: number, bi: number, direction: -1 | 1) {
+    const pillar = pillars[pi];
+    if (!pillar) return;
+    const target = bi + direction;
+    if (target < 0 || target >= pillar.bullets.length) return;
+    const nextBullets = pillar.bullets.slice();
+    [nextBullets[bi], nextBullets[target]] = [
+      nextBullets[target],
+      nextBullets[bi],
+    ];
+    onChange(
+      pillars.map((p, i) => (i === pi ? { ...p, bullets: nextBullets } : p)),
+    );
+  }
+
+  function updateBulletText(pi: number, bi: number, text: string) {
+    onChange(
+      pillars.map((p, i) =>
+        i === pi
+          ? {
+              ...p,
+              bullets: p.bullets.map((b, j) =>
+                j === bi ? { ...b, text } : b,
+              ),
+            }
+          : p,
+      ),
+    );
+  }
+
+  function updateBulletMetric(pi: number, bi: number, metric: string) {
+    const normalized = metric === "" ? undefined : metric;
+    onChange(
+      pillars.map((p, i) =>
+        i === pi
+          ? {
+              ...p,
+              bullets: p.bullets.map((b, j) =>
+                j === bi ? { ...b, metric: normalized } : b,
+              ),
+            }
+          : p,
+      ),
+    );
+  }
+
+  const pillButton: React.CSSProperties = {
+    ...MONO,
+    letterSpacing: "0.18em",
+    textTransform: "uppercase",
+    background: "rgba(255,255,255,0.04)",
+    border: `1px solid ${HAIRLINE_FAINT}`,
+  };
+
+  const inputStyle: React.CSSProperties = {
+    border: `1px solid ${HAIRLINE_FAINT}`,
+  };
+
+  return (
+    <details className="mt-4">
+      <summary
+        className="cursor-pointer text-[11px] text-white/70"
+        style={{
+          ...MONO,
+          letterSpacing: "0.18em",
+          textTransform: "uppercase",
+        }}
+      >
+        Pillars ({pillars.length})
+      </summary>
+      <div className="mt-3 flex flex-col gap-4">
+        {pillars.map((p, pi) => (
+          <div
+            key={pi}
+            className="rounded-lg p-3"
+            style={{ border: `1px solid ${HAIRLINE_FAINT}` }}
+          >
+            <input
+              type="text"
+              value={p.label}
+              onChange={(e) => updatePillarLabel(pi, e.target.value)}
+              className="w-full rounded-md bg-white/5 px-3 py-2 text-sm text-white placeholder-white/35 focus:outline-none"
+              style={inputStyle}
+              placeholder="Pillar label, e.g. Revenue & Growth"
+            />
+            <ul className="mt-3 flex flex-col gap-3">
+              {p.bullets.map((b, bi) => (
+                <li key={bi} className="flex flex-col gap-1.5">
+                  <textarea
+                    value={b.text}
+                    onChange={(e) =>
+                      updateBulletText(pi, bi, e.target.value)
+                    }
+                    rows={2}
+                    className="w-full resize-y rounded-md bg-white/5 px-3 py-2 text-sm text-white placeholder-white/35 focus:outline-none"
+                    style={inputStyle}
+                    placeholder="Bullet text"
+                  />
+                  <input
+                    type="text"
+                    value={b.metric ?? ""}
+                    onChange={(e) =>
+                      updateBulletMetric(pi, bi, e.target.value)
+                    }
+                    className="w-1/2 rounded-md bg-white/5 px-3 py-1.5 text-xs text-white placeholder-white/35 focus:outline-none"
+                    style={inputStyle}
+                    placeholder="Inline metric (optional, e.g. +18%)"
+                  />
+                  <div className="flex flex-wrap gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => moveBullet(pi, bi, -1)}
+                      disabled={bi === 0}
+                      aria-label="Move bullet up"
+                      className="rounded-full px-2 py-0.5 text-[11px] text-white/80 transition hover:bg-white/10 disabled:opacity-30"
+                      style={pillButton}
+                    >
+                      ↑
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveBullet(pi, bi, +1)}
+                      disabled={bi === p.bullets.length - 1}
+                      aria-label="Move bullet down"
+                      className="rounded-full px-2 py-0.5 text-[11px] text-white/80 transition hover:bg-white/10 disabled:opacity-30"
+                      style={pillButton}
+                    >
+                      ↓
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeBullet(pi, bi)}
+                      className="rounded-full px-2 py-0.5 text-[11px] text-red-300 transition hover:bg-red-500/10"
+                      style={{
+                        ...MONO,
+                        letterSpacing: "0.18em",
+                        textTransform: "uppercase",
+                        background: "rgba(248,113,113,0.06)",
+                        border: "1px solid rgba(248,113,113,0.24)",
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-3 flex flex-wrap items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => addBullet(pi)}
+                className="rounded-full px-2.5 py-1 text-[11px] text-white/80 transition hover:bg-white/10"
+                style={pillButton}
+              >
+                + Add bullet
+              </button>
+              <span className="flex-1" />
+              <button
+                type="button"
+                onClick={() => movePillar(pi, -1)}
+                disabled={pi === 0}
+                aria-label="Move pillar up"
+                className="rounded-full px-2 py-1 text-[11px] text-white/80 transition hover:bg-white/10 disabled:opacity-30"
+                style={pillButton}
+              >
+                ↑ Pillar
+              </button>
+              <button
+                type="button"
+                onClick={() => movePillar(pi, +1)}
+                disabled={pi === pillars.length - 1}
+                aria-label="Move pillar down"
+                className="rounded-full px-2 py-1 text-[11px] text-white/80 transition hover:bg-white/10 disabled:opacity-30"
+                style={pillButton}
+              >
+                ↓ Pillar
+              </button>
+              <button
+                type="button"
+                onClick={() => removePillar(pi)}
+                className="rounded-full px-2.5 py-1 text-[11px] text-red-300 transition hover:bg-red-500/10"
+                style={{
+                  ...MONO,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  background: "rgba(248,113,113,0.06)",
+                  border: "1px solid rgba(248,113,113,0.24)",
+                }}
+              >
+                Delete pillar
+              </button>
+            </div>
+          </div>
+        ))}
+        <div>
+          <button
+            type="button"
+            onClick={addPillar}
+            className="rounded-full px-3 py-1.5 text-[11px] text-white/80 transition hover:bg-white/10"
+            style={pillButton}
+          >
+            + Add pillar
+          </button>
+        </div>
+      </div>
+    </details>
   );
 }
 
