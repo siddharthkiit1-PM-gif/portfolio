@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { getAuthUserId } from "@convex-dev/auth/server";
+import { requireAdmin } from "./lib/auth";
 
 export const get = query({
   args: { page: v.string(), slot: v.string() },
@@ -13,6 +13,29 @@ export const get = query({
   },
 });
 
+/** All slots for a single page. */
+export const list = query({
+  args: { page: v.string() },
+  handler: async (ctx, { page }) => {
+    const rows = await ctx.db
+      .query("siteContent")
+      .withIndex("by_page_slot", (q) => q.eq("page", page))
+      .collect();
+    return rows.map((r) => ({ _id: r._id, slot: r.slot, valueJson: r.valueJson }));
+  },
+});
+
+/** Unique page identifiers across all siteContent rows. Small dataset; in-JS dedupe. */
+export const listPages = query({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db.query("siteContent").collect();
+    const seen = new Set<string>();
+    for (const r of rows) seen.add(r.page);
+    return Array.from(seen);
+  },
+});
+
 export const upsert = mutation({
   args: {
     page: v.string(),
@@ -21,19 +44,7 @@ export const upsert = mutation({
     schemaVersion: v.number(),
   },
   handler: async (ctx, args) => {
-    const authUserId = await getAuthUserId(ctx);
-    if (!authUserId) throw new Error("Not authenticated");
-
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity?.email) throw new Error("No identity email");
-
-    const userRow = await ctx.db
-      .query("users")
-      .withIndex("by_email", (q) => q.eq("email", identity.email!.toLowerCase()))
-      .unique();
-    if (!userRow || userRow.role !== "admin") {
-      throw new Error("Forbidden: admin only");
-    }
+    const userRow = await requireAdmin(ctx);
 
     const existing = await ctx.db
       .query("siteContent")

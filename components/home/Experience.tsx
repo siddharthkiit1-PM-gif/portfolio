@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Experience — compact career arc, choreographed into the hero dwell beat.
  *
@@ -19,6 +21,9 @@
  */
 
 import { forwardRef } from "react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { EXPERIENCE_ROLE_DEFAULTS } from "@/lib/defaults/experienceRoles";
 
 const MONO: React.CSSProperties = {
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
@@ -36,28 +41,28 @@ type Role = {
   metric: string;
 };
 
-const ROLES: Role[] = [
-  {
-    dates: "2024 — Now",
-    company: "6sense",
-    title: "Product Manager",
-    metric: "$100K ARR · 0 → 1",
-  },
-  {
-    dates: "2022 — 24",
-    company: "6sense",
-    title: "Business Analyst",
-    metric: "+18% retention",
-  },
-  {
-    dates: "2020 — 22",
-    company: "Accenture",
-    title: "SE · AT&T",
-    metric: "98% ops cut via AI",
-  },
-];
-
 export const Experience = forwardRef<HTMLDivElement>(function Experience(_, ref) {
+  // Convex returns `undefined` while loading, then an array (possibly empty)
+  // once resolved. We render the fallback `EXPERIENCE_ROLE_DEFAULTS` on first
+  // paint so HeroPinController's `useLayoutEffect` always finds three rows to
+  // stage; Convex only swaps the list when it actually has stored rows, which
+  // keeps the controller's element refs stable through hydration.
+  const rows = useQuery(api.experienceRoles.list, {});
+  const data: Role[] =
+    rows && rows.length > 0
+      ? rows.map((r) => ({
+          dates: r.dates,
+          company: r.company,
+          title: r.title,
+          metric: r.metric,
+        }))
+      : EXPERIENCE_ROLE_DEFAULTS.map((r) => ({
+          dates: r.dates,
+          company: r.company,
+          title: r.title,
+          metric: r.metric,
+        }));
+
   return (
     <div ref={ref} data-experience className="mt-8 max-w-[640px]">
       <div className="flex items-baseline justify-between">
@@ -82,14 +87,14 @@ export const Experience = forwardRef<HTMLDivElement>(function Experience(_, ref)
       />
 
       <ul className="flex flex-col">
-        {ROLES.map((role, i) => (
+        {data.map((role, i) => (
           <li
             key={`${role.company}-${role.dates}`}
             data-experience-row
             className="grid grid-cols-[88px_1fr_auto] items-baseline gap-x-4 py-2.5"
             style={{
               borderBottom:
-                i < ROLES.length - 1
+                i < data.length - 1
                   ? "1px solid rgba(255,255,255,0.06)"
                   : "none",
             }}

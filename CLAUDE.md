@@ -21,9 +21,9 @@ Every user-facing string in the site is editable through the admin path. Two fla
 - **Free copy** (headlines, eyebrows, body, CTAs) → wrap in `<EditableText page="..." slot="..." fallback="...">`. The fallback is the source of truth for first paint and seeds Convex on first edit.
 - **Structured data** (contact endpoints, experience roles, projects) → live in a typed Convex collection (`siteContacts`, `experienceRoles`, etc.). Components subscribe via `useQuery`; literals only exist as the seed.
 
-Never hard-code a user-facing string in a component. If a string isn't yet wired through Convex, leave a TODO referencing the next-phase plan rather than shipping a literal.
+Any NEW user-facing string must land in `siteContent` (free copy) or a typed Convex collection (structured data). Never a literal except as a fallback for first paint / empty DB.
 
-The unified admin editor lives at `/admin/edit` (built in `docs/superpowers/plans/2026-05-09-admin-edit-page.md`). The existing inline editor on the live page (toggled via `AdminBar`) covers single-slot edits.
+The unified admin editor lives at `/admin/edit`. Three tabs cover all editable content today: Copy (every `siteContent` slot), Contacts (`siteContacts` singleton), Experience (`experienceRoles` collection). The existing inline `AdminBar` editor still handles single-slot edits on the live page.
 
 ## Plan execution cadence
 

@@ -18,6 +18,8 @@
  * docs/superpowers/plans/2026-05-09-admin-edit-page.md.
  */
 
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { EditableText } from "@/components/editable/EditableText";
 import { Monogram } from "@/components/brand/Monogram";
 import { LinkedInIcon, ResumeIcon, EmailIcon } from "@/components/brand/SocialIcons";
@@ -34,12 +36,20 @@ const SERIF: React.CSSProperties = {
 const HAIRLINE = "rgba(255,255,255,0.14)";
 const HAIRLINE_FAINT = "rgba(255,255,255,0.08)";
 
-// Contact endpoints. Wire to env / Convex in the next-phase admin work.
+// Contact endpoints. Used as fallbacks while the Convex query is loading
+// or when no `siteContacts` row exists yet (fresh DB). Edits in `/admin/edit`
+// upsert a singleton row keyed `"primary"`, after which these literals are
+// shadowed.
 const EMAIL = "hello@siddharthagrawal.com";
 const LINKEDIN_URL = "https://linkedin.com/in/siddharthagrawal";
 const RESUME_URL = "/Siddharth_Agrawal_Resume.pdf";
 
 export function HeroRecruiterRail() {
+  const contacts = useQuery(api.siteContacts.get, {});
+  const email = contacts?.email ?? EMAIL;
+  const linkedinUrl = contacts?.linkedinUrl ?? LINKEDIN_URL;
+  const resumeUrl = contacts?.resumeUrl ?? RESUME_URL;
+
   return (
     <aside
       className="relative w-full max-w-[360px] rounded-2xl px-7 py-8"
@@ -121,7 +131,7 @@ export function HeroRecruiterRail() {
             to icon-only since their semantics are universal. */}
         <div className="flex w-full items-center gap-2">
           <a
-            href={LINKEDIN_URL}
+            href={linkedinUrl}
             target="_blank"
             rel="noreferrer noopener"
             aria-label="LinkedIn"
@@ -134,7 +144,7 @@ export function HeroRecruiterRail() {
             <LinkedInIcon />
           </a>
           <a
-            href={RESUME_URL}
+            href={resumeUrl}
             target="_blank"
             rel="noreferrer noopener"
             aria-label="Résumé (PDF)"
@@ -147,8 +157,8 @@ export function HeroRecruiterRail() {
             <ResumeIcon />
           </a>
           <a
-            href={`mailto:${EMAIL}`}
-            aria-label={`Email ${EMAIL}`}
+            href={`mailto:${email}`}
+            aria-label={`Email ${email}`}
             className="inline-flex flex-1 items-center gap-2 rounded-full px-3 text-[12px] text-white/75 transition hover:text-white"
             style={{
               background: "rgba(255,255,255,0.04)",
@@ -159,7 +169,7 @@ export function HeroRecruiterRail() {
             }}
           >
             <EmailIcon size={14} />
-            <span className="truncate">{EMAIL}</span>
+            <span className="truncate">{email}</span>
           </a>
         </div>
       </div>
