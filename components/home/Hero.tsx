@@ -20,12 +20,12 @@ import { useViewportClass } from "@/lib/motion/useViewportClass";
  * been retired so the scroll feels lighter and the chromatic split
  * is the only effect carrying the cinematic weight.
  *
- * Layout: cinematic copy column on the left, static HeroRecruiterRail on
- * the right (monogram + recruiter pitch + contact strip). The rail does
- * not animate with the scroll — it's the calm scan target a recruiter
- * can read from frame 0. Below the CTAs, Experience replaces the old
- * impact chyron and reveals at the dwell beat (~0.86) so the narrative
- * arc reads: name climax → "here is the arc" → CTAs.
+ * Layout: cinematic copy column on the left (chapter label → headline →
+ * kinetic line → name climax → subline → CTAs), static HeroRecruiterRail
+ * on the right (monogram + recruiter pitch + contact strip). The rail
+ * does not animate with the scroll — it's the calm scan target a recruiter
+ * can read from frame 0. ExperienceSection now lives as a separate sibling
+ * section on app/page.tsx, no longer inside the hero pin.
  */
 export function Hero() {
   const tier = useDeviceTier();
@@ -126,7 +126,6 @@ export function Hero() {
           <EditableText page="home" slot="hero.statusPill" fallback="Open to senior PM roles" as="span" singleLine />
         </div>
       </div>
-
     </div>
   );
 

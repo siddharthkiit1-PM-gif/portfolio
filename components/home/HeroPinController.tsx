@@ -171,7 +171,7 @@ export function HeroPinController(p: Props) {
 
       // 85–100%: DWELL — viewer rests on the resolved identity.
       tl.to(p.chapterLabelRef.current, {
-        textContent: "04 · ARC",
+        textContent: "04 · NOW",
         duration: 0.05,
       }, 0.84);
       // Explicit no-op tween keeps the timeline alive through 1.0 so the
