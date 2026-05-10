@@ -14,6 +14,11 @@ type IconProps = {
   className?: string;
 };
 
+/**
+ * Official LinkedIn brand mark — #0A66C2 rounded square with the white "in"
+ * wordmark. Pulled directly from LinkedIn's brand guidelines so the silhouette
+ * is unmistakable inside the recruiter rail's hover chip.
+ */
 export function LinkedInIcon({ size = 18, className }: IconProps) {
   return (
     <svg
@@ -22,10 +27,14 @@ export function LinkedInIcon({ size = 18, className }: IconProps) {
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.22 8h4.56v15H.22V8zm7.78 0h4.37v2.05h.06c.61-1.15 2.1-2.36 4.32-2.36 4.62 0 5.47 3.04 5.47 7v8.31h-4.56v-7.37c0-1.76-.03-4.03-2.46-4.03-2.46 0-2.84 1.92-2.84 3.9V23H8V8z" />
+      <rect width="24" height="24" rx="4" fill="#0A66C2" />
+      <path
+        fill="#ffffff"
+        d="M7.06 9.5h-2.6v8.5h2.6V9.5zm.18-2.5a1.51 1.51 0 1 1-3.02 0 1.51 1.51 0 0 1 3.02 0zm10.96 5.34c0-2.18-.47-3.84-3.04-3.84-1.23 0-2.06.65-2.4 1.27h-.04V9.5h-2.5v8.5h2.6v-4.2c0-1.1.21-2.16 1.57-2.16 1.34 0 1.36 1.25 1.36 2.23v4.13h2.45v-4.66z"
+      />
     </svg>
   );
 }

@@ -41,7 +41,7 @@ const HAIRLINE_FAINT = "rgba(255,255,255,0.08)";
 // upsert a singleton row keyed `"primary"`, after which these literals are
 // shadowed.
 const EMAIL = "hello@siddharthagrawal.com";
-const LINKEDIN_URL = "https://linkedin.com/in/siddharthagrawal";
+const LINKEDIN_URL = "https://www.linkedin.com/in/siddharthagrawal18/?skipRedirect=true";
 const RESUME_URL = "/Siddharth_Agrawal_Resume.pdf";
 
 export function HeroRecruiterRail() {
