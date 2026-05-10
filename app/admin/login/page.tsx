@@ -1,21 +1,35 @@
 "use client";
 
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useViewer } from "@/lib/auth/useViewer";
 import { Button } from "@/components/ui/button";
 
 export default function AdminLoginPage() {
   const { signIn } = useAuthActions();
+  const viewer = useViewer();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+
+  // If the admin is already signed in and lands here, skip the form and go
+  // straight to the editor. Non-admin authenticated users get bounced home.
+  useEffect(() => {
+    if (viewer.state !== "authenticated") return;
+    router.replace(viewer.isAdmin ? "/admin/edit" : "/");
+  }, [viewer, router]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("sending");
     setError(null);
     try {
-      await signIn("resend", { email });
+      // `redirectTo` lands the user on /admin/edit after they click the
+      // magic link. Convex Auth threads this through the verify flow and
+      // navigates the browser there once the session is created.
+      await signIn("resend", { email, redirectTo: "/admin/edit" });
       setStatus("sent");
     } catch (err) {
       setStatus("error");
