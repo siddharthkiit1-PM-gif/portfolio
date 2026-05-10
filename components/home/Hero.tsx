@@ -60,7 +60,7 @@ export function Hero() {
 
       <h1
         ref={headlineRef}
-        className="mt-6 text-[44px] leading-[1.05] tracking-[-1.5px] sm:text-[56px] lg:text-[62px] lg:tracking-[-2.5px] text-white"
+        className="mt-[clamp(12px,2vh,24px)] text-[44px] leading-[1.05] tracking-[-1.5px] sm:text-[56px] lg:text-[clamp(44px,7vh,62px)] lg:tracking-[-2.5px] text-white"
         style={{
           fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
           fontWeight: 300,
@@ -80,7 +80,7 @@ export function Hero() {
 
       <div
         ref={kineticLineRef}
-        className="mt-6 text-[36px] leading-tight tracking-[-1px] text-white/85 lg:text-[48px]"
+        className="mt-[clamp(12px,2vh,24px)] text-[36px] leading-tight tracking-[-1px] text-white/85 lg:text-[clamp(32px,5vh,48px)]"
         style={{
           fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
           fontWeight: 300,
@@ -104,7 +104,7 @@ export function Hero() {
 
       <h2
         ref={nameRef}
-        className="mt-6 text-[44px] leading-none tracking-[-1.5px] text-white sm:text-[64px] lg:text-[clamp(64px,9vw,96px)] lg:tracking-[-3.5px]"
+        className="mt-[clamp(12px,2vh,24px)] text-[44px] leading-none tracking-[-1.5px] text-white sm:text-[64px] lg:text-[clamp(56px,min(8vw,11vh),80px)] lg:tracking-[-3.5px]"
         style={{
           fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
           fontWeight: 300,
@@ -119,11 +119,11 @@ export function Hero() {
         </ChromaticText>
       </h2>
 
-      <p ref={sublineRef} className="mt-6 max-w-[560px] text-base font-light leading-[1.55] text-white/75 lg:text-lg">
+      <p ref={sublineRef} className="mt-[clamp(12px,2vh,24px)] max-w-[560px] text-base font-light leading-[1.55] text-white/75 lg:text-lg">
         <EditableText page="home" slot="hero.subtext" fallback="PM crafting products at the intersection of Data, AI, and users." as="span" />
       </p>
 
-      <div ref={ctaGroupRef} className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div ref={ctaGroupRef} className="mt-[clamp(16px,3vh,24px)] flex flex-col gap-3 sm:flex-row sm:items-center">
         <a href="#work" className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black text-center sm:text-left">
           <EditableText page="home" slot="hero.ctaPrimary" fallback="View selected work →" as="span" singleLine />
         </a>
