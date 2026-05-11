@@ -50,8 +50,8 @@ const CHANNELS: Channel[] = [
   {
     key: "calendly",
     label: "Book a meeting",
-    handle: "calendly.com/siddharth-agrawal",
-    href: "https://calendly.com/siddharth-agrawal",
+    handle: "calendly.com/siddharth-kiit1/30min",
+    href: "https://calendly.com/siddharth-kiit1/30min",
     brand: "#006BFF",
     Icon: CalendlyMark,
   },
