@@ -2,7 +2,7 @@ import { Hero } from "@/components/home/Hero";
 import { ExperienceSection } from "@/components/experience/ExperienceSection";
 import { ProjectsSection } from "@/components/projects/ProjectsSection";
 import { AboutPreviewPlaceholder } from "@/components/home/AboutPreviewPlaceholder";
-import { ContactCTA } from "@/components/home/ContactCTA";
+import { ContactSection } from "@/components/home/ContactSection";
 import { Reveal } from "@/components/scroll/Reveal";
 import { CinematicIntro } from "@/components/cinematic/CinematicIntro";
 
@@ -21,7 +21,7 @@ export default function HomePage() {
         <AboutPreviewPlaceholder />
       </Reveal>
       <Reveal>
-        <ContactCTA />
+        <ContactSection />
       </Reveal>
     </>
   );

@@ -22,6 +22,7 @@ export const upsert = mutation({
     resumeUrl: v.string(),
     githubUrl: v.optional(v.string()),
     phone: v.optional(v.string()),
+    calendlyUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
@@ -38,6 +39,7 @@ export const upsert = mutation({
         resumeUrl: args.resumeUrl,
         githubUrl: args.githubUrl,
         phone: args.phone,
+        calendlyUrl: args.calendlyUrl,
         updatedAt: Date.now(),
       });
       return existing._id;
@@ -49,6 +51,7 @@ export const upsert = mutation({
       resumeUrl: args.resumeUrl,
       githubUrl: args.githubUrl,
       phone: args.phone,
+      calendlyUrl: args.calendlyUrl,
       updatedAt: Date.now(),
     });
   },

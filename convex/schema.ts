@@ -68,7 +68,13 @@ export default defineSchema({
     // continue to validate; the rail and admin form fall back to the literal
     // until an admin saves a value.
     githubUrl: v.optional(v.string()),
+    // Stored as E.164 digits without the leading "+" (e.g. "917977522907") so
+    // the same value works for both the wa.me chat link and the displayed
+    // "+91 79775 22907" rendering. Used by the Reach Out section's WhatsApp row.
     phone: v.optional(v.string()),
+    // Full Calendly event URL (e.g. https://calendly.com/<user>/30min). Used
+    // by the Reach Out section's "Book a meeting" row.
+    calendlyUrl: v.optional(v.string()),
     updatedAt: v.number(),
   }).index("by_key", ["key"]),
 

@@ -36,6 +36,7 @@ const FALLBACK = {
   resumeUrl: "/Siddharth_Agrawal_Resume.pdf",
   githubUrl: "https://github.com/siddharthkiit1-PM-gif",
   phone: "",
+  calendlyUrl: "",
 };
 
 type FormState = {
@@ -44,6 +45,7 @@ type FormState = {
   resumeUrl: string;
   githubUrl: string;
   phone: string;
+  calendlyUrl: string;
 };
 
 type ContactsRow = Doc<"siteContacts"> | null;
@@ -75,6 +77,7 @@ function ContactsForm({ initial }: { initial: ContactsRow }) {
     resumeUrl: initial?.resumeUrl ?? FALLBACK.resumeUrl,
     githubUrl: initial?.githubUrl ?? FALLBACK.githubUrl,
     phone: initial?.phone ?? FALLBACK.phone,
+    calendlyUrl: initial?.calendlyUrl ?? FALLBACK.calendlyUrl,
   }));
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">(
     "idle",
@@ -92,6 +95,7 @@ function ContactsForm({ initial }: { initial: ContactsRow }) {
         resumeUrl: form.resumeUrl.trim(),
         githubUrl: form.githubUrl.trim() ? form.githubUrl.trim() : undefined,
         phone: form.phone.trim() ? form.phone.trim() : undefined,
+        calendlyUrl: form.calendlyUrl.trim() ? form.calendlyUrl.trim() : undefined,
       });
       setStatus("saved");
       window.setTimeout(() => setStatus("idle"), 1800);
@@ -140,11 +144,20 @@ function ContactsForm({ initial }: { initial: ContactsRow }) {
         onChange={(v) => setForm({ ...form, githubUrl: v })}
       />
       <Field
-        label="Phone (optional)"
+        label="WhatsApp number (optional)"
         id="contacts-phone"
         type="tel"
         value={form.phone}
         onChange={(v) => setForm({ ...form, phone: v })}
+        hint="E.164 digits without the leading + (e.g. 917977522907). Powers the WhatsApp row + wa.me link."
+      />
+      <Field
+        label="Calendly URL (optional)"
+        id="contacts-calendly"
+        type="url"
+        value={form.calendlyUrl}
+        onChange={(v) => setForm({ ...form, calendlyUrl: v })}
+        hint="Full event URL (e.g. https://calendly.com/<user>/30min)."
       />
 
       <div className="flex items-center gap-3 pt-1">
