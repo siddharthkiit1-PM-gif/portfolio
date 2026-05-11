@@ -16,7 +16,7 @@ const MONO: React.CSSProperties = {
 const HAIRLINE_FAINT = "rgba(255,255,255,0.08)";
 
 type Props = {
-  project: Pick<Doc<"projects">, "liveUrl" | "githubUrl" | "figmaUrl">;
+  project: Pick<Doc<"projects">, "liveUrl" | "githubUrl" | "figmaUrl" | "loomUrl">;
   /** Optional inline tech-stack chip row rendered after the icons. */
   techStack?: string[];
 };
@@ -26,6 +26,7 @@ export function ProjectMetadataStrip({ project, techStack }: Props) {
   if (project.liveUrl) links.push({ label: "LIVE", url: project.liveUrl });
   if (project.githubUrl) links.push({ label: "CODE", url: project.githubUrl });
   if (project.figmaUrl) links.push({ label: "FIGMA", url: project.figmaUrl });
+  if (project.loomUrl) links.push({ label: "LOOM", url: project.loomUrl });
 
   if (links.length === 0 && (!techStack || techStack.length === 0)) return null;
 
