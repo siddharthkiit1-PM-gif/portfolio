@@ -24,7 +24,8 @@
  */
 
 import Link from "next/link";
-import { useQuery } from "convex/react";
+import { useState } from "react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Doc, Id } from "@/convex/_generated/dataModel";
 import { ChromaticText } from "@/components/home/ChromaticText";
@@ -50,6 +51,50 @@ const HAIRLINE = "rgba(255,255,255,0.14)";
 const HAIRLINE_FAINT = "rgba(255,255,255,0.08)";
 
 type Project = Doc<"projects">;
+
+function AddProjectButton({ existingCount }: { existingCount: number }) {
+  const upsert = useMutation(api.projects.upsert);
+  const [saving, setSaving] = useState(false);
+
+  async function handleAdd() {
+    if (saving) return;
+    setSaving(true);
+    try {
+      // Mirror AdminEditorProjects.handleNew defaults so a fresh project lands
+      // with the three fact-block slots ready to fill inline.
+      await upsert({
+        slug: `untitled-${existingCount}-${Date.now()}`,
+        order: existingCount,
+        featured: false,
+        title: "Untitled project",
+        year: String(new Date().getFullYear()),
+        techStack: [],
+        problem: "",
+        users: "",
+        value: "",
+      });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleAdd}
+      disabled={saving}
+      className="mt-6 w-full rounded-xl border border-dashed px-6 py-6 text-left text-[13px] text-white/55 transition hover:border-white/30 hover:text-white disabled:opacity-50"
+      style={{
+        ...MONO,
+        letterSpacing: "0.18em",
+        textTransform: "uppercase",
+        borderColor: HAIRLINE_FAINT,
+      }}
+    >
+      {saving ? "Adding…" : "+ Add project"}
+    </button>
+  );
+}
 
 function MiniFact({ label, body }: { label: string; body: string }) {
   return (
@@ -289,7 +334,9 @@ export function ProjectsSection() {
         <div className="mt-[clamp(48px,8vh,96px)]">
           {projects === undefined ? null : projects.length === 0 ? (
             <p className="text-[14px] text-white/55">
-              No projects yet — add some at /admin/edit.
+              {isEditing
+                ? "No projects yet — use \u201C+ Add project\u201D below to create one."
+                : "No projects yet — add some at /admin/edit."}
             </p>
           ) : (
             <div role="list">
@@ -302,6 +349,7 @@ export function ProjectsSection() {
               )}
             </div>
           )}
+          {isEditing && <AddProjectButton existingCount={projects?.length ?? 0} />}
         </div>
 
         <div className="mt-[clamp(48px,8vh,96px)]">
