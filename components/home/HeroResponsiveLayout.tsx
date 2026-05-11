@@ -40,11 +40,15 @@ export function HeroResponsiveLayout({ viewport, copy, silhouette }: Props) {
       </div>
     );
   }
-  // phone
+  // phone — copy leads, rail follows. The recruiter rail on phone is a
+  // secondary scan target; pushing the "I build products" headline below a
+  // 40dvh rail block was burying the primary above-the-fold beat. We also
+  // drop the fixed-height container so the rail can size to its own content
+  // instead of clipping or overflowing inside an h-[40dvh] frame.
   return (
-    <div className="relative flex min-h-[100dvh] flex-col items-stretch gap-6 px-6 pt-12">
-      {hasSilhouette && <div className="relative h-[40dvh] w-full">{silhouette}</div>}
+    <div className="relative flex min-h-[100dvh] flex-col items-stretch gap-10 px-6 pt-10 pb-12">
       <div className="relative z-10">{copy}</div>
+      {hasSilhouette && <div className="relative w-full">{silhouette}</div>}
     </div>
   );
 }

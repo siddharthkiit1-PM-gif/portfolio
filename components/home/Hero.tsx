@@ -49,7 +49,13 @@ export function Hero() {
   const statusPillRef = useRef<HTMLDivElement>(null);
   const chapterLabelRef = useRef<HTMLDivElement>(null);
 
-  const cinemaActive = tier !== "static";
+  // Phone viewports skip the cinematic pin entirely. The pin spacer + scroll-
+  // driven ChromaticText/FlowingGradient choreography reads as broken scrolling
+  // on touch devices ("I build products" / "Build across Data, AI, and users"
+  // freeze mid-scroll, then a tall empty pin-spacer follows). Without the pin,
+  // the hero is just a normal stacked section; the chromatic + gradient text
+  // degrade to clean static styling via their CSS @property initial values.
+  const cinemaActive = viewport !== "phone" && tier !== "static";
 
   const copy = (
     <div className="max-w-[640px]">
