@@ -138,7 +138,8 @@ export function HeroRecruiterRail() {
               href={linkedinUrl}
               target="_blank"
               rel="noreferrer noopener"
-              aria-label="LinkedIn"
+              aria-label="Check my LinkedIn"
+              title="Check my LinkedIn"
               className="inline-flex size-9 items-center justify-center rounded-full text-white/80 transition hover:text-white"
               style={{
                 background: "rgba(255,255,255,0.04)",
