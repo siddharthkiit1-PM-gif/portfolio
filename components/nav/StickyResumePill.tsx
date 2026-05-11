@@ -1,7 +1,7 @@
 "use client";
 
 export function StickyResumePill({
-  resumeHref = "#",
+  resumeHref = "/resume.pdf",
   workHref = "#work",
 }: {
   resumeHref?: string;
@@ -17,6 +17,8 @@ export function StickyResumePill({
       </a>
       <a
         href={resumeHref}
+        target="_blank"
+        rel="noopener noreferrer"
         className="rounded-full bg-white px-3.5 py-1.5 text-xs font-medium text-black hover:bg-white/90"
       >
         Résumé
