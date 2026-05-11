@@ -9,6 +9,7 @@
  * ProjectNarrative; everything else is static editorial typography.
  */
 
+import { useState, useEffect } from "react";
 import { notFound } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -36,6 +37,11 @@ export function ProjectDetail({ slug }: Props) {
       ? { storageId: project.heroImageStorageId }
       : "skip",
   );
+
+  const [heroLoaded, setHeroLoaded] = useState(false);
+  useEffect(() => {
+    setHeroLoaded(true);
+  }, []);
 
   if (project === undefined) return null; // still loading
   if (project === null) notFound();
@@ -95,8 +101,9 @@ export function ProjectDetail({ slug }: Props) {
             <img
               src={heroUrl}
               alt={project.heroImageAlt ?? project.title}
-              className="size-full object-cover opacity-0 transition-opacity duration-700 motion-safe:opacity-100"
-              style={{ opacity: 1 }}
+              className={`size-full object-cover transition-opacity duration-700 motion-reduce:opacity-100 ${
+                heroLoaded ? "opacity-100" : "opacity-0"
+              }`}
               loading="eager"
             />
           </div>
@@ -170,9 +177,9 @@ function NavLink({
   label: string | null;
 }) {
   if (!href || !label) return <div />;
-  const align = direction === "prev" ? "text-left" : "text-right md:text-right";
+  const align = direction === "prev" ? "text-left" : "text-right";
   return (
-    <a href={href} className={`${align} block transition hover:opacity-100 opacity-80`}>
+    <a href={href} className={`${align} block transition opacity-80 hover:opacity-100`}>
       <div
         className="text-[10px] text-white/45"
         style={{

@@ -11,7 +11,10 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const project = await fetchQuery(api.projects.getBySlug, { slug }).catch(() => null);
+  const project = await fetchQuery(api.projects.getBySlug, { slug }).catch((err) => {
+    console.error("generateMetadata: getBySlug failed", { slug, err });
+    return null;
+  });
   if (!project) {
     return { title: "Project \u2014 Siddharth Agrawal" };
   }
