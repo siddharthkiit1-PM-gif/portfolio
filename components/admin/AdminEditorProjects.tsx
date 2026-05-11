@@ -494,7 +494,7 @@ export function AdminEditorProjects() {
             {/* Case-study narrative */}
             <Section
               label="Case-study narrative (optional)"
-              hint="Leave all four blank for hobby projects \u2014 the detail page hides this section automatically."
+              hint="Leave all four blank for hobby projects — the detail page hides this section automatically."
             >
               <Field label="Approach">
                 <Textarea

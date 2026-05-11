@@ -61,7 +61,7 @@ export function ProjectsSection({
             <EditableText
               page="home"
               slot="projects.eyebrowLeft"
-              fallback="PROJECTS \u00B7 2022 \u2014 2026"
+              fallback="PROJECTS · 2022 — 2026"
               as="span"
               singleLine
             />
@@ -97,7 +97,7 @@ export function ProjectsSection({
             <EditableText
               page="home"
               slot="projects.standfirst"
-              fallback="A small set of products I led, designed, or built \u2014 each with the problem, the people, and the result."
+              fallback="A small set of products I led, designed, or built — each with the problem, the people, and the result."
               as="span"
             />
           </p>

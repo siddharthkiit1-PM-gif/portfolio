@@ -65,7 +65,7 @@ export function ProjectsIndex() {
                 <EditableText
                   page="home"
                   slot="projects.indexHeadline"
-                  fallback="Everything I\u2019ve shipped."
+                  fallback="Everything I’ve shipped."
                   as="span"
                   singleLine
                 />
