@@ -32,7 +32,7 @@ const HAIRLINE_FAINT = "rgba(255,255,255,0.08)";
 // siteContacts singleton row exists.
 const FALLBACK = {
   email: "hello@siddharthagrawal.com",
-  linkedinUrl: "https://www.linkedin.com/in/siddharthagrawal18/?skipRedirect=true",
+  linkedinUrl: "https://www.linkedin.com/in/siddharthagrawal18/",
   resumeUrl: "/Siddharth_Agrawal_Resume.pdf",
   githubUrl: "https://github.com/siddharthkiit1-PM-gif",
   phone: "",

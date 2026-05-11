@@ -54,7 +54,7 @@ const HAIRLINE = "rgba(255,255,255,0.10)";
 // Defaults match the literals in HeroRecruiterRail + the seeds so a
 // fresh DB renders the section without a flash of empty.
 const DEFAULT_LINKEDIN =
-  "https://www.linkedin.com/in/siddharthagrawal18/?skipRedirect=true";
+  "https://www.linkedin.com/in/siddharthagrawal18/";
 const DEFAULT_EMAIL = "siddharth.kiit1@gmail.com";
 const DEFAULT_PHONE = "917977522907"; // E.164 digits, no leading +
 const DEFAULT_CALENDLY = "https://calendly.com/siddharth-kiit1/30min";

@@ -41,7 +41,7 @@ const HAIRLINE_FAINT = "rgba(255,255,255,0.08)";
 // upsert a singleton row keyed `"primary"`, after which these literals are
 // shadowed.
 const EMAIL = "hello@siddharthagrawal.com";
-const LINKEDIN_URL = "https://www.linkedin.com/in/siddharthagrawal18/?skipRedirect=true";
+const LINKEDIN_URL = "https://www.linkedin.com/in/siddharthagrawal18/";
 const RESUME_URL = "/Siddharth_Agrawal_Resume.pdf";
 const GITHUB_URL = "https://github.com/siddharthkiit1-PM-gif";
 

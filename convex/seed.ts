@@ -51,7 +51,7 @@ export const seedSiteContacts = internalMutation({
     await ctx.db.insert("siteContacts", {
       key: "primary",
       email: "hello@siddharthagrawal.com",
-      linkedinUrl: "https://www.linkedin.com/in/siddharthagrawal18/?skipRedirect=true",
+      linkedinUrl: "https://www.linkedin.com/in/siddharthagrawal18/",
       resumeUrl: "/Siddharth_Agrawal_Resume.pdf",
       githubUrl: "https://github.com/siddharthkiit1-PM-gif",
       updatedAt: Date.now(),
