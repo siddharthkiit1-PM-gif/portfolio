@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { EditableText } from "@/components/editable/EditableText";
@@ -49,13 +49,23 @@ export function Hero() {
   const statusPillRef = useRef<HTMLDivElement>(null);
   const chapterLabelRef = useRef<HTMLDivElement>(null);
 
-  // Phone viewports skip the cinematic pin entirely. The pin spacer + scroll-
-  // driven ChromaticText/FlowingGradient choreography reads as broken scrolling
-  // on touch devices ("I build products" / "Build across Data, AI, and users"
-  // freeze mid-scroll, then a tall empty pin-spacer follows). Without the pin,
-  // the hero is just a normal stacked section; the chromatic + gradient text
-  // degrade to clean static styling via their CSS @property initial values.
-  const cinemaActive = viewport !== "phone" && tier !== "static";
+  // Cinema choreography only runs when the viewport can actually contain it.
+  //  - Phone: pin spacer + scroll-driven type freeze mid-scroll on touch.
+  //  - Tablet: the rail stacks above the copy and the pinned 100dvh frame
+  //    can't fit both blocks → bottom content clips.
+  //  - Short laptops (< 720px tall): even the desktop two-column layout
+  //    overflows the pinned 100dvh frame → CTAs / status pill get cut.
+  // When cinema is off, the hero degrades to a normal stacked section and
+  // the chromatic + gradient type fall back to clean static styling via
+  // their CSS @property initial values.
+  const [tallEnough, setTallEnough] = useState(true);
+  useEffect(() => {
+    const probe = () => setTallEnough(window.innerHeight >= 720);
+    probe();
+    window.addEventListener("resize", probe);
+    return () => window.removeEventListener("resize", probe);
+  }, []);
+  const cinemaActive = viewport === "desktop" && tier !== "static" && tallEnough;
 
   const copy = (
     <div className="max-w-[640px]">
@@ -63,7 +73,7 @@ export function Hero() {
 
       <h1
         ref={headlineRef}
-        className="mt-[clamp(12px,2vh,24px)] text-[44px] leading-[1.05] tracking-[-1.5px] sm:text-[56px] lg:text-[clamp(44px,7vh,62px)] lg:tracking-[-2.5px] text-white"
+        className="mt-[clamp(8px,1.4vh,18px)] text-[40px] leading-[1.05] tracking-[-1.5px] sm:text-[52px] lg:text-[clamp(40px,5.6vh,56px)] lg:tracking-[-2px] text-white"
         style={{
           fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
           fontWeight: 300,
@@ -83,7 +93,7 @@ export function Hero() {
 
       <div
         ref={kineticLineRef}
-        className="mt-[clamp(12px,2vh,24px)] text-[36px] leading-tight tracking-[-1px] text-white/85 lg:text-[clamp(32px,5vh,48px)]"
+        className="mt-[clamp(8px,1.4vh,18px)] text-[28px] leading-tight tracking-[-1px] text-white/85 sm:text-[32px] lg:text-[clamp(28px,4vh,40px)]"
         style={{
           fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
           fontWeight: 300,
@@ -107,7 +117,7 @@ export function Hero() {
 
       <h2
         ref={nameRef}
-        className="mt-[clamp(12px,2vh,24px)] text-[44px] leading-none tracking-[-1.5px] text-white sm:text-[64px] lg:text-[clamp(56px,min(8vw,11vh),80px)] lg:tracking-[-3.5px]"
+        className="mt-[clamp(8px,1.4vh,18px)] text-[40px] leading-none tracking-[-1.5px] text-white sm:text-[56px] lg:text-[clamp(48px,min(6.5vw,9vh),68px)] lg:tracking-[-3px]"
         style={{
           fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
           fontWeight: 300,
@@ -122,11 +132,11 @@ export function Hero() {
         </ChromaticText>
       </h2>
 
-      <p ref={sublineRef} className="mt-[clamp(12px,2vh,24px)] max-w-[560px] text-base font-light leading-[1.55] text-white/75 lg:text-lg">
+      <p ref={sublineRef} className="mt-[clamp(8px,1.4vh,18px)] max-w-[560px] text-sm font-light leading-[1.5] text-white/75 lg:text-base">
         <EditableText page="home" slot="hero.subtext" fallback="PM crafting products at the intersection of Data, AI, and users." as="span" />
       </p>
 
-      <div ref={ctaGroupRef} className="mt-[clamp(16px,3vh,24px)] flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div ref={ctaGroupRef} className="mt-[clamp(12px,2vh,20px)] flex flex-col gap-3 sm:flex-row sm:items-center">
         <a href="#work" className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black text-center sm:text-left">
           <EditableText page="home" slot="hero.ctaPrimary" fallback="View selected work →" as="span" singleLine />
         </a>

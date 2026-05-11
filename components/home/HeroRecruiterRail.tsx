@@ -54,7 +54,7 @@ export function HeroRecruiterRail() {
 
   return (
     <aside
-      className="relative w-full max-w-[360px] rounded-2xl px-7 py-8"
+      className="relative w-full max-w-[360px] rounded-2xl px-6 py-6 lg:py-7"
       style={{
         background:
           "linear-gradient(180deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.005) 100%)",
@@ -62,8 +62,8 @@ export function HeroRecruiterRail() {
         backdropFilter: "blur(6px)",
       }}
     >
-      <div className="flex flex-col items-start gap-6">
-        <Monogram size={76} photoSrc="/portrait/avatar.jpg" photoAlt="Siddharth Agrawal" />
+      <div className="flex flex-col items-start gap-4 lg:gap-5">
+        <Monogram size={64} photoSrc="/portrait/avatar.jpg" photoAlt="Siddharth Agrawal" />
 
         <div aria-hidden className="h-px w-12" style={{ background: HAIRLINE }} />
 
@@ -81,7 +81,7 @@ export function HeroRecruiterRail() {
             />
           </div>
           <p
-            className="mt-3 text-[24px] leading-[1.15] tracking-tight text-white"
+            className="mt-2 text-[22px] leading-[1.15] tracking-tight text-white"
             style={{ ...SERIF, fontWeight: 400 }}
           >
             <EditableText
@@ -92,7 +92,7 @@ export function HeroRecruiterRail() {
               singleLine
             />
           </p>
-          <p className="mt-3 text-[13px] leading-snug text-white/65">
+          <p className="mt-2 text-[12.5px] leading-snug text-white/65">
             <EditableText
               page="home"
               slot="hero.recruiter.body"
