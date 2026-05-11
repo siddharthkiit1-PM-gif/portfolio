@@ -68,14 +68,13 @@ export const currentUser = query({
   handler: async (ctx) => {
     const authUserId = await getAuthUserId(ctx);
     if (!authUserId) return null;
-    // The auth integration stores its own users table; we mirror via email.
-    // Look up our app-level row.
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity?.email) return null;
-    const row = await ctx.db
-      .query("users")
-      .withIndex("email", (q) => q.eq("email", identity.email!.toLowerCase()))
-      .unique();
-    return row;
+    // Convex Auth writes into the SAME `users` table this app defines (see
+    // `schema.ts` — `...authTables` is spread and `users` is overridden with
+    // our app-level fields). Resolve directly by id; do NOT go through
+    // `ctx.auth.getUserIdentity().email`, because the Resend provider does
+    // not populate the `email` claim on the identity token, which made this
+    // query return null for freshly-verified sessions and trapped the admin
+    // in a redirect loop between `/admin/edit` and `/admin/login`.
+    return ctx.db.get(authUserId);
   },
 });

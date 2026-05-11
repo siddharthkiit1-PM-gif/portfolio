@@ -3,18 +3,20 @@ import type { MutationCtx, QueryCtx } from "../_generated/server";
 
 /**
  * Verifies the caller is an authenticated admin and returns their `users` row.
- * Throws on any failure: not authenticated, no email on identity, no matching
- * users row, or role !== "admin".
+ * Throws on any failure: not authenticated, no matching users row, or
+ * role !== "admin".
+ *
+ * Resolves the row directly via the auth user id. We do NOT route through
+ * `ctx.auth.getUserIdentity().email` — the Resend provider does not populate
+ * the `email` claim on the identity token, so that path threw "No identity
+ * email" on every admin save right after sign-in. Convex Auth's `users`
+ * table is the same one this app defines in `schema.ts`, so a direct id
+ * lookup is the canonical resolution.
  */
 export async function requireAdmin(ctx: MutationCtx | QueryCtx) {
   const authUserId = await getAuthUserId(ctx);
   if (!authUserId) throw new Error("Not authenticated");
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity?.email) throw new Error("No identity email");
-  const userRow = await ctx.db
-    .query("users")
-    .withIndex("email", (q) => q.eq("email", identity.email!.toLowerCase()))
-    .unique();
+  const userRow = await ctx.db.get(authUserId);
   if (!userRow || userRow.role !== "admin") throw new Error("Forbidden");
   return userRow;
 }
