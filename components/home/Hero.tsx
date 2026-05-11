@@ -123,7 +123,7 @@ export function Hero() {
         </a>
         <div ref={statusPillRef} className="ml-0 inline-flex items-center gap-2 text-xs text-white/50 sm:ml-3">
           <span className="size-1.5 rounded-full bg-emerald-500" />
-          <EditableText page="home" slot="hero.statusPill" fallback="Open to senior PM roles" as="span" singleLine />
+          <EditableText page="home" slot="hero.statusPill" fallback="Open to PM roles" as="span" singleLine />
         </div>
       </div>
     </div>

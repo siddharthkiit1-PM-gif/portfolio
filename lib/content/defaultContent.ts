@@ -18,7 +18,7 @@ export const HOME_DEFAULTS: Seed[] = [
   },
   { page: "home", slot: "hero.ctaPrimary", text: "View selected work →" },
   { page: "home", slot: "hero.ctaSecondary", text: "Book a call" },
-  { page: "home", slot: "hero.statusPill", text: "Open to senior PM roles" },
+  { page: "home", slot: "hero.statusPill", text: "Open to PM roles" },
 ];
 
 export const DEFAULT_CONTENT_PAYLOAD = HOME_DEFAULTS.map((s) => ({
