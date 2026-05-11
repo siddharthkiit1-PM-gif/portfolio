@@ -15,9 +15,14 @@ type IconProps = {
 };
 
 /**
- * Official LinkedIn brand mark — #0A66C2 rounded square with the white "in"
- * wordmark. Pulled directly from LinkedIn's brand guidelines so the silhouette
- * is unmistakable inside the recruiter rail's hover chip.
+ * Official LinkedIn brand mark — the canonical integrated glyph (rounded
+ * square frame with the "in" wordmark cut from the same fill). This is the
+ * exact path LinkedIn ships in its brand kit and the one Simple Icons /
+ * every premium icon set uses. Vector-sharp at any size, geometrically
+ * correct kerning on the "in", proper LinkedIn brand blue (#0A66C2).
+ *
+ * Rendered as a single fill path so antialiasing is uniform — no seams
+ * between background rect and wordmark like the earlier two-shape version.
  */
 export function LinkedInIcon({ size = 18, className }: IconProps) {
   return (
@@ -30,10 +35,9 @@ export function LinkedInIcon({ size = 18, className }: IconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <rect width="24" height="24" rx="4" fill="#0A66C2" />
       <path
-        fill="#ffffff"
-        d="M7.06 9.5h-2.6v8.5h2.6V9.5zm.18-2.5a1.51 1.51 0 1 1-3.02 0 1.51 1.51 0 0 1 3.02 0zm10.96 5.34c0-2.18-.47-3.84-3.04-3.84-1.23 0-2.06.65-2.4 1.27h-.04V9.5h-2.5v8.5h2.6v-4.2c0-1.1.21-2.16 1.57-2.16 1.34 0 1.36 1.25 1.36 2.23v4.13h2.45v-4.66z"
+        fill="#0A66C2"
+        d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
       />
     </svg>
   );
