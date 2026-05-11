@@ -1,6 +1,7 @@
 import { internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 import { EXPERIENCE_ROLE_DEFAULTS } from "../lib/defaults/experienceRoles";
+import { PROJECT_DEFAULTS } from "../lib/defaults/projects";
 
 /** Seed siteContent rows that don't exist yet. Idempotent. */
 export const seedSiteContent = internalMutation({
@@ -87,6 +88,41 @@ export const seedExperienceRoles = internalMutation({
         outcome: role.outcome,
         location: role.location,
         pillars: role.pillars,
+        updatedAt: Date.now(),
+      });
+      inserted++;
+    }
+    return { inserted };
+  },
+});
+
+/**
+ * Seed 1–2 placeholder project rows. Idempotent on `slug` — re-running
+ * will not double-insert. Order is assigned from the array index.
+ */
+export const seedProjects = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    let inserted = 0;
+    for (let i = 0; i < PROJECT_DEFAULTS.length; i++) {
+      const p = PROJECT_DEFAULTS[i];
+      const existing = await ctx.db
+        .query("projects")
+        .withIndex("by_slug", (q) => q.eq("slug", p.slug))
+        .unique();
+      if (existing) continue;
+      await ctx.db.insert("projects", {
+        slug: p.slug,
+        order: i,
+        featured: p.featured,
+        title: p.title,
+        outcome: p.outcome,
+        year: p.year,
+        role: p.role,
+        techStack: p.techStack,
+        problem: p.problem,
+        users: p.users,
+        value: p.value,
         updatedAt: Date.now(),
       });
       inserted++;
