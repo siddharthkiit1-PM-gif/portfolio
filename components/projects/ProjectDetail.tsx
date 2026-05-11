@@ -74,7 +74,7 @@ export function ProjectDetail({ slug }: Props) {
     <main className="relative min-h-[100dvh] bg-[#05060a] py-[clamp(64px,10vh,120px)] text-white">
       <div className="mx-auto w-full max-w-[920px] px-6">
         <a
-          href="/projects"
+          href="/#work"
           className="text-[11px] text-white/55 transition hover:text-white"
           style={{ ...MONO, letterSpacing: "0.24em", textTransform: "uppercase" }}
         >
@@ -199,7 +199,7 @@ export function ProjectDetail({ slug }: Props) {
           </div>
           <div className="mt-8 text-center">
             <a
-              href="/projects"
+              href="/#work"
               className="text-[11px] text-white/55 transition hover:text-white"
               style={{ ...MONO, letterSpacing: "0.24em", textTransform: "uppercase" }}
             >
