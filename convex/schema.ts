@@ -100,4 +100,45 @@ export default defineSchema({
   })
     .index("by_order", ["order"])
     .index("by_company_dates", ["company", "dates"]),
+
+  projects: defineTable({
+    // identity
+    slug: v.string(),
+    order: v.number(),
+    featured: v.boolean(),
+
+    // identity copy
+    title: v.string(),
+    outcome: v.optional(v.string()),
+    year: v.string(),
+    role: v.optional(v.string()),
+
+    // links
+    liveUrl: v.optional(v.string()),
+    githubUrl: v.optional(v.string()),
+    figmaUrl: v.optional(v.string()),
+
+    // metadata
+    techStack: v.array(v.string()),
+
+    // hero media
+    heroImageStorageId: v.optional(v.id("_storage")),
+    heroImageAlt: v.optional(v.string()),
+
+    // fact sheet (required)
+    problem: v.string(),
+    users: v.string(),
+    value: v.string(),
+
+    // case-study narrative (optional)
+    approach: v.optional(v.string()),
+    outcomeNarrative: v.optional(v.string()),
+    heroMetricValue: v.optional(v.string()),
+    heroMetricLabel: v.optional(v.string()),
+
+    updatedAt: v.number(),
+  })
+    .index("by_slug", ["slug"])
+    .index("by_order", ["order"])
+    .index("by_featured_order", ["featured", "order"]),
 });
