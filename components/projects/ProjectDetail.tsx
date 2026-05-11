@@ -162,8 +162,8 @@ export function ProjectDetail({ slug }: Props) {
         >
           <FactBlock label="PROBLEM" body={project.problem} />
           {project.goal && <FactBlock label="GOAL" body={project.goal} />}
-          <FactBlock label="USERS" body={project.users} />
-          <FactBlock label="VALUE" body={project.value} />
+          <FactBlock label="HOW WE SOLVE IT" body={project.value} />
+          <FactBlock label="WHO WE SOLVE IT FOR" body={project.users} />
         </div>
 
         <ProjectNarrative project={project} />

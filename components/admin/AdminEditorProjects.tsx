@@ -506,25 +506,25 @@ export function AdminEditorProjects() {
                   onChange={(v) => setDraft({ ...draft, problem: v })}
                 />
               </Field>
-              <Field label="Goal" hint="What you set out to achieve. Renders alongside Problem/Users/Value on the detail page.">
+              <Field label="Goal" hint="What you set out to achieve. Renders alongside the other fact blocks on the detail page.">
                 <Textarea
                   rows={4}
                   value={draft.goal}
                   onChange={(v) => setDraft({ ...draft, goal: v })}
                 />
               </Field>
-              <Field label="Users">
-                <Textarea
-                  rows={6}
-                  value={draft.users}
-                  onChange={(v) => setDraft({ ...draft, users: v })}
-                />
-              </Field>
-              <Field label="Value">
+              <Field label="How we solve it" hint="The 'value' field — labelled as 'How we solve it' on the case-study page.">
                 <Textarea
                   rows={6}
                   value={draft.value}
                   onChange={(v) => setDraft({ ...draft, value: v })}
+                />
+              </Field>
+              <Field label="Who we solve it for" hint="The 'users' field — labelled as 'Who we solve it for' on the case-study page.">
+                <Textarea
+                  rows={6}
+                  value={draft.users}
+                  onChange={(v) => setDraft({ ...draft, users: v })}
                 />
               </Field>
             </Section>
