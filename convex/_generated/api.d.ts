@@ -13,6 +13,7 @@ import type * as experienceRoles from "../experienceRoles.js";
 import type * as http from "../http.js";
 import type * as lib_auth from "../lib/auth.js";
 import type * as media from "../media.js";
+import type * as projects from "../projects.js";
 import type * as seed from "../seed.js";
 import type * as siteContacts from "../siteContacts.js";
 import type * as siteContent from "../siteContent.js";
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   "lib/auth": typeof lib_auth;
   media: typeof media;
+  projects: typeof projects;
   seed: typeof seed;
   siteContacts: typeof siteContacts;
   siteContent: typeof siteContent;
