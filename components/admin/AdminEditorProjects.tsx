@@ -34,10 +34,12 @@ type Draft = {
   outcome: string;
   year: string;
   role: string;
+  tagline: string;
   liveUrl: string;
   githubUrl: string;
   figmaUrl: string;
   loomUrl: string;
+  prdUrl: string;
   techStack: string[];
   heroImageStorageId: Id<"_storage"> | undefined;
   heroImageAlt: string;
@@ -47,6 +49,7 @@ type Draft = {
   goal: string;
   approach: string;
   outcomeNarrative: string;
+  learnings: string;
   heroMetricValue: string;
   heroMetricLabel: string;
 };
@@ -59,10 +62,12 @@ function toDraft(p: Project): Draft {
     outcome: p.outcome ?? "",
     year: p.year,
     role: p.role ?? "",
+    tagline: p.tagline ?? "",
     liveUrl: p.liveUrl ?? "",
     githubUrl: p.githubUrl ?? "",
     figmaUrl: p.figmaUrl ?? "",
     loomUrl: p.loomUrl ?? "",
+    prdUrl: p.prdUrl ?? "",
     techStack: [...p.techStack],
     heroImageStorageId: p.heroImageStorageId,
     heroImageAlt: p.heroImageAlt ?? "",
@@ -72,6 +77,7 @@ function toDraft(p: Project): Draft {
     goal: p.goal ?? "",
     approach: p.approach ?? "",
     outcomeNarrative: p.outcomeNarrative ?? "",
+    learnings: p.learnings ?? "",
     heroMetricValue: p.heroMetricValue ?? "",
     heroMetricLabel: p.heroMetricLabel ?? "",
   };
@@ -85,10 +91,12 @@ function isDirty(d: Draft, p: Project): boolean {
     d.outcome !== (p.outcome ?? "") ||
     d.year !== p.year ||
     d.role !== (p.role ?? "") ||
+    d.tagline !== (p.tagline ?? "") ||
     d.liveUrl !== (p.liveUrl ?? "") ||
     d.githubUrl !== (p.githubUrl ?? "") ||
     d.figmaUrl !== (p.figmaUrl ?? "") ||
     d.loomUrl !== (p.loomUrl ?? "") ||
+    d.prdUrl !== (p.prdUrl ?? "") ||
     JSON.stringify(d.techStack) !== JSON.stringify(p.techStack) ||
     d.heroImageStorageId !== p.heroImageStorageId ||
     d.heroImageAlt !== (p.heroImageAlt ?? "") ||
@@ -98,6 +106,7 @@ function isDirty(d: Draft, p: Project): boolean {
     d.goal !== (p.goal ?? "") ||
     d.approach !== (p.approach ?? "") ||
     d.outcomeNarrative !== (p.outcomeNarrative ?? "") ||
+    d.learnings !== (p.learnings ?? "") ||
     d.heroMetricValue !== (p.heroMetricValue ?? "") ||
     d.heroMetricLabel !== (p.heroMetricLabel ?? "")
   );
@@ -183,6 +192,7 @@ export function AdminEditorProjects() {
       ["githubUrl", draft.githubUrl],
       ["figmaUrl", draft.figmaUrl],
       ["loomUrl", draft.loomUrl],
+      ["prdUrl", draft.prdUrl],
     ] as const) {
       if (!isValidUrl(url)) {
         setError(`${name} is not a valid URL`);
@@ -201,10 +211,12 @@ export function AdminEditorProjects() {
         outcome: draft.outcome || undefined,
         year: draft.year,
         role: draft.role || undefined,
+        tagline: draft.tagline || undefined,
         liveUrl: draft.liveUrl || undefined,
         githubUrl: draft.githubUrl || undefined,
         figmaUrl: draft.figmaUrl || undefined,
         loomUrl: draft.loomUrl || undefined,
+        prdUrl: draft.prdUrl || undefined,
         techStack: draft.techStack,
         heroImageStorageId: draft.heroImageStorageId,
         heroImageAlt: draft.heroImageAlt || undefined,
@@ -214,6 +226,7 @@ export function AdminEditorProjects() {
         goal: draft.goal || undefined,
         approach: draft.approach || undefined,
         outcomeNarrative: draft.outcomeNarrative || undefined,
+        learnings: draft.learnings || undefined,
         heroMetricValue: draft.heroMetricValue || undefined,
         heroMetricLabel: draft.heroMetricLabel || undefined,
       });
@@ -390,6 +403,9 @@ export function AdminEditorProjects() {
               <Field label="Outcome (optional)" hint="Leads on cards when set. Leave blank for hobby projects.">
                 <Input value={draft.outcome} onChange={(v) => setDraft({ ...draft, outcome: v })} />
               </Field>
+              <Field label="Tagline" hint="One-breath pitch — what this is and who it's for. Shows under the title on the homepage and as the standfirst on the case-study page.">
+                <Input value={draft.tagline} onChange={(v) => setDraft({ ...draft, tagline: v })} />
+              </Field>
               <Field label="Year">
                 <Input value={draft.year} onChange={(v) => setDraft({ ...draft, year: v })} />
               </Field>
@@ -411,6 +427,9 @@ export function AdminEditorProjects() {
               </Field>
               <Field label="Loom URL" hint="Walkthrough or demo video">
                 <Input value={draft.loomUrl} onChange={(v) => setDraft({ ...draft, loomUrl: v })} />
+              </Field>
+              <Field label="PRD URL" hint="Spec / PRD doc — Notion, Google Doc, Confluence.">
+                <Input value={draft.prdUrl} onChange={(v) => setDraft({ ...draft, prdUrl: v })} />
               </Field>
             </Section>
 
@@ -539,6 +558,20 @@ export function AdminEditorProjects() {
                 <Input
                   value={draft.heroMetricLabel}
                   onChange={(v) => setDraft({ ...draft, heroMetricLabel: v })}
+                />
+              </Field>
+            </Section>
+
+            {/* Reflection */}
+            <Section
+              label="What I learned"
+              hint="A short reflection — surprises, trade-offs, what you'd do differently. Renders as its own block on the case-study page. Leave blank to hide."
+            >
+              <Field label="Learnings">
+                <Textarea
+                  rows={6}
+                  value={draft.learnings}
+                  onChange={(v) => setDraft({ ...draft, learnings: v })}
                 />
               </Field>
             </Section>

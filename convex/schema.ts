@@ -112,12 +112,20 @@ export default defineSchema({
     outcome: v.optional(v.string()),
     year: v.string(),
     role: v.optional(v.string()),
+    /**
+     * One-breath pitch line shown beneath the title on the homepage row and
+     * as the standfirst on the case-study page. Distinct from `problem` —
+     * tagline is "what it is + who it's for", problem is "what was broken".
+     */
+    tagline: v.optional(v.string()),
 
     // links
     liveUrl: v.optional(v.string()),
     githubUrl: v.optional(v.string()),
     figmaUrl: v.optional(v.string()),
     loomUrl: v.optional(v.string()),
+    /** PRD / spec doc link (Notion, Google Doc, Confluence, etc.). */
+    prdUrl: v.optional(v.string()),
 
     // metadata
     techStack: v.array(v.string()),
@@ -137,6 +145,12 @@ export default defineSchema({
     // case-study narrative (optional)
     approach: v.optional(v.string()),
     outcomeNarrative: v.optional(v.string()),
+    /**
+     * Free-form reflection rendered as the "What I learned" block on the
+     * case-study page. Optional — hidden when blank so hobby projects don't
+     * carry an empty section.
+     */
+    learnings: v.optional(v.string()),
     heroMetricValue: v.optional(v.string()),
     heroMetricLabel: v.optional(v.string()),
 

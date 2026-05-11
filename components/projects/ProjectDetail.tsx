@@ -4,9 +4,18 @@
  * ProjectDetail — body of /projects/[slug]. Reads api.projects.getBySlug
  * for this row and api.projects.list for prev/next neighbor resolution.
  *
- * Layout: single column, max-width 880px, centered, generous vertical
- * rhythm. Hero image fades in on mount; hero metric counts up via
- * ProjectNarrative; everything else is static editorial typography.
+ * Reading order, top to bottom:
+ *
+ *   1. Eyebrow (kind · year · role)
+ *   2. Title (chromatic + flowing gradient)
+ *   3. Tagline standfirst (italic serif — the one-breath pitch)
+ *   4. Original title beneath when an `outcome` headline is used
+ *   5. Action cluster (Vercel · GitHub · Figma · Loom · PRD)
+ *   6. Hero image
+ *   7. 3- or 4-up fact sheet (Problem · Goal · Users · Value)
+ *   8. Narrative blocks (approach, outcome) via ProjectNarrative
+ *   9. "What I learned" reflection block when `learnings` is set
+ *  10. Prev / next neighbor nav
  */
 
 import { useState, useEffect } from "react";
@@ -15,15 +24,22 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { ChromaticText } from "@/components/home/ChromaticText";
 import { FlowingGradientText } from "@/components/home/FlowingGradientText";
-import { ProjectMetadataStrip } from "./ProjectMetadataStrip";
 import { ProjectNarrative } from "./ProjectNarrative";
+import { ProjectActionCluster } from "./ProjectActionCluster";
 import { neighbors } from "@/lib/projects/neighbors";
 
 const MONO: React.CSSProperties = {
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
 };
 
+const SERIF_ITALIC: React.CSSProperties = {
+  fontFamily:
+    'ui-serif, "New York", "Iowan Old Style", "Apple Garamond", Georgia, serif',
+  fontStyle: "italic",
+};
+
 const HAIRLINE = "rgba(255,255,255,0.14)";
+const HAIRLINE_FAINT = "rgba(255,255,255,0.08)";
 
 type Props = { slug: string };
 
@@ -56,7 +72,7 @@ export function ProjectDetail({ slug }: Props) {
 
   return (
     <main className="relative min-h-[100dvh] bg-[#05060a] py-[clamp(64px,10vh,120px)] text-white">
-      <div className="mx-auto w-full max-w-[880px] px-6">
+      <div className="mx-auto w-full max-w-[920px] px-6">
         <a
           href="/projects"
           className="text-[11px] text-white/55 transition hover:text-white"
@@ -74,22 +90,52 @@ export function ProjectDetail({ slug }: Props) {
           </div>
           <h1
             className="mt-6 text-[clamp(40px,7vh,80px)] leading-[1.02] tracking-[-2.5px] text-white"
-            style={{
-              fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
-              fontWeight: 500,
-            }}
+            style={{ ...SERIF_ITALIC, fontWeight: 500 }}
           >
             <ChromaticText amount={0.25}>
               <FlowingGradientText>{titleLine}</FlowingGradientText>
             </ChromaticText>
           </h1>
-          {project.outcome && (
-            <p className="mt-3 text-[18px] font-light text-white/55">
-              {project.title}
+          {project.tagline && (
+            <p
+              className="mt-5 max-w-[680px] text-[clamp(18px,2vw,22px)] leading-[1.4] text-white/85"
+              style={{ ...SERIF_ITALIC, fontWeight: 300 }}
+            >
+              {project.tagline}
             </p>
           )}
-          <ProjectMetadataStrip project={project} techStack={project.techStack} />
-          <div aria-hidden className="mt-8 h-px w-full" style={{ background: HAIRLINE }} />
+          {project.outcome && (
+            <p
+              className="mt-3 text-[12px] text-white/45"
+              style={{ ...MONO, letterSpacing: "0.18em", textTransform: "uppercase" }}
+            >
+              Originally shipped as · {project.title}
+            </p>
+          )}
+
+          <div className="mt-7">
+            <ProjectActionCluster project={project} density="spread" align="start" />
+          </div>
+
+          {project.techStack.length > 0 && (
+            <div className="mt-5 flex flex-wrap gap-1.5">
+              {project.techStack.map((t) => (
+                <span
+                  key={t}
+                  className="rounded-full px-2.5 py-[3px] text-[10.5px] text-white/70"
+                  style={{
+                    ...MONO,
+                    letterSpacing: "0.06em",
+                    border: `1px solid ${HAIRLINE_FAINT}`,
+                  }}
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div aria-hidden className="mt-9 h-px w-full" style={{ background: HAIRLINE }} />
         </header>
 
         {heroUrl && (
@@ -121,6 +167,21 @@ export function ProjectDetail({ slug }: Props) {
         </div>
 
         <ProjectNarrative project={project} />
+
+        {project.learnings && project.learnings.trim().length > 0 && (
+          <section className="mt-[clamp(56px,9vh,108px)]">
+            <div
+              className="text-[10px] text-white/45"
+              style={{ ...MONO, letterSpacing: "0.32em", textTransform: "uppercase" }}
+            >
+              What I learned
+            </div>
+            <div aria-hidden className="mt-2 h-px w-full" style={{ background: HAIRLINE }} />
+            <p className="mt-6 max-w-[680px] whitespace-pre-wrap text-[17px] leading-[1.65] font-light text-white/85">
+              {project.learnings}
+            </p>
+          </section>
+        )}
 
         <footer className="mt-[clamp(64px,10vh,120px)]">
           <div aria-hidden className="h-px w-full" style={{ background: HAIRLINE }} />
