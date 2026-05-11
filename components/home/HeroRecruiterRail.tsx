@@ -152,7 +152,8 @@ export function HeroRecruiterRail() {
               href={githubUrl}
               target="_blank"
               rel="noreferrer noopener"
-              aria-label="GitHub"
+              aria-label="Checkout my GitHub repo"
+              title="Checkout my GitHub repo"
               className="inline-flex size-9 items-center justify-center rounded-full text-white/80 transition hover:text-white"
               style={{
                 background: "rgba(255,255,255,0.04)",
