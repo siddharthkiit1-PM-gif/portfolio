@@ -22,6 +22,7 @@ import { useAdmin } from "./AdminProvider";
 import { AdminEditorList } from "./AdminEditorList";
 import { AdminEditorContacts } from "./AdminEditorContacts";
 import { AdminEditorRoles } from "./AdminEditorRoles";
+import { AdminEditorProjects } from "./AdminEditorProjects";
 
 const MONO: React.CSSProperties = {
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
@@ -30,12 +31,13 @@ const MONO: React.CSSProperties = {
 const HAIRLINE = "rgba(255,255,255,0.14)";
 const HAIRLINE_FAINT = "rgba(255,255,255,0.08)";
 
-type TabKey = "copy" | "contacts" | "experience";
+type TabKey = "copy" | "contacts" | "experience" | "projects";
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "copy", label: "Copy" },
   { key: "contacts", label: "Contacts" },
   { key: "experience", label: "Experience" },
+  { key: "projects", label: "Projects" },
 ];
 
 export function AdminEditor() {
@@ -84,6 +86,7 @@ export function AdminEditor() {
         {active === "copy" && <AdminEditorList />}
         {active === "contacts" && <AdminEditorContacts />}
         {active === "experience" && <AdminEditorRoles />}
+        {active === "projects" && <AdminEditorProjects />}
       </div>
     </div>
   );
