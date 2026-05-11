@@ -36,12 +36,14 @@ type Draft = {
   liveUrl: string;
   githubUrl: string;
   figmaUrl: string;
+  loomUrl: string;
   techStack: string[];
   heroImageStorageId: Id<"_storage"> | undefined;
   heroImageAlt: string;
   problem: string;
   users: string;
   value: string;
+  goal: string;
   approach: string;
   outcomeNarrative: string;
   heroMetricValue: string;
@@ -59,12 +61,14 @@ function toDraft(p: Project): Draft {
     liveUrl: p.liveUrl ?? "",
     githubUrl: p.githubUrl ?? "",
     figmaUrl: p.figmaUrl ?? "",
+    loomUrl: p.loomUrl ?? "",
     techStack: [...p.techStack],
     heroImageStorageId: p.heroImageStorageId,
     heroImageAlt: p.heroImageAlt ?? "",
     problem: p.problem,
     users: p.users,
     value: p.value,
+    goal: p.goal ?? "",
     approach: p.approach ?? "",
     outcomeNarrative: p.outcomeNarrative ?? "",
     heroMetricValue: p.heroMetricValue ?? "",
@@ -83,12 +87,14 @@ function isDirty(d: Draft, p: Project): boolean {
     d.liveUrl !== (p.liveUrl ?? "") ||
     d.githubUrl !== (p.githubUrl ?? "") ||
     d.figmaUrl !== (p.figmaUrl ?? "") ||
+    d.loomUrl !== (p.loomUrl ?? "") ||
     JSON.stringify(d.techStack) !== JSON.stringify(p.techStack) ||
     d.heroImageStorageId !== p.heroImageStorageId ||
     d.heroImageAlt !== (p.heroImageAlt ?? "") ||
     d.problem !== p.problem ||
     d.users !== p.users ||
     d.value !== p.value ||
+    d.goal !== (p.goal ?? "") ||
     d.approach !== (p.approach ?? "") ||
     d.outcomeNarrative !== (p.outcomeNarrative ?? "") ||
     d.heroMetricValue !== (p.heroMetricValue ?? "") ||
@@ -157,6 +163,7 @@ export function AdminEditorProjects() {
       ["liveUrl", draft.liveUrl],
       ["githubUrl", draft.githubUrl],
       ["figmaUrl", draft.figmaUrl],
+      ["loomUrl", draft.loomUrl],
     ] as const) {
       if (!isValidUrl(url)) {
         setError(`${name} is not a valid URL`);
@@ -178,12 +185,14 @@ export function AdminEditorProjects() {
         liveUrl: draft.liveUrl || undefined,
         githubUrl: draft.githubUrl || undefined,
         figmaUrl: draft.figmaUrl || undefined,
+        loomUrl: draft.loomUrl || undefined,
         techStack: draft.techStack,
         heroImageStorageId: draft.heroImageStorageId,
         heroImageAlt: draft.heroImageAlt || undefined,
         problem: draft.problem,
         users: draft.users,
         value: draft.value,
+        goal: draft.goal || undefined,
         approach: draft.approach || undefined,
         outcomeNarrative: draft.outcomeNarrative || undefined,
         heroMetricValue: draft.heroMetricValue || undefined,
@@ -381,6 +390,9 @@ export function AdminEditorProjects() {
               <Field label="Figma URL">
                 <Input value={draft.figmaUrl} onChange={(v) => setDraft({ ...draft, figmaUrl: v })} />
               </Field>
+              <Field label="Loom URL" hint="Walkthrough or demo video">
+                <Input value={draft.loomUrl} onChange={(v) => setDraft({ ...draft, loomUrl: v })} />
+              </Field>
             </Section>
 
             {/* Tech stack */}
@@ -454,6 +466,13 @@ export function AdminEditorProjects() {
                   rows={6}
                   value={draft.problem}
                   onChange={(v) => setDraft({ ...draft, problem: v })}
+                />
+              </Field>
+              <Field label="Goal" hint="What you set out to achieve. Renders alongside Problem/Users/Value on the detail page.">
+                <Textarea
+                  rows={4}
+                  value={draft.goal}
+                  onChange={(v) => setDraft({ ...draft, goal: v })}
                 />
               </Field>
               <Field label="Users">
