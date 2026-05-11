@@ -15,7 +15,7 @@ export function SiteNav() {
         <span className="font-medium">Siddharth Agrawal</span>
       </Link>
       <div className="hidden gap-6 text-[13px] text-white/70 md:flex">
-        <a href="/#experience" className="transition-colors hover:text-white">Work</a>
+        <a href="/#work" className="transition-colors hover:text-white">Work</a>
         <a href="/#contact" className="transition-colors hover:text-white">Contact</a>
       </div>
       <StickyResumePill />
