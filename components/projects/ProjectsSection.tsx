@@ -352,18 +352,20 @@ export function ProjectsSection() {
           {isEditing && <AddProjectButton existingCount={projects?.length ?? 0} />}
         </div>
 
-        <div className="mt-[clamp(48px,8vh,96px)]">
-          <div aria-hidden className="h-px w-full" style={{ background: HAIRLINE }} />
-          <div className="mt-6 flex justify-end">
-            <a
-              href="/projects"
-              className="text-[12px] text-white/70 transition hover:text-white"
-              style={{ ...MONO, letterSpacing: "0.24em", textTransform: "uppercase" }}
-            >
-              <EditableCountLabel count={projects ? projects.length : null} />
-            </a>
+        {isEditing && (
+          <div className="mt-[clamp(48px,8vh,96px)]">
+            <div aria-hidden className="h-px w-full" style={{ background: HAIRLINE }} />
+            <div className="mt-6 flex justify-end">
+              <a
+                href="/projects"
+                className="text-[12px] text-white/70 transition hover:text-white"
+                style={{ ...MONO, letterSpacing: "0.24em", textTransform: "uppercase" }}
+              >
+                <EditableCountLabel count={projects ? projects.length : null} />
+              </a>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
