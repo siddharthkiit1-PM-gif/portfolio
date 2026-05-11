@@ -430,6 +430,7 @@ Expected: FAIL with `Cannot find module '../slugify'`.
 export function slugify(input: string): string {
   const cleaned = input
     .toLowerCase()
+    .replace(/[^\x00-\x7f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
   return cleaned.length > 0 ? cleaned : "untitled";
