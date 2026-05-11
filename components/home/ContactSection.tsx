@@ -223,7 +223,7 @@ export function ContactSection() {
   return (
     <section
       id="contact"
-      className="bg-black px-6 py-28 text-white"
+      className="scroll-mt-24 bg-black px-6 py-28 text-white"
       aria-label="Contact"
     >
       <div className="mx-auto max-w-[820px]">

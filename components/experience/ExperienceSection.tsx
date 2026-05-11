@@ -54,7 +54,7 @@ export function ExperienceSection({ animate = true }: Props) {
   });
 
   return (
-    <section className="relative overflow-hidden bg-[#05060a] py-[clamp(96px,14vh,160px)] text-white">
+    <section id="experience" className="relative overflow-hidden bg-[#05060a] py-[clamp(96px,14vh,160px)] text-white scroll-mt-24">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"

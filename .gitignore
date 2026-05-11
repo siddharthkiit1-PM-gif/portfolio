@@ -47,3 +47,4 @@ next-env.d.ts
 
 # Brainstorming visual companion sessions
 .superpowers/
+.claude/

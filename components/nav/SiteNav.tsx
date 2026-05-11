@@ -2,6 +2,11 @@ import Link from "next/link";
 import { Monogram } from "@/components/brand/Monogram";
 import { StickyResumePill } from "./StickyResumePill";
 
+/**
+ * SiteNav — single-page anchored nav. The portfolio lives on one document,
+ * so "Work" jumps to the Experience section (career narrative), and
+ * "Contact" jumps to the Reach Out section at the bottom of the homepage.
+ */
 export function SiteNav() {
   return (
     <nav className="absolute inset-x-0 top-0 z-30 flex items-center justify-between px-8 py-5">
@@ -10,11 +15,8 @@ export function SiteNav() {
         <span className="font-medium">Siddharth Agrawal</span>
       </Link>
       <div className="hidden gap-6 text-[13px] text-white/70 md:flex">
-        <Link href="/work">Work</Link>
-        <Link href="/notes">Writing</Link>
-        <Link href="/talks">Talks</Link>
-        <Link href="/about">About</Link>
-        <Link href="/contact">Contact</Link>
+        <a href="/#experience" className="transition-colors hover:text-white">Work</a>
+        <a href="/#contact" className="transition-colors hover:text-white">Contact</a>
       </div>
       <StickyResumePill />
     </nav>

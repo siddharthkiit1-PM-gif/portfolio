@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef } from "react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { EditableText } from "@/components/editable/EditableText";
 import { HeroPinController } from "./HeroPinController";
 import { HeroResponsiveLayout } from "./HeroResponsiveLayout";
@@ -27,9 +29,13 @@ import { useViewportClass } from "@/lib/motion/useViewportClass";
  * can read from frame 0. ExperienceSection now lives as a separate sibling
  * section on app/page.tsx, no longer inside the hero pin.
  */
+const DEFAULT_CALENDLY = "https://calendly.com/siddharth-kiit1/30min";
+
 export function Hero() {
   const tier = useDeviceTier();
   const viewport = useViewportClass();
+  const contacts = useQuery(api.siteContacts.get, {});
+  const calendlyUrl = contacts?.calendlyUrl ?? DEFAULT_CALENDLY;
 
   // Kept for plumbing compatibility with HeroPinController; no orb to drive.
   const warpRef = useRef(0);
@@ -118,7 +124,12 @@ export function Hero() {
         <a href="#work" className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black text-center sm:text-left">
           <EditableText page="home" slot="hero.ctaPrimary" fallback="View selected work →" as="span" singleLine />
         </a>
-        <a href="/contact" className="rounded-full border border-white/20 px-5 py-3 text-sm text-white text-center sm:text-left">
+        <a
+          href={calendlyUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-full border border-white/20 px-5 py-3 text-sm text-white text-center sm:text-left"
+        >
           <EditableText page="home" slot="hero.ctaSecondary" fallback="Book a call" as="span" singleLine />
         </a>
         <div ref={statusPillRef} className="ml-0 inline-flex items-center gap-2 text-xs text-white/50 sm:ml-3">
