@@ -292,7 +292,7 @@ export function ProjectsSection() {
             <EditableText
               page="home"
               slot="projects.eyebrowLeft"
-              fallback="PROJECTS · 2022 — 2026"
+              fallback="AI PRODUCT BUILDER"
               as="span"
               singleLine
             />
@@ -314,7 +314,7 @@ export function ProjectsSection() {
                 <EditableText
                   page="home"
                   slot="projects.headline"
-                  fallback="Selected work, in detail."
+                  fallback="AI products, shipped solo."
                   as="span"
                   singleLine
                 />
@@ -325,7 +325,7 @@ export function ProjectsSection() {
             <EditableText
               page="home"
               slot="projects.standfirst"
-              fallback="A small set of products I led, designed, or built — each with the problem, the people, and the result."
+              fallback="Spec to ship, end to end. Each one carries the problem, the people, and what worked."
               as="span"
             />
           </p>
