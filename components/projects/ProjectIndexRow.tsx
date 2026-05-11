@@ -5,8 +5,13 @@
  * row lifts 1px, hairline brightens, thumbnail scales 1.02, and the
  * title-line gets a faint chromatic split. Reduced-motion drops the lift
  * and scale but keeps the hairline brighten.
+ *
+ * The title block is the primary link to the detail page. Action icons
+ * (Live/Code/Figma/Loom) are separate anchors that open in a new tab,
+ * so recruiters can jump straight to the artifact without a click-through.
  */
 
+import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Doc } from "@/convex/_generated/dataModel";
@@ -42,15 +47,21 @@ export function ProjectIndexRow({ project, index }: Props) {
     project.heroImageStorageId ? { storageId: project.heroImageStorageId } : "skip",
   );
 
+  const actions: { label: string; url: string }[] = [];
+  if (project.liveUrl) actions.push({ label: "LIVE", url: project.liveUrl });
+  if (project.githubUrl) actions.push({ label: "CODE", url: project.githubUrl });
+  if (project.figmaUrl) actions.push({ label: "FIGMA", url: project.figmaUrl });
+  if (project.loomUrl) actions.push({ label: "LOOM", url: project.loomUrl });
+
   return (
-    <a
-      href={`/projects/${project.slug}`}
+    <div
       className="group block py-8 transition motion-safe:hover:-translate-y-px"
       style={{ borderBottom: `1px solid ${HAIRLINE_FAINT}` }}
     >
-      <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-[120px_64px_1fr_auto_auto] md:gap-8">
+      <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-[120px_64px_1fr_auto_auto_auto] md:gap-8">
         {/* Thumbnail */}
-        <div
+        <Link
+          href={`/projects/${project.slug}`}
           className="relative aspect-[120/80] w-full overflow-hidden rounded-md md:w-[120px]"
           style={{ border: `1px solid ${HAIRLINE_FAINT}` }}
         >
@@ -70,7 +81,7 @@ export function ProjectIndexRow({ project, index }: Props) {
               {String(index + 1).padStart(2, "0")}
             </div>
           )}
-        </div>
+        </Link>
 
         {/* Year */}
         <div
@@ -80,8 +91,8 @@ export function ProjectIndexRow({ project, index }: Props) {
           {project.year}
         </div>
 
-        {/* Title + meta */}
-        <div className="flex flex-col gap-1.5">
+        {/* Title + meta — primary link to detail page */}
+        <Link href={`/projects/${project.slug}`} className="flex flex-col gap-1.5">
           <div
             className="text-[clamp(20px,2.4vw,28px)] leading-tight text-white"
             style={{
@@ -103,7 +114,7 @@ export function ProjectIndexRow({ project, index }: Props) {
               {metaParts.join(" \u00B7 ")}
             </div>
           )}
-        </div>
+        </Link>
 
         {/* Tech chips */}
         <div className="flex flex-wrap items-center gap-1.5">
@@ -134,11 +145,35 @@ export function ProjectIndexRow({ project, index }: Props) {
           )}
         </div>
 
-        {/* Arrow */}
-        <div className="text-[18px] text-white/55 transition group-hover:text-white">
-          &rarr;
+        {/* Inline action links */}
+        <div className="flex flex-wrap items-center gap-2">
+          {actions.map((a) => (
+            <a
+              key={a.label}
+              href={a.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full px-2.5 py-[3px] text-[10px] text-white/70 transition hover:text-white hover:bg-white/5"
+              style={{
+                ...MONO,
+                letterSpacing: "0.16em",
+                border: `1px solid ${HAIRLINE_FAINT}`,
+              }}
+            >
+              {a.label} &nearr;
+            </a>
+          ))}
         </div>
+
+        {/* Arrow → detail */}
+        <Link
+          href={`/projects/${project.slug}`}
+          className="text-[18px] text-white/55 transition group-hover:text-white"
+          aria-label={`Open ${project.title} detail page`}
+        >
+          &rarr;
+        </Link>
       </div>
-    </a>
+    </div>
   );
 }
