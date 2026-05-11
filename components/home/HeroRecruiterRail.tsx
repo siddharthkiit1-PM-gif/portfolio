@@ -96,7 +96,7 @@ export function HeroRecruiterRail() {
             <EditableText
               page="home"
               slot="hero.recruiter.body"
-              fallback="I lead 0 → 1 product work at the data, AI and customer intersection. Currently scoping senior PM roles."
+              fallback="I lead products from 0→1 across data, AI, and user-facing experiences. 5+ years in software — 3.5 as a PM building B2B SaaS products, 2 as a backend engineer. At 6sense, I own technographics and market insights: shipped a signals product from scratch to $100K ARR, improved retention 18% through data-backed decisions, and built AI workflows that cut manual ops effort by 98%. I also build independently — Thalify is a live AI food tracker I shipped solo with vision AI, chat agents, and paying users."
               as="span"
             />
           </p>
