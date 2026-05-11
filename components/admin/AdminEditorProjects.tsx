@@ -303,7 +303,7 @@ export function AdminEditorProjects() {
               className="text-[11px] text-red-400/70 hover:text-red-400"
               aria-label="Delete"
             >
-              \u2715
+              &#x2715;
             </button>
           </div>
         ))}
@@ -404,7 +404,7 @@ export function AdminEditorProjects() {
                       className="text-white/45 hover:text-white"
                       aria-label={`Remove ${t}`}
                     >
-                      \u00D7
+                      &times;
                     </button>
                   </span>
                 ))}
