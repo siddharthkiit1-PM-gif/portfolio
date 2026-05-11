@@ -109,8 +109,13 @@ export function ProjectDetail({ slug }: Props) {
           </div>
         )}
 
-        <div className="mt-[clamp(48px,8vh,96px)] grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div
+          className={`mt-[clamp(48px,8vh,96px)] grid grid-cols-1 gap-8 ${
+            project.goal ? "md:grid-cols-4" : "md:grid-cols-3"
+          }`}
+        >
           <FactBlock label="PROBLEM" body={project.problem} />
+          {project.goal && <FactBlock label="GOAL" body={project.goal} />}
           <FactBlock label="USERS" body={project.users} />
           <FactBlock label="VALUE" body={project.value} />
         </div>
