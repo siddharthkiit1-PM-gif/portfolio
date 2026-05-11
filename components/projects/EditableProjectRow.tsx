@@ -365,6 +365,40 @@ function IconForLink({
   }
 }
 
+function EditableMiniFact({
+  label,
+  value,
+  placeholder,
+  onCommit,
+  ariaLabel,
+}: {
+  label: string;
+  value: string;
+  placeholder: string;
+  onCommit: (v: string) => Promise<void> | void;
+  ariaLabel: string;
+}) {
+  return (
+    <div className="min-w-0">
+      <div
+        className="text-[9.5px] text-white/45"
+        style={{ ...MONO, letterSpacing: "0.28em", textTransform: "uppercase" }}
+      >
+        {label}
+      </div>
+      <div aria-hidden className="mt-1.5 h-px w-full" style={{ background: HAIRLINE_FAINT }} />
+      <InlineEditable
+        value={value}
+        onCommit={onCommit}
+        multiline
+        placeholder={placeholder}
+        className="mt-2 block text-[13px] leading-[1.5] font-light text-white/70"
+        ariaLabel={ariaLabel}
+      />
+    </div>
+  );
+}
+
 function TechChipEditable({ project, tech }: { project: Project; tech: string }) {
   const upsert = useMutation(api.projects.upsert);
   async function remove() {
@@ -554,13 +588,29 @@ export function EditableProjectRow({
             style={{ ...SERIF_ITALIC, fontWeight: 300 }}
             ariaLabel="Edit tagline"
           />
-          <InlineEditable
+        </div>
+
+        <div className="grid max-w-[760px] grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-3">
+          <EditableMiniFact
+            label="PROBLEM"
             value={p.problem ?? ""}
+            placeholder="What was broken before — in your voice, one or two lines."
             onCommit={(v) => commitField({ problem: v })}
-            multiline
-            placeholder="The problem in one or two lines — what was broken before."
-            className="block max-w-[640px] text-[13.5px] leading-[1.5] font-light text-white/55"
             ariaLabel="Edit problem"
+          />
+          <EditableMiniFact
+            label="HOW WE SOLVE IT"
+            value={p.value ?? ""}
+            placeholder="What this product actually does, plainly."
+            onCommit={(v) => commitField({ value: v })}
+            ariaLabel="Edit how we solve it"
+          />
+          <EditableMiniFact
+            label="WHO WE SOLVE IT FOR"
+            value={p.users ?? ""}
+            placeholder="Who this is for — one sentence."
+            onCommit={(v) => commitField({ users: v })}
+            ariaLabel="Edit who we solve it for"
           />
         </div>
 

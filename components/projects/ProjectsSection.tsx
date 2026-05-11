@@ -51,6 +51,42 @@ const HAIRLINE_FAINT = "rgba(255,255,255,0.08)";
 
 type Project = Doc<"projects">;
 
+function MiniFact({ label, body }: { label: string; body: string }) {
+  return (
+    <div className="min-w-0">
+      <div
+        className="text-[9.5px] text-white/45"
+        style={{ ...MONO, letterSpacing: "0.28em", textTransform: "uppercase" }}
+      >
+        {label}
+      </div>
+      <div aria-hidden className="mt-1.5 h-px w-full" style={{ background: HAIRLINE_FAINT }} />
+      <p className="mt-2 line-clamp-3 text-[13px] leading-[1.5] font-light text-white/70">
+        {body}
+      </p>
+    </div>
+  );
+}
+
+function MiniFactStrip({
+  problem,
+  howWeSolveIt,
+  whoFor,
+}: {
+  problem: string;
+  howWeSolveIt: string;
+  whoFor: string;
+}) {
+  if (!problem && !howWeSolveIt && !whoFor) return null;
+  return (
+    <div className="grid max-w-[760px] grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-3">
+      {problem && <MiniFact label="PROBLEM" body={problem} />}
+      {howWeSolveIt && <MiniFact label="HOW WE SOLVE IT" body={howWeSolveIt} />}
+      {whoFor && <MiniFact label="WHO WE SOLVE IT FOR" body={whoFor} />}
+    </div>
+  );
+}
+
 function TechChip({ children }: { children: React.ReactNode }) {
   return (
     <span
@@ -157,12 +193,13 @@ function IndexRow({ project: p, index }: { project: Project; index: number }) {
               {p.tagline}
             </p>
           )}
-          {p.problem && (
-            <p className="line-clamp-2 max-w-[640px] text-[13.5px] leading-[1.5] font-light text-white/55">
-              {p.problem}
-            </p>
-          )}
         </div>
+
+        <MiniFactStrip
+          problem={p.problem}
+          howWeSolveIt={p.value}
+          whoFor={p.users}
+        />
 
         {p.techStack.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5">
