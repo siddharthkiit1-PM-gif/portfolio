@@ -146,7 +146,7 @@ export function Hero() {
           rel="noopener noreferrer"
           className="rounded-full border border-white/20 px-5 py-3 text-sm text-white text-center sm:text-left"
         >
-          <EditableText page="home" slot="hero.ctaSecondary" fallback="Book a call" as="span" singleLine />
+          <EditableText page="home" slot="hero.ctaSecondary" fallback="Book a meeting with me" as="span" singleLine />
         </a>
         <div ref={statusPillRef} className="ml-0 inline-flex items-center gap-2 text-xs text-white/50 sm:ml-3">
           <span className="size-1.5 rounded-full bg-emerald-500" />

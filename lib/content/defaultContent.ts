@@ -17,7 +17,7 @@ export const HOME_DEFAULTS: Seed[] = [
       "PM at the intersection of AI, health, and consumer. Twelve products shipped, three from zero. Currently building healthcoach-ai. This site is the working file.",
   },
   { page: "home", slot: "hero.ctaPrimary", text: "View AI projects →" },
-  { page: "home", slot: "hero.ctaSecondary", text: "Book a call" },
+  { page: "home", slot: "hero.ctaSecondary", text: "Book a meeting with me" },
   { page: "home", slot: "hero.statusPill", text: "Open to PM roles" },
 ];
 
