@@ -9,11 +9,14 @@
  *     Vercel mark on the left, "View live" label, and a corner arrow.
  *     Sized 12–13px so it stands a head above the secondary cluster.
  *
- *   • Secondary links (code, design, walkthrough, PRD) render as small
- *     square icon buttons grouped to the right of the primary CTA.
- *     Each button shows only the brand mark; the human-readable label
- *     is the button's `title` attribute (browser tooltip) and aria-label,
- *     keeping the cluster compact without losing accessibility.
+ *   • GitHub and PRD are promoted to labeled pills that mirror the
+ *     "View live" treatment — brand mark + readable label + corner
+ *     arrow — but render as outlined ghost pills so the live CTA
+ *     keeps visual primacy. "View on GitHub" and "Read the PRD".
+ *
+ *   • Figma and Loom stay as compact icon-only buttons grouped after
+ *     the labeled pills, since the brand mark alone reads clearly and
+ *     keeps the cluster from sprawling.
  *
  *   • Buttons only render when their URL is set, so a project with just a
  *     GitHub repo doesn't get four ghost slots.
@@ -55,30 +58,35 @@ export function ProjectActionCluster({ project, density = "compact", align = "en
     project.prdUrl;
   if (!hasAny) return null;
 
-  const secondaries: { url: string; label: string; node: React.ReactNode }[] = [];
+  const labeledIconSize = density === "spread" ? 14 : 12;
+  const iconOnlySize = density === "spread" ? 18 : 16;
+
+  const labeled: { url: string; label: string; node: React.ReactNode }[] = [];
   if (project.githubUrl)
-    secondaries.push({
+    labeled.push({
       url: project.githubUrl,
-      label: "Source code · GitHub",
-      node: <GithubMark size={density === "spread" ? 18 : 16} />,
-    });
-  if (project.figmaUrl)
-    secondaries.push({
-      url: project.figmaUrl,
-      label: "Design · Figma",
-      node: <FigmaMark size={density === "spread" ? 18 : 16} />,
-    });
-  if (project.loomUrl)
-    secondaries.push({
-      url: project.loomUrl,
-      label: "Walkthrough · Loom",
-      node: <LoomMark size={density === "spread" ? 18 : 16} />,
+      label: "View on GitHub",
+      node: <GithubMark size={labeledIconSize} />,
     });
   if (project.prdUrl)
-    secondaries.push({
+    labeled.push({
       url: project.prdUrl,
-      label: "Spec · PRD",
-      node: <PrdDocMark size={density === "spread" ? 18 : 16} />,
+      label: "Read the PRD",
+      node: <PrdDocMark size={labeledIconSize} />,
+    });
+
+  const iconOnly: { url: string; label: string; node: React.ReactNode }[] = [];
+  if (project.figmaUrl)
+    iconOnly.push({
+      url: project.figmaUrl,
+      label: "Design · Figma",
+      node: <FigmaMark size={iconOnlySize} />,
+    });
+  if (project.loomUrl)
+    iconOnly.push({
+      url: project.loomUrl,
+      label: "Walkthrough · Loom",
+      node: <LoomMark size={iconOnlySize} />,
     });
 
   const justify = align === "end" ? "justify-end" : "justify-start";
@@ -101,12 +109,27 @@ export function ProjectActionCluster({ project, density = "compact", align = "en
           <ArrowUpRight size={density === "spread" ? 12 : 11} />
         </a>
       )}
-      {secondaries.length > 0 && (
+      {labeled.map((l) => (
+        <a
+          key={l.label}
+          href={l.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={l.label}
+          className={`inline-flex items-center gap-2 rounded-full px-4 ${primaryHeight} ${primaryText} font-medium tracking-tight text-white/85 transition hover:bg-white/10 hover:text-white`}
+          style={{ border: "1px solid rgba(255,255,255,0.14)" }}
+        >
+          {l.node}
+          <span>{l.label}</span>
+          <ArrowUpRight size={density === "spread" ? 12 : 11} />
+        </a>
+      ))}
+      {iconOnly.length > 0 && (
         <div
           className="inline-flex items-center gap-1 rounded-full px-1 py-1"
           style={{ border: "1px solid rgba(255,255,255,0.08)" }}
         >
-          {secondaries.map((s) => (
+          {iconOnly.map((s) => (
             <a
               key={s.label}
               href={s.url}
