@@ -17,7 +17,8 @@
  * it's the same cue the inline editor uses on the live page.
  */
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useAdmin } from "./AdminProvider";
 import { AdminEditorList } from "./AdminEditorList";
 import { AdminEditorContacts } from "./AdminEditorContacts";
@@ -40,8 +41,22 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "projects", label: "Projects" },
 ];
 
+function isTabKey(s: string | null | undefined): s is TabKey {
+  return s === "copy" || s === "contacts" || s === "experience" || s === "projects";
+}
+
 export function AdminEditor() {
-  const [active, setActive] = useState<TabKey>("copy");
+  return (
+    <Suspense fallback={null}>
+      <AdminEditorInner />
+    </Suspense>
+  );
+}
+
+function AdminEditorInner() {
+  const params = useSearchParams();
+  const initialTab = isTabKey(params.get("tab")) ? (params.get("tab") as TabKey) : "copy";
+  const [active, setActive] = useState<TabKey>(initialTab);
   const { isEditing } = useAdmin();
 
   return (

@@ -28,6 +28,8 @@ import { ChromaticText } from "@/components/home/ChromaticText";
 import { FlowingGradientText } from "@/components/home/FlowingGradientText";
 import { EditableText } from "@/components/editable/EditableText";
 import { tiptapToPlainText, type TiptapNode } from "@/lib/content/tiptapJson";
+import { useAdmin } from "@/components/admin/AdminProvider";
+import { EditableProjectRow } from "./EditableProjectRow";
 
 const MONO: React.CSSProperties = {
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
@@ -213,6 +215,7 @@ function IndexRow({ project: p, index }: { project: Project; index: number }) {
 
 export function ProjectsSection() {
   const projects = useQuery(api.projects.list);
+  const { isEditing } = useAdmin();
 
   return (
     <section className="relative overflow-hidden bg-[#05060a] py-[clamp(96px,14vh,160px)] text-white">
@@ -282,9 +285,13 @@ export function ProjectsSection() {
             </p>
           ) : (
             <div role="list">
-              {projects.map((p, i) => (
-                <IndexRow key={p._id} project={p} index={i} />
-              ))}
+              {projects.map((p, i) =>
+                isEditing ? (
+                  <EditableProjectRow key={p._id} project={p} index={i} all={projects} />
+                ) : (
+                  <IndexRow key={p._id} project={p} index={i} />
+                ),
+              )}
             </div>
           )}
         </div>

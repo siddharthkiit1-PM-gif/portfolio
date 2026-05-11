@@ -11,7 +11,8 @@
  * URLs are validated with new URL() before save.
  */
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Doc, Id } from "@/convex/_generated/dataModel";
@@ -117,6 +118,8 @@ export function AdminEditorProjects() {
   const upsert = useMutation(api.projects.upsert);
   const remove = useMutation(api.projects.remove);
   const reorder = useMutation(api.projects.reorder);
+  const params = useSearchParams();
+  const requestedId = params.get("id");
 
   const [selectedId, setSelectedId] = useState<Id<"projects"> | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -124,11 +127,27 @@ export function AdminEditorProjects() {
   const [techInput, setTechInput] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [didApplyDeepLink, setDidApplyDeepLink] = useState(false);
 
   const selected = useMemo(
     () => projects?.find((p) => p._id === selectedId) ?? null,
     [projects, selectedId],
   );
+
+  // Deep-link: pre-select project from ?id=<projectId> when admin lands here
+  // from the homepage "Edit ↗" pencil. Runs once after projects load.
+  useEffect(() => {
+    if (didApplyDeepLink) return;
+    if (!projects || !requestedId) return;
+    const hit = projects.find((p) => p._id === (requestedId as Id<"projects">));
+    if (hit) {
+      setSelectedId(hit._id);
+      setDraft(toDraft(hit));
+      setEditingSlug(false);
+      setError(null);
+    }
+    setDidApplyDeepLink(true);
+  }, [projects, requestedId, didApplyDeepLink]);
 
   function select(p: Project) {
     setSelectedId(p._id);
