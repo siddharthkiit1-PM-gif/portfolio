@@ -117,6 +117,7 @@ export default defineSchema({
     liveUrl: v.optional(v.string()),
     githubUrl: v.optional(v.string()),
     figmaUrl: v.optional(v.string()),
+    loomUrl: v.optional(v.string()),
 
     // metadata
     techStack: v.array(v.string()),
@@ -129,6 +130,9 @@ export default defineSchema({
     problem: v.string(),
     users: v.string(),
     value: v.string(),
+
+    // optional extras
+    goal: v.optional(v.string()),
 
     // case-study narrative (optional)
     approach: v.optional(v.string()),
