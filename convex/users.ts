@@ -13,7 +13,18 @@ function getAllowlist(): string[] {
   return raw.split(",").map((s) => s.trim()).filter(Boolean);
 }
 
-/** Called from the front-end after sign-in to ensure a `users` row exists. */
+/**
+ * Called from the front-end after sign-in to ensure the caller's `users` row
+ * is populated and role-stamped.
+ *
+ * SECURITY: always resolve the row by `authUserId`. Never look up by the
+ * client-supplied `args.email` — that would let any signed-in caller patch
+ * (or pre-create) another user's row by passing their email. The Convex Auth
+ * provider has already created the row at sign-in keyed by `authUserId`, so
+ * the email stored there is the trustworthy one; `args.email` is treated as
+ * a hint and only used if the auth row hasn't captured an email yet (Resend
+ * provider edge case noted in lib/auth.ts).
+ */
 export const ensureUserRecord = mutation({
   args: { email: v.string(), name: v.optional(v.string()) },
   handler: async (ctx, args) => {
@@ -21,23 +32,19 @@ export const ensureUserRecord = mutation({
     if (!authUserId) {
       throw new Error("Not authenticated");
     }
-    const existing = await ctx.db
-      .query("users")
-      .withIndex("email", (q) => q.eq("email", args.email.toLowerCase()))
-      .unique();
-
-    const role = isAdminEmail(args.email, getAllowlist()) ? "admin" : "viewer";
-
-    if (existing) {
-      await ctx.db.patch(existing._id, { role, name: args.name ?? existing.name });
-      return existing._id;
+    const existing = await ctx.db.get(authUserId);
+    if (!existing) {
+      // Convex Auth always inserts a row at sign-in; missing row = bad state.
+      throw new Error("Auth user row missing");
     }
-    return ctx.db.insert("users", {
-      email: args.email.toLowerCase(),
-      name: args.name,
+    const email = (existing.email ?? args.email).toLowerCase();
+    const role = isAdminEmail(email, getAllowlist()) ? "admin" : "viewer";
+    await ctx.db.patch(authUserId, {
+      email,
       role,
-      createdAt: Date.now(),
+      name: args.name ?? existing.name,
     });
+    return authUserId;
   },
 });
 
