@@ -250,10 +250,10 @@ export function AboutSection() {
         </div>
         <div aria-hidden className="mt-4 h-px w-full" style={{ background: HAIRLINE }} />
 
-        {/* Headline — unified: SERIF_ITALIC weight 500 at clamp(40,6vw,64) */}
+        {/* Headline — unified across sections: SERIF_ITALIC bold (700) at clamp(40,6vw,64) */}
         <h2
           className="mt-8 max-w-[860px] text-[clamp(40px,6vw,64px)] leading-[1.05] tracking-[-1.5px] text-white"
-          style={{ ...SERIF_ITALIC, fontWeight: 500 }}
+          style={{ ...SERIF_ITALIC, fontWeight: 700 }}
         >
           <EditableText
             page="home"

@@ -307,7 +307,7 @@ export function ProjectsSection() {
           <div aria-hidden className="mt-4 h-px w-full" style={{ background: HAIRLINE }} />
           <h2
             className="mt-8 text-[clamp(40px,6vw,64px)] leading-[1.05] tracking-[-1.5px] text-white"
-            style={{ ...SERIF_ITALIC, fontWeight: 500 }}
+            style={{ ...SERIF_ITALIC, fontWeight: 700 }}
           >
             <ChromaticText amount={0.3}>
               <FlowingGradientText>

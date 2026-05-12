@@ -91,7 +91,7 @@ export function ExperienceSection({ animate = true }: Props) {
           />
           <h2
             className="mt-8 text-[clamp(40px,6vw,64px)] leading-[1.05] tracking-[-1.5px] text-white"
-            style={{ ...SERIF_ITALIC, fontWeight: 500 }}
+            style={{ ...SERIF_ITALIC, fontWeight: 700 }}
           >
             <EditableText
               page="home"
