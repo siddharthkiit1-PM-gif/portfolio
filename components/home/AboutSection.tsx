@@ -1,22 +1,25 @@
 "use client";
 
 /**
- * AboutSection — graduated from /preview/about Variant C.
+ * AboutSection — graduated from /preview/about Variant B.
  *
- * The "Builder ledger" — an `ABOUT.md` document rendered as a section.
- * Doc header with version + maintainer + live status, then four code-block
- * sections (`// who.ts`, `// venn.svg`, `// process.ts`, `// receipts.ts`).
- * Venn is a dashed technical drawing with construction lines between
- * centers and coordinate ticks; process is a monospace function-signature
- * table; receipts are a tabular metric ledger.
+ * The "Editorial · first-principles" direction. Reads like a magazine
+ * essay rather than a product page:
+ *   • Display serif headline (ui-serif "New York")
+ *   • Italic serif sub-question right under it
+ *   • Two-column body — narrative lede on the left with inline bold
+ *     tabular metrics, FIG. 01 Venn diagram on the right
+ *   • FIG. 02 process ladder — serif-italic step labels paired with
+ *     monospace function-style markers and a longer body paragraph each
+ *   • FIG. 03 receipts table — four metrics in a tabular ledger
  *
- * Maximum "PM who codes" flex — leans on monospace + tabular numerals +
- * SVG construction geometry rather than the chromatic/gradient primitives.
+ * The Venn uses Marty Cagan's three risks (desirability / viability /
+ * feasibility) as the editorial annotation, with Technology (= I ship
+ * the code) carrying the weight that separates this PM from the field.
  *
- * Per CLAUDE.md every user-facing string is wrapped in `<EditableText>` so
- * the admin can rewrite copy in place. Venn axis labels are HTML overlays
- * on top of the SVG so each one is reachable; the coordinate ticks inside
- * the SVG are structural (part of the technical drawing) and stay literal.
+ * Per CLAUDE.md every user-facing string is wrapped in `<EditableText>`
+ * so the admin can rewrite copy in place. The Venn axis labels are
+ * rendered as HTML overlays on top of the SVG so each is reachable.
  */
 
 import { EditableText } from "@/components/editable/EditableText";
@@ -27,6 +30,16 @@ import { EditableText } from "@/components/editable/EditableText";
 
 const MONO: React.CSSProperties = {
   fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+};
+
+const SERIF: React.CSSProperties = {
+  fontFamily:
+    'ui-serif, "New York", "Iowan Old Style", "Apple Garamond", Georgia, serif',
+};
+
+const SERIF_ITALIC: React.CSSProperties = {
+  ...SERIF,
+  fontStyle: "italic",
 };
 
 const TABULAR: React.CSSProperties = {
@@ -72,7 +85,8 @@ const METRICS: Metric[] = [
 type VennAxis = {
   slot: "user" | "business" | "technology";
   defaultLabel: string;
-  defaultBody: string;
+  defaultRisk: string;
+  defaultSub: string;
   color: string;
 };
 
@@ -80,20 +94,22 @@ const VENN_AXES: VennAxis[] = [
   {
     slot: "user",
     defaultLabel: "USER",
-    defaultBody: "Personas, JTBD, eight buyer interviews — not eighty dashboards.",
+    defaultRisk: "desirability —",
+    defaultSub: "buyer + end-user",
     color: "#a78bfa",
   },
   {
     slot: "business",
     defaultLabel: "BUSINESS",
-    defaultBody: "Owned the revenue line. Owned the retention number. Owned the ops bill.",
+    defaultRisk: "— viability",
+    defaultSub: "revenue · retention",
     color: "#22d3ee",
   },
   {
     slot: "technology",
     defaultLabel: "TECHNOLOGY",
-    defaultBody:
-      "2 yrs backend before PM. Three AI products shipped solo in 2026. Engineering disagreements are short.",
+    defaultRisk: "feasibility",
+    defaultSub: "I ship the code",
     color: "#f472b6",
   },
 ];
@@ -103,49 +119,43 @@ type ProcessStep = {
   n: string;
   defaultLabel: string;
   defaultBody: string;
-  defaultFn: string;
 };
 
 const PROCESS: ProcessStep[] = [
   {
     slot: "step1",
     n: "01",
-    defaultLabel: "WHY",
+    defaultLabel: "why",
     defaultBody:
       "Find the problem that hurts. Not the one you can spec — the one users won't shut up about.",
-    defaultFn: "locateProblem()",
   },
   {
     slot: "step2",
     n: "02",
-    defaultLabel: "USER",
+    defaultLabel: "user",
     defaultBody:
       "Talk to the people. What they're doing instead is the spec. Ignore the loud feature requests.",
-    defaultFn: "mapJTBD()",
   },
   {
     slot: "step3",
     n: "03",
-    defaultLabel: "ATOMIZE",
+    defaultLabel: "atomize",
     defaultBody:
       "Strip the problem to its smallest unit. The thing that, if true, makes the rest fall in.",
-    defaultFn: "breakdown(problem)",
   },
   {
     slot: "step4",
     n: "04",
-    defaultLabel: "SHIP",
+    defaultLabel: "ship",
     defaultBody:
       "Build the thinnest slice that proves the thesis. Before the slide deck is ready.",
-    defaultFn: "thinnest_slice()",
   },
   {
     slot: "step5",
     n: "05",
-    defaultLabel: "MEASURE",
+    defaultLabel: "measure",
     defaultBody:
       "Watch what users do, not what they say. Rewrite the next spec from the data.",
-    defaultFn: "observe()",
   },
 ];
 
@@ -188,348 +198,261 @@ export function AboutSection() {
     >
       <SectionBackdrop />
 
-      <div className="relative mx-auto max-w-[1080px] px-6 sm:px-6 lg:px-10">
-        {/* Doc header */}
-        <div
-          className="flex flex-wrap items-baseline gap-x-5 gap-y-2 border-b pb-4 text-[11px] text-white/55"
-          style={{ ...MONO, borderColor: HAIRLINE }}
-        >
-          <span className="text-white/85">
+      <div className="relative mx-auto max-w-[1100px] px-6 sm:px-6 lg:px-10">
+        {/* Chapter marker */}
+        <div className="flex items-center gap-4 text-[10px] text-white/45">
+          <span style={{ ...MONO, letterSpacing: "0.32em" }}>
             <EditableText
               page="home"
-              slot="about.doc.title"
-              fallback="ABOUT.md"
+              slot="about.chapter"
+              fallback="CHAPTER 02"
               as="span"
               singleLine
             />
           </span>
-          <span aria-hidden>·</span>
-          <span>
+          <span className="h-px w-10" style={{ background: HAIRLINE }} aria-hidden />
+          <span style={{ ...MONO, letterSpacing: "0.32em" }}>
             <EditableText
               page="home"
-              slot="about.doc.version"
-              fallback="v.2026.05.12"
-              as="span"
-              singleLine
-            />
-          </span>
-          <span aria-hidden>·</span>
-          <span>
-            <EditableText
-              page="home"
-              slot="about.doc.maintainer"
-              fallback="maintained by sa@"
-              as="span"
-              singleLine
-            />
-          </span>
-          <span className="ml-auto text-emerald-400/80">
-            <EditableText
-              page="home"
-              slot="about.doc.status"
-              fallback="● live"
+              slot="about.eyebrow"
+              fallback="FROM FIRST PRINCIPLES"
               as="span"
               singleLine
             />
           </span>
         </div>
 
-        {/* Title */}
+        {/* Serif headline */}
         <h2
-          className="mt-10 max-w-[760px] text-[40px] leading-[1.05] tracking-[-1px] text-white lg:text-[clamp(44px,5.4vw,60px)] lg:tracking-[-1.5px]"
-          style={{
-            fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
-            fontWeight: 300,
-          }}
+          className="mt-8 max-w-[820px] text-[48px] leading-[1.02] tracking-[-1px] text-white sm:text-[68px] lg:text-[clamp(56px,7vw,92px)]"
+          style={{ ...SERIF, fontWeight: 400 }}
         >
           <EditableText
             page="home"
             slot="about.headline"
-            fallback="A working history of a PM at the intersection."
+            fallback="Every product starts with one question."
             as="span"
           />
         </h2>
 
-        {/* who.ts */}
-        <CodeBlock commentSlot="about.who.comment" commentFallback="who.ts">
-          <p className="mt-3 max-w-[680px] text-[15px] leading-[1.65] text-white/85">
+        {/* Italic serif sub-question */}
+        <p
+          className="mt-5 max-w-[640px] text-[20px] leading-[1.35] text-white/70 lg:text-[24px]"
+          style={{ ...SERIF_ITALIC, fontWeight: 400 }}
+        >
+          <EditableText
+            page="home"
+            slot="about.subheadline"
+            fallback="Why is this broken, and who has been waiting for someone to fix it?"
+            as="span"
+          />
+        </p>
+
+        {/* Two-column body — narrative lede + FIG. 01 Venn */}
+        <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-16">
+          <div className="max-w-[560px]">
+            <p
+              className="text-[16px] leading-[1.7] text-white/85 lg:text-[17.5px]"
+              style={TABULAR}
+            >
+              <EditableText
+                page="home"
+                slot="about.lede1"
+                fallback="I'm a PM who codes. Three and a half years writing PRDs for B2B SaaS — two years before that writing the backend the PRDs were aimed at. I don't translate between product and engineering; I think in both."
+                as="span"
+              />
+            </p>
+            <p
+              className="mt-5 text-[16px] leading-[1.7] text-white/85 lg:text-[17.5px]"
+              style={TABULAR}
+            >
+              <EditableText
+                page="home"
+                slot="about.lede2.before"
+                fallback="The reason most products miss isn't strategy — it's that nobody walked the problem down to its atoms. So I do that first. The signals product I owned at 6sense went "
+                as="span"
+              />
+              <strong className="text-white" style={TABULAR}>
+                <EditableText
+                  page="home"
+                  slot="about.lede2.metric1"
+                  fallback="$0 → $500K"
+                  as="span"
+                  singleLine
+                />
+              </strong>
+              <EditableText
+                page="home"
+                slot="about.lede2.mid1"
+                fallback=" ARR because the spec started with eight buyer interviews and ended in one sentence. Retention lifted "
+                as="span"
+              />
+              <strong className="text-white" style={TABULAR}>
+                <EditableText
+                  page="home"
+                  slot="about.lede2.metric2"
+                  fallback="+18%"
+                  as="span"
+                  singleLine
+                />
+              </strong>
+              <EditableText
+                page="home"
+                slot="about.lede2.mid2"
+                fallback=" the same way. Manual ops dropped "
+                as="span"
+              />
+              <strong className="text-white" style={TABULAR}>
+                <EditableText
+                  page="home"
+                  slot="about.lede2.metric3"
+                  fallback="−98%"
+                  as="span"
+                  singleLine
+                />
+              </strong>
+              <EditableText
+                page="home"
+                slot="about.lede2.after"
+                fallback={
+                  " with an AI workflow I shipped end-to-end — and three AI products went live solo in 2026 because the bar between “spec” and “ship” is, for me, a few days of code."
+                }
+                as="span"
+              />
+            </p>
+          </div>
+
+          {/* FIG. 01 — Venn */}
+          <div className="self-start">
+            <FigureLabel slot="about.venn.figLabel" fallback="FIG. 01 — THE INTERSECTION" />
+            <VennDiagram />
+          </div>
+        </div>
+
+        {/* FIG. 02 — first-principles ladder */}
+        <div className="mt-20">
+          <FigureLabel slot="about.process.figLabel" fallback="FIG. 02 — THE LADDER" />
+          <h3
+            className="mt-2 max-w-[640px] text-[28px] leading-[1.1] tracking-[-0.4px] text-white lg:text-[36px]"
+            style={{ ...SERIF, fontWeight: 400 }}
+          >
             <EditableText
               page="home"
-              slot="about.who.body"
-              fallback="I'm Siddharth Agrawal. PM at 6sense, owning technographics and market insights. 12 products shipped, 3 from zero, 3 AI products shipped solo in 2026 (Thalify · EvalForge · Rapido). Started as a backend engineer in 2018; switched to PM in 2022. The PM Venn diagram isn't a claim I make — it's the shape of my résumé."
+              slot="about.process.headline"
+              fallback="How I walk the problem to its atoms."
               as="span"
             />
-          </p>
-        </CodeBlock>
-
-        {/* venn.svg */}
-        <CodeBlock commentSlot="about.venn.comment" commentFallback="venn.svg">
-          <div className="mt-3 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-12">
-            <VennDiagram />
-            <div className="space-y-5">
-              <CornerNote
-                color={VENN_AXES[0].color}
-                tokenSlot="about.venn.user.token"
-                tokenFallback="user"
-                bodySlot="about.venn.user.body"
-                bodyFallback={VENN_AXES[0].defaultBody}
-              />
-              <CornerNote
-                color={VENN_AXES[1].color}
-                tokenSlot="about.venn.business.token"
-                tokenFallback="business"
-                bodySlot="about.venn.business.body"
-                bodyFallback={VENN_AXES[1].defaultBody}
-              />
-              <CornerNote
-                color={VENN_AXES[2].color}
-                tokenSlot="about.venn.technology.token"
-                tokenFallback="technology"
-                bodySlot="about.venn.technology.body"
-                bodyFallback={VENN_AXES[2].defaultBody}
-              />
-              <CornerNote
-                color="#ffffff"
-                tokenSlot="about.venn.intersection.token"
-                tokenFallback="intersection"
-                bodySlot="about.venn.intersection.body"
-                bodyFallback="Where I work."
-                mono
-              />
-            </div>
-          </div>
-        </CodeBlock>
-
-        {/* process.ts */}
-        <CodeBlock commentSlot="about.process.comment" commentFallback="process.ts">
+          </h3>
           <ProcessFlow />
-        </CodeBlock>
+        </div>
 
-        {/* receipts.ts */}
-        <CodeBlock commentSlot="about.receipts.comment" commentFallback="receipts.ts">
+        {/* FIG. 03 — receipts table */}
+        <div className="mt-20">
+          <FigureLabel slot="about.receipts.figLabel" fallback="FIG. 03 — THE RECEIPTS" />
           <MetricStrip />
-        </CodeBlock>
+        </div>
       </div>
     </section>
   );
 }
 
 /* -------------------------------------------------------------------------- */
-/*  CodeBlock — `// filename.ext` comment marker above each section            */
+/*  FigureLabel — monospace "FIG. NN — TITLE" stamp                           */
 /* -------------------------------------------------------------------------- */
 
-function CodeBlock({
-  commentSlot,
-  commentFallback,
-  children,
-}: {
-  commentSlot: string;
-  commentFallback: string;
-  children: React.ReactNode;
-}) {
+function FigureLabel({ slot, fallback }: { slot: string; fallback: string }) {
   return (
-    <div className="mt-14">
-      <div
-        className="text-[12px] text-violet-300/85"
-        style={{ ...MONO, letterSpacing: "0.02em" }}
-      >
-        <span aria-hidden>// </span>
-        <EditableText
-          page="home"
-          slot={commentSlot}
-          fallback={commentFallback}
-          as="span"
-          singleLine
-        />
-      </div>
-      {children}
+    <div
+      className="text-[10px] text-white/45"
+      style={{ ...MONO, letterSpacing: "0.32em" }}
+    >
+      <EditableText page="home" slot={slot} fallback={fallback} as="span" singleLine />
     </div>
   );
 }
 
 /* -------------------------------------------------------------------------- */
-/*  CornerNote — glow-dot + uppercase token + body paragraph                  */
-/* -------------------------------------------------------------------------- */
-
-function CornerNote({
-  color,
-  tokenSlot,
-  tokenFallback,
-  bodySlot,
-  bodyFallback,
-  mono = false,
-}: {
-  color: string;
-  tokenSlot: string;
-  tokenFallback: string;
-  bodySlot: string;
-  bodyFallback: string;
-  mono?: boolean;
-}) {
-  return (
-    <div className="flex gap-4">
-      <div className="flex flex-col items-center pt-1">
-        <span
-          className="size-2.5 rounded-full"
-          style={{ background: color, boxShadow: `0 0 12px ${color}80` }}
-          aria-hidden
-        />
-        <div
-          className="mt-2 w-px flex-1"
-          style={{ background: HAIRLINE_FAINT, minHeight: 12 }}
-          aria-hidden
-        />
-      </div>
-      <div className="flex-1">
-        <div
-          className="text-[11px] text-white/55"
-          style={{ ...MONO, letterSpacing: "0.18em", textTransform: "uppercase" }}
-        >
-          <EditableText
-            page="home"
-            slot={tokenSlot}
-            fallback={tokenFallback}
-            as="span"
-            singleLine
-          />
-        </div>
-        <p
-          className={[
-            "mt-1 text-[14px] leading-[1.55] text-white/85",
-            mono ? "text-white" : "",
-          ].join(" ")}
-          style={mono ? MONO : undefined}
-        >
-          <EditableText page="home" slot={bodySlot} fallback={bodyFallback} as="span" />
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/*  ProcessFlow — table with monospace function signatures                    */
+/*  ProcessFlow — magazine-style step ladder                                  */
 /* -------------------------------------------------------------------------- */
 
 function ProcessFlow() {
   return (
-    <div
-      className="mt-3 overflow-hidden rounded-md border"
-      style={{ borderColor: HAIRLINE_FAINT }}
-    >
-      <div
-        className="grid grid-cols-[60px_minmax(0,1fr)_180px] border-b px-4 py-2 text-[10px] text-white/45"
-        style={{
-          ...MONO,
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-          borderColor: HAIRLINE_FAINT,
-        }}
-      >
-        <span>step</span>
-        <span>behavior</span>
-        <span>signature</span>
-      </div>
+    <ol className="mt-10 space-y-0">
       {PROCESS.map((step, i) => (
-        <div
+        <li
           key={step.slot}
-          className="grid grid-cols-[60px_minmax(0,1fr)_180px] items-baseline gap-4 px-4 py-4"
+          className="grid grid-cols-[64px_minmax(0,1fr)] gap-6 border-t py-6 lg:grid-cols-[80px_220px_minmax(0,1fr)] lg:gap-8"
           style={{
-            ...(i < PROCESS.length - 1
+            borderColor: HAIRLINE_FAINT,
+            ...(i === PROCESS.length - 1
               ? { borderBottom: `1px solid ${HAIRLINE_FAINT}` }
               : {}),
-            background: i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.012)",
           }}
         >
-          <div className="text-white/75" style={{ ...MONO, ...TABULAR, fontSize: 13 }}>
+          {/* Serif numeral */}
+          <div
+            className="text-[36px] leading-none text-white/30 lg:text-[44px]"
+            style={{ ...SERIF, ...TABULAR, fontWeight: 400 }}
+          >
             {step.n}
           </div>
-          <div>
-            <div
-              className="text-[12px] text-violet-300/90"
-              style={{ ...MONO, letterSpacing: "0.18em", textTransform: "uppercase" }}
-            >
-              <EditableText
-                page="home"
-                slot={`about.${step.slot}.label`}
-                fallback={step.defaultLabel}
-                as="span"
-                singleLine
-              />
-            </div>
-            <p className="mt-1 max-w-[520px] text-[14px] leading-[1.55] text-white/85">
-              <EditableText
-                page="home"
-                slot={`about.${step.slot}.body`}
-                fallback={step.defaultBody}
-                as="span"
-              />
-            </p>
-          </div>
-          <div className="text-[12px] text-cyan-200/75" style={MONO}>
+          {/* Italic serif label */}
+          <div
+            className="text-[16px] text-white lg:text-[18px]"
+            style={{ ...SERIF_ITALIC, fontWeight: 400 }}
+          >
+            <span className="text-white/55" aria-hidden>
+              →{" "}
+            </span>
             <EditableText
               page="home"
-              slot={`about.${step.slot}.fn`}
-              fallback={step.defaultFn}
+              slot={`about.${step.slot}.label`}
+              fallback={step.defaultLabel}
               as="span"
               singleLine
             />
           </div>
-        </div>
+          {/* Body paragraph */}
+          <p className="max-w-[560px] text-[15px] leading-[1.55] text-white/75">
+            <EditableText
+              page="home"
+              slot={`about.${step.slot}.body`}
+              fallback={step.defaultBody}
+              as="span"
+            />
+          </p>
+        </li>
       ))}
-    </div>
+    </ol>
   );
 }
 
 /* -------------------------------------------------------------------------- */
-/*  MetricStrip — tabular receipts ledger                                     */
+/*  MetricStrip — magazine endnote ledger                                     */
 /* -------------------------------------------------------------------------- */
 
 function MetricStrip() {
   return (
-    <div
-      className="mt-3 overflow-hidden rounded-md border"
-      style={{ borderColor: HAIRLINE_FAINT }}
-    >
-      <div
-        className="grid grid-cols-[minmax(0,1fr)_120px_minmax(0,1fr)] border-b px-4 py-2 text-[10px] text-white/45"
-        style={{
-          ...MONO,
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-          borderColor: HAIRLINE_FAINT,
-        }}
-      >
-        <span>metric</span>
-        <span className="text-right">value</span>
-        <span>context</span>
-      </div>
+    <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
       {METRICS.map((m, i) => (
         <div
           key={m.slot}
-          className="grid grid-cols-[minmax(0,1fr)_120px_minmax(0,1fr)] items-baseline gap-4 px-4 py-4"
-          style={
-            i < METRICS.length - 1
-              ? { borderBottom: `1px solid ${HAIRLINE_FAINT}` }
-              : undefined
-          }
+          className={[
+            "relative pt-6",
+            // First three rows on mobile get a top hairline; on desktop every
+            // tile gets one to read as a continuous endnote strip.
+            i === 0 ? "" : "",
+          ].join(" ")}
+          style={{ borderTop: `1px solid ${HAIRLINE_FAINT}` }}
         >
-          <div className="text-[14px] text-white/85">
-            <EditableText
-              page="home"
-              slot={`about.${m.slot}.label`}
-              fallback={m.label}
-              as="span"
-              singleLine
-            />
-          </div>
+          {/* Tabular-num display value */}
           <div
-            className="text-right text-[22px] text-white"
+            className="text-[44px] leading-none text-white lg:text-[52px]"
             style={{
               ...TABULAR,
               fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
-              fontWeight: 400,
-              letterSpacing: "-0.5px",
+              fontWeight: 300,
+              letterSpacing: "-1.5px",
             }}
           >
             <EditableText
@@ -540,7 +463,24 @@ function MetricStrip() {
               singleLine
             />
           </div>
-          <div className="text-[12px] text-white/55" style={MONO}>
+          {/* Italic serif label */}
+          <div
+            className="mt-3 text-[15px] leading-snug text-white/85"
+            style={{ ...SERIF_ITALIC, fontWeight: 400 }}
+          >
+            <EditableText
+              page="home"
+              slot={`about.${m.slot}.label`}
+              fallback={m.label}
+              as="span"
+              singleLine
+            />
+          </div>
+          {/* Mono caption */}
+          <div
+            className="mt-1.5 text-[10px] text-white/45"
+            style={{ ...MONO, letterSpacing: "0.18em", textTransform: "uppercase" }}
+          >
             <EditableText
               page="home"
               slot={`about.${m.slot}.note`}
@@ -556,169 +496,239 @@ function MetricStrip() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  VennDiagram — dashed technical drawing                                    */
-/*  SVG owns circles, construction lines between centers, centroid marker,    */
-/*  and decorative coordinate ticks. HTML overlays carry the three editable   */
-/*  axis labels (USER · BUSINESS · TECHNOLOGY).                               */
+/*  VennDiagram — outline-only circles + editorial annotation pairs           */
+/*                                                                            */
+/*  SVG owns the three circles, the dashed pointers to the centroid, and     */
+/*  the centroid marker + serif-italic "here." callout. HTML overlays carry  */
+/*  every editable label so admin can rewrite each in place.                 */
 /* -------------------------------------------------------------------------- */
 
 const CIRCLES = {
-  user: { cx: 215, cy: 195, r: 115, color: "#a78bfa" },
-  business: { cx: 385, cy: 195, r: 115, color: "#22d3ee" },
-  technology: { cx: 300, cy: 340, r: 115, color: "#f472b6" },
+  user: { cx: 215, cy: 195, r: 115 },
+  business: { cx: 385, cy: 195, r: 115 },
+  technology: { cx: 300, cy: 340, r: 115 },
 };
 
-// Axis label anchors expressed as % of the SVG viewBox (600 × 500) so the
-// HTML overlays line up with the SVG at any container size.
-// USER label sits above its circle (cy − r − padding), and so on.
-const LABEL_ANCHORS = {
-  user: { left: `${(CIRCLES.user.cx / 600) * 100}%`, top: `${((CIRCLES.user.cy - CIRCLES.user.r - 18) / 500) * 100}%` },
-  business: { left: `${(CIRCLES.business.cx / 600) * 100}%`, top: `${((CIRCLES.business.cy - CIRCLES.business.r - 18) / 500) * 100}%` },
-  technology: { left: `${(CIRCLES.technology.cx / 600) * 100}%`, top: `${((CIRCLES.technology.cy + CIRCLES.technology.r + 14) / 500) * 100}%` },
+// Anchors expressed as % of the SVG viewBox (600×500) so the HTML overlays
+// stay aligned with the SVG geometry at any container width.
+function pct(x: number, y: number) {
+  return { left: `${(x / 600) * 100}%`, top: `${(y / 500) * 100}%` };
+}
+
+const ANCHORS = {
+  // Inside-circle uppercase axis labels
+  userLabel: pct(CIRCLES.user.cx, CIRCLES.user.cy - 18),
+  businessLabel: pct(CIRCLES.business.cx, CIRCLES.business.cy - 18),
+  technologyLabel: pct(CIRCLES.technology.cx, CIRCLES.technology.cy + 22),
+  // Outside-corner Cagan-risk annotations (serif italic + mono sub)
+  userAnnotation: { left: "12%", top: "20%", align: "left" as const },
+  businessAnnotation: { left: "88%", top: "20%", align: "right" as const },
+  technologyAnnotation: { left: "50%", top: "93%", align: "center" as const },
 };
 
 function VennDiagram() {
   return (
-    <div className="relative mt-3 w-full max-w-[520px]" style={{ aspectRatio: "600 / 500" }}>
+    <div className="relative mt-3 w-full max-w-[420px]" style={{ aspectRatio: "600 / 500" }}>
       <svg
         viewBox="0 0 600 500"
         className="absolute inset-0 block h-full w-full"
         aria-label="PM Venn diagram — User, Business, Technology"
       >
-        {/* Faint technical grid */}
-        <defs>
-          <pattern id="vennGrid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={0.5} />
-          </pattern>
-        </defs>
-        <rect x="0" y="0" width="600" height="500" fill="url(#vennGrid)" />
-
-        {/* Construction lines connecting circle centers */}
-        <g stroke="rgba(255,255,255,0.15)" strokeWidth={0.5} strokeDasharray="2 3">
-          <line x1={CIRCLES.user.cx} y1={CIRCLES.user.cy} x2={CIRCLES.business.cx} y2={CIRCLES.business.cy} />
-          <line x1={CIRCLES.user.cx} y1={CIRCLES.user.cy} x2={CIRCLES.technology.cx} y2={CIRCLES.technology.cy} />
-          <line x1={CIRCLES.business.cx} y1={CIRCLES.business.cy} x2={CIRCLES.technology.cx} y2={CIRCLES.technology.cy} />
-        </g>
-
-        {/* Circle center markers + coordinate ticks (structural, kept literal) */}
-        {[CIRCLES.user, CIRCLES.business, CIRCLES.technology].map((c) => (
-          <g key={`${c.cx}-${c.cy}`}>
-            <circle cx={c.cx} cy={c.cy} r={2} fill={c.color} />
-            <text
-              x={c.cx + 8}
-              y={c.cy - 6}
-              fill="rgba(255,255,255,0.5)"
-              fontSize={9}
-              style={{ ...MONO, letterSpacing: "0.05em" }}
-            >
-              ({c.cx},{c.cy})
-            </text>
-          </g>
-        ))}
-
-        {/* Circles — dashed strokes, low-alpha fill */}
+        {/* Outline-only circles */}
         <circle
           cx={CIRCLES.user.cx}
           cy={CIRCLES.user.cy}
           r={CIRCLES.user.r}
-          fill={CIRCLES.user.color}
-          fillOpacity={0.06}
-          stroke={CIRCLES.user.color}
-          strokeOpacity={0.7}
+          fill="none"
+          stroke="rgba(255,255,255,0.55)"
           strokeWidth={1}
-          strokeDasharray="4 3"
         />
         <circle
           cx={CIRCLES.business.cx}
           cy={CIRCLES.business.cy}
           r={CIRCLES.business.r}
-          fill={CIRCLES.business.color}
-          fillOpacity={0.06}
-          stroke={CIRCLES.business.color}
-          strokeOpacity={0.7}
+          fill="none"
+          stroke="rgba(255,255,255,0.55)"
           strokeWidth={1}
-          strokeDasharray="4 3"
         />
         <circle
           cx={CIRCLES.technology.cx}
           cy={CIRCLES.technology.cy}
           r={CIRCLES.technology.r}
-          fill={CIRCLES.technology.color}
-          fillOpacity={0.06}
-          stroke={CIRCLES.technology.color}
-          strokeOpacity={0.7}
+          fill="none"
+          stroke="rgba(255,255,255,0.55)"
           strokeWidth={1}
-          strokeDasharray="4 3"
         />
 
-        {/* Centroid marker (PM) */}
-        <circle cx={300} cy={243} r={4} fill="white" stroke="black" strokeWidth={1} />
-        <text
-          x={300}
-          y={228}
-          textAnchor="middle"
-          fill="white"
-          fontSize={10}
-          style={{ ...MONO, letterSpacing: "0.18em" }}
-        >
-          PM
-        </text>
-        <text
-          x={300}
-          y={262}
-          textAnchor="middle"
-          fill="rgba(255,255,255,0.6)"
-          fontSize={9}
-          style={MONO}
-        >
-          (300,243)
-        </text>
+        {/* Dashed pointers from the three outside corners toward the centroid */}
+        <line
+          x1={120}
+          y1={120}
+          x2={210}
+          y2={170}
+          stroke="rgba(255,255,255,0.3)"
+          strokeWidth={0.75}
+          strokeDasharray="2 3"
+        />
+        <line
+          x1={480}
+          y1={120}
+          x2={390}
+          y2={170}
+          stroke="rgba(255,255,255,0.3)"
+          strokeWidth={0.75}
+          strokeDasharray="2 3"
+        />
+        <line
+          x1={300}
+          y1={450}
+          x2={300}
+          y2={400}
+          stroke="rgba(255,255,255,0.3)"
+          strokeWidth={0.75}
+          strokeDasharray="2 3"
+        />
+
+        {/* Centroid point + connector to the "here." callout */}
+        <circle cx={300} cy={243} r={3} fill="white" />
+        <line
+          x1={300}
+          y1={243}
+          x2={345}
+          y2={260}
+          stroke="rgba(255,255,255,0.5)"
+          strokeWidth={0.75}
+        />
       </svg>
 
-      {/* HTML overlay labels (editable) */}
-      <VennAxisLabel
-        anchor={LABEL_ANCHORS.user}
-        color={CIRCLES.user.color}
+      {/* HTML overlays — inside-circle uppercase labels */}
+      <VennLabel
+        anchor={ANCHORS.userLabel}
         slot="about.venn.user.label"
         fallback={VENN_AXES[0].defaultLabel}
       />
-      <VennAxisLabel
-        anchor={LABEL_ANCHORS.business}
-        color={CIRCLES.business.color}
+      <VennLabel
+        anchor={ANCHORS.businessLabel}
         slot="about.venn.business.label"
         fallback={VENN_AXES[1].defaultLabel}
       />
-      <VennAxisLabel
-        anchor={LABEL_ANCHORS.technology}
-        color={CIRCLES.technology.color}
+      <VennLabel
+        anchor={ANCHORS.technologyLabel}
         slot="about.venn.technology.label"
         fallback={VENN_AXES[2].defaultLabel}
       />
+
+      {/* HTML overlays — outside-corner Cagan annotations */}
+      <VennAnnotation
+        anchor={ANCHORS.userAnnotation}
+        riskSlot="about.venn.user.risk"
+        riskFallback={VENN_AXES[0].defaultRisk}
+        subSlot="about.venn.user.sub"
+        subFallback={VENN_AXES[0].defaultSub}
+      />
+      <VennAnnotation
+        anchor={ANCHORS.businessAnnotation}
+        riskSlot="about.venn.business.risk"
+        riskFallback={VENN_AXES[1].defaultRisk}
+        subSlot="about.venn.business.sub"
+        subFallback={VENN_AXES[1].defaultSub}
+      />
+      <VennAnnotation
+        anchor={ANCHORS.technologyAnnotation}
+        riskSlot="about.venn.technology.risk"
+        riskFallback={VENN_AXES[2].defaultRisk}
+        subSlot="about.venn.technology.sub"
+        subFallback={VENN_AXES[2].defaultSub}
+      />
+
+      {/* "here." callout near the centroid */}
+      <div
+        className="pointer-events-none absolute"
+        style={{
+          left: `${(355 / 600) * 100}%`,
+          top: `${(263 / 500) * 100}%`,
+          transform: "translateY(-50%)",
+        }}
+      >
+        <span
+          className="text-[14px] text-white"
+          style={{ ...SERIF_ITALIC, fontWeight: 400 }}
+        >
+          <EditableText
+            page="home"
+            slot="about.venn.center"
+            fallback="here."
+            as="span"
+            singleLine
+          />
+        </span>
+      </div>
     </div>
   );
 }
 
-function VennAxisLabel({
+function VennLabel({
   anchor,
-  color,
   slot,
   fallback,
 }: {
   anchor: { left: string; top: string };
-  color: string;
   slot: string;
   fallback: string;
 }) {
   return (
     <div
-      className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-center"
+      className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap"
       style={{ left: anchor.left, top: anchor.top }}
     >
-      <div
-        className="text-[11px]"
-        style={{ ...MONO, color, letterSpacing: "0.2em", textTransform: "uppercase" }}
+      <span
+        className="text-[11px] text-white/85"
+        style={{ ...MONO, letterSpacing: "0.2em" }}
       >
         <EditableText page="home" slot={slot} fallback={fallback} as="span" singleLine />
+      </span>
+    </div>
+  );
+}
+
+function VennAnnotation({
+  anchor,
+  riskSlot,
+  riskFallback,
+  subSlot,
+  subFallback,
+}: {
+  anchor: { left: string; top: string; align: "left" | "right" | "center" };
+  riskSlot: string;
+  riskFallback: string;
+  subSlot: string;
+  subFallback: string;
+}) {
+  const transformX =
+    anchor.align === "left" ? "0%" : anchor.align === "right" ? "-100%" : "-50%";
+  const textAlign =
+    anchor.align === "left" ? "left" : anchor.align === "right" ? "right" : "center";
+  return (
+    <div
+      className="pointer-events-none absolute"
+      style={{
+        left: anchor.left,
+        top: anchor.top,
+        transform: `translate(${transformX}, -50%)`,
+        textAlign,
+      }}
+    >
+      <div
+        className="text-[11px] text-white/55"
+        style={{ ...SERIF_ITALIC, fontWeight: 400 }}
+      >
+        <EditableText page="home" slot={riskSlot} fallback={riskFallback} as="span" singleLine />
+      </div>
+      <div
+        className="mt-0.5 text-[10px] text-white/50"
+        style={{ ...MONO, letterSpacing: "0.08em" }}
+      >
+        <EditableText page="home" slot={subSlot} fallback={subFallback} as="span" singleLine />
       </div>
     </div>
   );
