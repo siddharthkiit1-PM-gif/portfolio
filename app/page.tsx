@@ -1,4 +1,5 @@
 import { Hero } from "@/components/home/Hero";
+import { AboutSection } from "@/components/home/AboutSection";
 import { ExperienceSection } from "@/components/experience/ExperienceSection";
 import { ProjectsSection } from "@/components/projects/ProjectsSection";
 import { ContactSection } from "@/components/home/ContactSection";
@@ -13,6 +14,9 @@ export default function HomePage() {
       <CinematicIntro />
       <HashAnchorFix />
       <Hero />
+      <Reveal>
+        <AboutSection />
+      </Reveal>
       <Reveal>
         <ExperienceSection animate={true} />
       </Reveal>
