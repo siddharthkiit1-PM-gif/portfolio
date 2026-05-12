@@ -521,41 +521,216 @@ const LABEL_ANCHORS = {
 function VennDiagram() {
   return (
     <div className="relative mt-5 w-full max-w-[560px]" style={{ aspectRatio: "600 / 500" }}>
+      {/* Ambient bloom backdrop — atmospheric color behind the stage */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 65% 55% at 50% 45%, rgba(167,139,250,0.10) 0%, rgba(34,211,238,0.05) 35%, transparent 75%)",
+          filter: "blur(20px)",
+        }}
+      />
+
+      {/* Animation keyframes — gated by prefers-reduced-motion */}
+      <style>{`
+        @keyframes ka-venn-breathe-1 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(-1.5px, -1px); }
+        }
+        @keyframes ka-venn-breathe-2 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(1.5px, -1px); }
+        }
+        @keyframes ka-venn-breathe-3 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(0, 2px); }
+        }
+        @keyframes ka-venn-orbit {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes ka-venn-halo {
+          0%, 100% { opacity: 0.55; transform: scale(1); }
+          50% { opacity: 0.85; transform: scale(1.08); }
+        }
+        .ka-venn-breathe-1,
+        .ka-venn-breathe-2,
+        .ka-venn-breathe-3,
+        .ka-venn-orbit,
+        .ka-venn-halo {
+          transform-box: fill-box;
+          transform-origin: center;
+        }
+        @media (prefers-reduced-motion: no-preference) {
+          .ka-venn-breathe-1 { animation: ka-venn-breathe-1 8s ease-in-out infinite; }
+          .ka-venn-breathe-2 { animation: ka-venn-breathe-2 9s ease-in-out infinite; }
+          .ka-venn-breathe-3 { animation: ka-venn-breathe-3 10s ease-in-out infinite; }
+          .ka-venn-orbit { animation: ka-venn-orbit 30s linear infinite; }
+          .ka-venn-halo { animation: ka-venn-halo 3.5s ease-in-out infinite; }
+        }
+      `}</style>
+
       <svg
         viewBox="0 0 600 500"
         className="absolute inset-0 block h-full w-full"
         aria-label="PM Venn diagram — User, Business, Technology"
       >
-        <g style={{ mixBlendMode: "screen" }}>
-          <circle
-            cx={CIRCLES.user.cx}
-            cy={CIRCLES.user.cy}
-            r={CIRCLES.user.r}
-            fill={VENN_AXES[0].color}
-            fillOpacity={0.42}
-          />
-          <circle
-            cx={CIRCLES.business.cx}
-            cy={CIRCLES.business.cy}
-            r={CIRCLES.business.r}
-            fill={VENN_AXES[1].color}
-            fillOpacity={0.42}
-          />
-          <circle
-            cx={CIRCLES.technology.cx}
-            cy={CIRCLES.technology.cy}
-            r={CIRCLES.technology.r}
-            fill={VENN_AXES[2].color}
-            fillOpacity={0.42}
-          />
+        <defs>
+          {/* Radial gradient fills — bright core fading to a soft edge so the
+              intersections bloom under mix-blend-screen without flat seams. */}
+          <radialGradient id="ka-venn-user-fill" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={VENN_AXES[0].color} stopOpacity="0.55" />
+            <stop offset="70%" stopColor={VENN_AXES[0].color} stopOpacity="0.42" />
+            <stop offset="100%" stopColor={VENN_AXES[0].color} stopOpacity="0.08" />
+          </radialGradient>
+          <radialGradient id="ka-venn-business-fill" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={VENN_AXES[1].color} stopOpacity="0.55" />
+            <stop offset="70%" stopColor={VENN_AXES[1].color} stopOpacity="0.42" />
+            <stop offset="100%" stopColor={VENN_AXES[1].color} stopOpacity="0.08" />
+          </radialGradient>
+          <radialGradient id="ka-venn-technology-fill" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={VENN_AXES[2].color} stopOpacity="0.55" />
+            <stop offset="70%" stopColor={VENN_AXES[2].color} stopOpacity="0.42" />
+            <stop offset="100%" stopColor={VENN_AXES[2].color} stopOpacity="0.08" />
+          </radialGradient>
+          {/* Centroid halo — white core fading to transparent */}
+          <radialGradient id="ka-venn-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.7" />
+            <stop offset="50%" stopColor="#ffffff" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        {/* === Technical filigree (very faint, behind circles) === */}
+        {/* Centroid crosshair — horizontal + vertical axes through (300, 243) */}
+        <g stroke="rgba(255,255,255,0.07)" strokeWidth="0.75" fill="none">
+          <line x1="0" y1="243" x2="600" y2="243" strokeDasharray="2 5" />
+          <line x1="300" y1="0" x2="300" y2="500" strokeDasharray="2 5" />
         </g>
 
-        {/* Centroid marker */}
-        <circle cx={300} cy={243} r={5} fill="#ffffff" />
-        <circle cx={300} cy={243} r={14} fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth={1} />
+        {/* Corner registration ticks — technical-drawing frame */}
+        <g stroke="rgba(255,255,255,0.18)" strokeWidth="0.75" fill="none">
+          <path d="M 6 18 L 6 6 L 18 6" />
+          <path d="M 594 18 L 594 6 L 582 6" />
+          <path d="M 6 482 L 6 494 L 18 494" />
+          <path d="M 594 482 L 594 494 L 582 494" />
+        </g>
 
-        {/* Connector from centroid to the "WHERE I WORK" callout below it */}
-        <line x1={300} y1={257} x2={300} y2={282} stroke="rgba(255,255,255,0.4)" strokeWidth={1} />
+        {/* Registration "+" marks at each circle center */}
+        <g stroke="rgba(255,255,255,0.28)" strokeWidth="0.75">
+          <line x1="209" y1="195" x2="221" y2="195" />
+          <line x1="215" y1="189" x2="215" y2="201" />
+          <line x1="379" y1="195" x2="391" y2="195" />
+          <line x1="385" y1="189" x2="385" y2="201" />
+          <line x1="294" y1="340" x2="306" y2="340" />
+          <line x1="300" y1="334" x2="300" y2="346" />
+        </g>
+
+        {/* === Circles — radial-gradient fills with hairline edge stroke,
+               blended via mix-blend-screen and individually "breathing" === */}
+        <g style={{ mixBlendMode: "screen" }}>
+          <g className="ka-venn-breathe-1">
+            <circle
+              cx={CIRCLES.user.cx}
+              cy={CIRCLES.user.cy}
+              r={CIRCLES.user.r}
+              fill="url(#ka-venn-user-fill)"
+            />
+            <circle
+              cx={CIRCLES.user.cx}
+              cy={CIRCLES.user.cy}
+              r={CIRCLES.user.r}
+              fill="none"
+              stroke={VENN_AXES[0].color}
+              strokeOpacity="0.55"
+              strokeWidth="0.75"
+            />
+          </g>
+          <g className="ka-venn-breathe-2">
+            <circle
+              cx={CIRCLES.business.cx}
+              cy={CIRCLES.business.cy}
+              r={CIRCLES.business.r}
+              fill="url(#ka-venn-business-fill)"
+            />
+            <circle
+              cx={CIRCLES.business.cx}
+              cy={CIRCLES.business.cy}
+              r={CIRCLES.business.r}
+              fill="none"
+              stroke={VENN_AXES[1].color}
+              strokeOpacity="0.55"
+              strokeWidth="0.75"
+            />
+          </g>
+          <g className="ka-venn-breathe-3">
+            <circle
+              cx={CIRCLES.technology.cx}
+              cy={CIRCLES.technology.cy}
+              r={CIRCLES.technology.r}
+              fill="url(#ka-venn-technology-fill)"
+            />
+            <circle
+              cx={CIRCLES.technology.cx}
+              cy={CIRCLES.technology.cy}
+              r={CIRCLES.technology.r}
+              fill="none"
+              stroke={VENN_AXES[2].color}
+              strokeOpacity="0.55"
+              strokeWidth="0.75"
+            />
+          </g>
+        </g>
+
+        {/* === Centroid (the protagonist) === */}
+        {/* Outer pulsing halo */}
+        <circle
+          cx="300"
+          cy="243"
+          r="28"
+          fill="url(#ka-venn-halo)"
+          className="ka-venn-halo"
+        />
+        {/* Slowly orbiting dashed ring */}
+        <g className="ka-venn-orbit" style={{ transformOrigin: "300px 243px" }}>
+          <circle
+            cx="300"
+            cy="243"
+            r="20"
+            fill="none"
+            stroke="rgba(255,255,255,0.35)"
+            strokeWidth="0.75"
+            strokeDasharray="2 3"
+          />
+        </g>
+        {/* Solid inner ring */}
+        <circle
+          cx="300"
+          cy="243"
+          r="12"
+          fill="none"
+          stroke="rgba(255,255,255,0.7)"
+          strokeWidth="1"
+        />
+        {/* Chromatic core — RGB-split echo of the ChromaticText primitive */}
+        <g style={{ mixBlendMode: "screen" }}>
+          <circle cx="298.5" cy="243" r="3" fill="#22d3ee" />
+          <circle cx="301.5" cy="243" r="3" fill="#f472b6" />
+        </g>
+        <circle cx="300" cy="243" r="3" fill="#ffffff" />
+
+        {/* === Connector to "WHERE I WORK" callout === */}
+        <line
+          x1="300"
+          y1="271"
+          x2="300"
+          y2="286"
+          stroke="rgba(255,255,255,0.5)"
+          strokeWidth="0.75"
+          strokeDasharray="2 2"
+        />
+        <circle cx="300" cy="286" r="2" fill="rgba(255,255,255,0.8)" />
       </svg>
 
       {/* HTML label overlays */}
