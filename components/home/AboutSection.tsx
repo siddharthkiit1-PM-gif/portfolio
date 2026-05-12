@@ -52,7 +52,7 @@ type Metric = {
 const METRICS: Metric[] = [
   {
     slot: "metric1",
-    value: "$100K",
+    value: "$500K",
     label: "ARR shipped from zero",
     note: "6sense signals product",
   },
