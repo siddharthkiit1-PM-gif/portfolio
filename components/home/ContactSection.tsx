@@ -47,9 +47,14 @@ const SERIF: React.CSSProperties = {
   fontFamily:
     'ui-serif, "New York", "Iowan Old Style", "Apple Garamond", Georgia, serif',
 };
+const SERIF_ITALIC: React.CSSProperties = {
+  ...SERIF,
+  fontStyle: "italic",
+};
 const TAB_NUM: React.CSSProperties = { fontVariantNumeric: "tabular-nums" };
 
 const HAIRLINE = "rgba(255,255,255,0.10)";
+const HAIRLINE_HEADER = "rgba(255,255,255,0.14)";
 
 // Defaults match the literals in HeroRecruiterRail + the seeds so a
 // fresh DB renders the section without a flash of empty.
@@ -227,21 +232,32 @@ export function ContactSection() {
       aria-label="Contact"
     >
       <div className="mx-auto max-w-[820px]">
-        <p
-          className="text-[10px] text-white/45"
-          style={{ ...MONO, letterSpacing: "0.34em", textTransform: "uppercase" }}
+        {/* Eyebrow — unified across all sections: mono caps + hairline rule */}
+        <div
+          className="flex items-baseline justify-between text-[10px] text-white/45"
+          style={{ ...MONO, letterSpacing: "0.32em", textTransform: "uppercase" }}
         >
           <EditableText
             page="home"
             slot="contact.eyebrow"
-            fallback="Reach out"
+            fallback="REACH OUT"
             as="span"
             singleLine
           />
-        </p>
+          <EditableText
+            page="home"
+            slot="contact.eyebrowRight"
+            fallback=""
+            as="span"
+            singleLine
+          />
+        </div>
+        <div aria-hidden className="mt-4 h-px w-full" style={{ background: HAIRLINE_HEADER }} />
+
+        {/* Headline — unified: SERIF_ITALIC weight 500 at clamp(40,6vw,64) */}
         <h2
-          className="mt-3 text-[clamp(34px,4.2vw,48px)] font-light leading-[1.05] tracking-tight"
-          style={SERIF}
+          className="mt-8 text-[clamp(40px,6vw,64px)] leading-[1.05] tracking-[-1.5px] text-white"
+          style={{ ...SERIF_ITALIC, fontWeight: 500 }}
         >
           <EditableText
             page="home"

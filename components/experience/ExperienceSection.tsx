@@ -90,8 +90,8 @@ export function ExperienceSection({ animate = true }: Props) {
             style={{ background: HAIRLINE }}
           />
           <h2
-            className="mt-8 text-[clamp(36px,5vw,56px)] leading-[1.05] tracking-[-1px] text-white"
-            style={{ ...SERIF_ITALIC, fontWeight: 400 }}
+            className="mt-8 text-[clamp(40px,6vw,64px)] leading-[1.05] tracking-[-1.5px] text-white"
+            style={{ ...SERIF_ITALIC, fontWeight: 500 }}
           >
             <EditableText
               page="home"

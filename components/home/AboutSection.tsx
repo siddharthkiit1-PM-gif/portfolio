@@ -226,12 +226,11 @@ export function AboutSection() {
       <SectionBackdrop />
 
       <div className="relative mx-auto max-w-[1180px] px-6 sm:px-6 lg:px-10">
-        {/* Chapter marker — chromatic eyebrow */}
+        {/* Eyebrow — unified across all sections: mono caps + hairline rule */}
         <div
-          className="flex items-center gap-3 text-[10px] text-white/45"
+          className="flex items-baseline justify-between text-[10px] text-white/45"
           style={{ ...MONO, letterSpacing: "0.32em", textTransform: "uppercase" }}
         >
-          <span className="h-px w-8" style={{ background: HAIRLINE }} aria-hidden />
           <ChromaticText amount={0.4}>
             <EditableText
               page="home"
@@ -241,15 +240,20 @@ export function AboutSection() {
               singleLine
             />
           </ChromaticText>
+          <EditableText
+            page="home"
+            slot="about.eyebrowRight"
+            fallback=""
+            as="span"
+            singleLine
+          />
         </div>
+        <div aria-hidden className="mt-4 h-px w-full" style={{ background: HAIRLINE }} />
 
-        {/* Headline */}
+        {/* Headline — unified: SERIF_ITALIC weight 500 at clamp(40,6vw,64) */}
         <h2
-          className="mt-5 max-w-[860px] text-[40px] leading-[1.04] tracking-[-1.5px] text-white sm:text-[56px] lg:text-[clamp(48px,6vw,72px)] lg:tracking-[-2.5px]"
-          style={{
-            fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
-            fontWeight: 300,
-          }}
+          className="mt-8 max-w-[860px] text-[clamp(40px,6vw,64px)] leading-[1.05] tracking-[-1.5px] text-white"
+          style={{ ...SERIF_ITALIC, fontWeight: 500 }}
         >
           <EditableText
             page="home"
@@ -258,17 +262,15 @@ export function AboutSection() {
             as="span"
             singleLine
           />
-          <em className="not-italic" style={{ fontWeight: 500 }}>
-            <FlowingGradientText>
-              <EditableText
-                page="home"
-                slot="about.headline.line1.pull"
-                fallback="Venn diagram"
-                as="span"
-                singleLine
-              />
-            </FlowingGradientText>
-          </em>
+          <FlowingGradientText>
+            <EditableText
+              page="home"
+              slot="about.headline.line1.pull"
+              fallback="Venn diagram"
+              as="span"
+              singleLine
+            />
+          </FlowingGradientText>
           <EditableText
             page="home"
             slot="about.headline.line1.after"
