@@ -236,7 +236,7 @@ export function AboutSection() {
             <EditableText
               page="home"
               slot="about.eyebrow"
-              fallback="About · Chapter 02"
+              fallback="About"
               as="span"
               singleLine
             />
@@ -294,7 +294,7 @@ export function AboutSection() {
           <EditableText
             page="home"
             slot="about.lede"
-            fallback="5 years in software. 3.5 as a PM. 2 as a backend engineer before that. 3 AI products shipped solo in 2026. The intersection of user, business, and technology isn't a slide for me — it's a workbench I've been at since 2018."
+            fallback="5 years in software. 3.5 as a PM. 2 as a backend engineer before that. 3 AI products shipped solo in 2026. The intersection of user, business, and technology isn't a slide for me — it's a workbench I've been at since 2022."
             as="span"
           />
         </p>
@@ -355,7 +355,7 @@ export function AboutSection() {
             <EditableText
               page="home"
               slot="about.closing"
-              fallback="Built this way since 2018."
+              fallback="Built this way since 2022."
               as="span"
               singleLine
             />
