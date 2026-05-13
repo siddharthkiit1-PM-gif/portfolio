@@ -165,4 +165,49 @@ export default defineSchema({
     .index("by_slug", ["slug"])
     .index("by_order", ["order"])
     .index("by_featured_order", ["featured", "order"]),
+
+  bulletEmbeddings: defineTable({
+    roleCompany: v.string(),
+    roleDates: v.string(),
+    pillarLabel: v.string(),
+    bulletText: v.string(),
+    metric: v.optional(v.string()),
+    embedding: v.array(v.float64()),
+    sourceHash: v.string(),
+    updatedAt: v.number(),
+  })
+    .vectorIndex("by_embedding", { vectorField: "embedding", dimensions: 1536 })
+    .index("by_source_hash", ["sourceHash"]),
+
+  oauthClients: defineTable({
+    clientId: v.string(),
+    clientName: v.string(),
+    redirectUris: v.array(v.string()),
+    createdAt: v.number(),
+  }).index("by_client_id", ["clientId"]),
+
+  oauthTokens: defineTable({
+    token: v.string(),
+    refreshToken: v.optional(v.string()),
+    clientId: v.string(),
+    userId: v.id("users"),
+    scopes: v.array(v.string()),
+    expiresAt: v.number(),
+    revokedAt: v.optional(v.number()),
+  })
+    .index("by_token", ["token"])
+    .index("by_refresh_token", ["refreshToken"])
+    .index("by_user", ["userId"]),
+
+  oauthAuthCodes: defineTable({
+    code: v.string(),
+    clientId: v.string(),
+    userId: v.id("users"),
+    redirectUri: v.string(),
+    codeChallenge: v.string(),
+    codeChallengeMethod: v.string(),
+    scopes: v.array(v.string()),
+    expiresAt: v.number(),
+    consumedAt: v.optional(v.number()),
+  }).index("by_code", ["code"]),
 });
