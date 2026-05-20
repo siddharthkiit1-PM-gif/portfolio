@@ -22,6 +22,7 @@ import type * as mcpHelpers from "../mcpHelpers.js";
 import type * as mcpQueries from "../mcpQueries.js";
 import type * as media from "../media.js";
 import type * as oauthAuthCodes from "../oauthAuthCodes.js";
+import type * as oauthCleanup from "../oauthCleanup.js";
 import type * as oauthClients from "../oauthClients.js";
 import type * as oauthTokens from "../oauthTokens.js";
 import type * as projects from "../projects.js";
@@ -51,6 +52,7 @@ declare const fullApi: ApiFromModules<{
   mcpQueries: typeof mcpQueries;
   media: typeof media;
   oauthAuthCodes: typeof oauthAuthCodes;
+  oauthCleanup: typeof oauthCleanup;
   oauthClients: typeof oauthClients;
   oauthTokens: typeof oauthTokens;
   projects: typeof projects;
