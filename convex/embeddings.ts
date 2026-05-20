@@ -1,6 +1,6 @@
 "use node";
 import { v } from "convex/values";
-import { action } from "./_generated/server";
+import { action, internalAction } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import { embed } from "./lib/openai";
 import { sha256OfText } from "./lib/hash";
@@ -61,7 +61,7 @@ export const rebuildAll = action({
  * after admin edits so the vector index stays in sync without a full rebuild.
  * Only bullets whose hash is not already in the table get embedded.
  */
-export const refreshRole = action({
+export const refreshRole = internalAction({
   args: { roleId: v.id("experienceRoles") },
   handler: async (ctx, { roleId }) => {
     const role = await ctx.runQuery(internal.embeddingsHelpers.getRole, { roleId });

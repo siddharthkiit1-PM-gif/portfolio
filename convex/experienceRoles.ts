@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { internal } from "./_generated/api";
 import { requireAdmin } from "./lib/auth";
 
 /** Public list, ordered ascending by `order`. */
@@ -45,6 +46,7 @@ export const upsert = mutation({
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
     const now = Date.now();
+    let roleId;
     if (args.id) {
       await ctx.db.patch(args.id, {
         order: args.order,
@@ -57,19 +59,23 @@ export const upsert = mutation({
         pillars: args.pillars,
         updatedAt: now,
       });
-      return args.id;
+      roleId = args.id;
+    } else {
+      roleId = await ctx.db.insert("experienceRoles", {
+        order: args.order,
+        dates: args.dates,
+        company: args.company,
+        title: args.title,
+        metric: args.metric,
+        outcome: args.outcome,
+        location: args.location,
+        pillars: args.pillars,
+        updatedAt: now,
+      });
     }
-    return ctx.db.insert("experienceRoles", {
-      order: args.order,
-      dates: args.dates,
-      company: args.company,
-      title: args.title,
-      metric: args.metric,
-      outcome: args.outcome,
-      location: args.location,
-      pillars: args.pillars,
-      updatedAt: now,
-    });
+    // Keep the vector index in sync with admin edits without a manual rebuild.
+    await ctx.scheduler.runAfter(0, internal.embeddings.refreshRole, { roleId });
+    return roleId;
   },
 });
 
