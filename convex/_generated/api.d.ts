@@ -9,6 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as crons from "../crons.js";
 import type * as embeddings from "../embeddings.js";
 import type * as embeddingsHelpers from "../embeddingsHelpers.js";
 import type * as experienceRoles from "../experienceRoles.js";
@@ -18,6 +19,7 @@ import type * as lib_hash from "../lib/hash.js";
 import type * as lib_openai from "../lib/openai.js";
 import type * as mcp from "../mcp.js";
 import type * as mcpHelpers from "../mcpHelpers.js";
+import type * as mcpQueries from "../mcpQueries.js";
 import type * as media from "../media.js";
 import type * as projects from "../projects.js";
 import type * as seed from "../seed.js";
@@ -33,6 +35,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  crons: typeof crons;
   embeddings: typeof embeddings;
   embeddingsHelpers: typeof embeddingsHelpers;
   experienceRoles: typeof experienceRoles;
@@ -42,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   "lib/openai": typeof lib_openai;
   mcp: typeof mcp;
   mcpHelpers: typeof mcpHelpers;
+  mcpQueries: typeof mcpQueries;
   media: typeof media;
   projects: typeof projects;
   seed: typeof seed;
