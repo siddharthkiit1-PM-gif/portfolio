@@ -165,4 +165,65 @@ export default defineSchema({
     .index("by_slug", ["slug"])
     .index("by_order", ["order"])
     .index("by_featured_order", ["featured", "order"]),
+
+  // Resume bullet embeddings powering MCP semantic search.
+  // `embedding` is 1536-dim because we use OpenAI `text-embedding-3-small`;
+  // changing the model means changing this dimension and re-embedding.
+  // `sourceHash` is sha256(bulletText) — used by the embedding cron and
+  // by `experienceRoles.update` to skip re-embedding unchanged bullets.
+  bulletEmbeddings: defineTable({
+    roleCompany: v.string(),
+    roleDates: v.string(),
+    pillarLabel: v.string(),
+    bulletText: v.string(),
+    metric: v.optional(v.string()),
+    embedding: v.array(v.float64()),
+    sourceHash: v.string(),
+    updatedAt: v.number(),
+  })
+    .vectorIndex("by_embedding", { vectorField: "embedding", dimensions: 1536 })
+    .index("by_source_hash", ["sourceHash"]),
+
+  // Dynamically-registered MCP clients (RFC 7591). `clientId` is the public
+  // identifier returned to the client during registration; no client secret
+  // is issued — MCP relies on PKCE for code-exchange security.
+  oauthClients: defineTable({
+    clientId: v.string(),
+    clientName: v.string(),
+    redirectUris: v.array(v.string()),
+    createdAt: v.number(),
+  }).index("by_client_id", ["clientId"]),
+
+  // OAuth access + refresh tokens issued to MCP clients. `userId` must point
+  // at a `users` row with `role: "admin"` — the token endpoint verifies this
+  // at issue time. Tokens are opaque random bytes (not JWTs) so revocation
+  // is a single index lookup.
+  oauthTokens: defineTable({
+    token: v.string(),
+    refreshToken: v.optional(v.string()),
+    clientId: v.string(),
+    userId: v.id("users"),
+    scopes: v.array(v.string()),
+    expiresAt: v.number(),
+    revokedAt: v.optional(v.number()),
+  })
+    .index("by_token", ["token"])
+    .index("by_refresh_token", ["refreshToken"])
+    .index("by_user", ["userId"]),
+
+  // Short-lived authorization codes from the OAuth authorize flow. Single-use
+  // (consumed during /oauth/token exchange) and TTL'd by `expiresAt`.
+  // `codeChallengeMethod` is constrained to `"S256"` per MCP spec — `"plain"`
+  // is explicitly rejected.
+  oauthAuthCodes: defineTable({
+    code: v.string(),
+    clientId: v.string(),
+    userId: v.id("users"),
+    redirectUri: v.string(),
+    codeChallenge: v.string(),
+    codeChallengeMethod: v.literal("S256"),
+    scopes: v.array(v.string()),
+    expiresAt: v.number(),
+    consumedAt: v.optional(v.number()),
+  }).index("by_code", ["code"]),
 });

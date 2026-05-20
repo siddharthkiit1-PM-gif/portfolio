@@ -69,6 +69,34 @@ export const testEnsureAdmin = internalMutation({
   },
 });
 
+/**
+ * One-time admin sign-in for the MCP OAuth flow. The MCP server's authorize
+ * handler accepts a token submitted via the consent page form; this validator
+ * matches it against the ADMIN_BOOTSTRAP_TOKEN env var (set on the Convex
+ * deployment) and returns the first admin user's _id on success, else null.
+ *
+ * SECURITY NOTES:
+ * - Uses strict equality + length check. Convex V8 isolate does not expose
+ *   node:crypto for timing-safe compare. The token is high-entropy and only
+ *   used by the admin's own browser, so the timing-attack risk is minimal.
+ * - If multiple admins exist, the FIRST admin (oldest by _creationTime) is
+ *   returned. Acceptable for a single-operator portfolio site.
+ */
+export const getAdminByToken = query({
+  args: { token: v.string() },
+  handler: async (ctx, { token }) => {
+    const expected = process.env.ADMIN_BOOTSTRAP_TOKEN;
+    if (!expected || expected.length === 0) return null;
+    if (token.length !== expected.length) return null;
+    if (token !== expected) return null;
+    const admin = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("role"), "admin"))
+      .first();
+    return admin ?? null;
+  },
+});
+
 /** Returns the current authenticated user record, or null. */
 export const currentUser = query({
   args: {},
