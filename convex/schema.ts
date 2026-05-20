@@ -167,8 +167,9 @@ export default defineSchema({
     .index("by_featured_order", ["featured", "order"]),
 
   // Resume bullet embeddings powering MCP semantic search.
-  // `embedding` is 1536-dim because we use OpenAI `text-embedding-3-small`;
-  // changing the model means changing this dimension and re-embedding.
+  // `embedding` is 1536-dim because we use Gemini `gemini-embedding-001`
+  // with `outputDimensionality: 1536` (Matryoshka truncation). Changing the
+  // model or dimension means changing this number and re-embedding.
   // `sourceHash` is sha256(bulletText) — used by the embedding cron and
   // by `experienceRoles.update` to skip re-embedding unchanged bullets.
   bulletEmbeddings: defineTable({

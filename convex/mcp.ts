@@ -2,7 +2,7 @@
 import { ConvexError, v } from "convex/values";
 import { action } from "./_generated/server";
 import { internal } from "./_generated/api";
-import { embed } from "./lib/openai";
+import { embed } from "./lib/gemini";
 
 /**
  * Node action entrypoints for the MCP server's semantic search.
@@ -28,8 +28,8 @@ export function validateK(k: number | undefined): number {
 }
 
 /**
- * Semantic search over resume bullets. Embeds the query via OpenAI
- * text-embedding-3-small, runs Convex's vectorSearch over
+ * Semantic search over resume bullets. Embeds the query via Gemini
+ * gemini-embedding-001 (1536-dim, RETRIEVAL_QUERY), runs Convex's vectorSearch over
  * `bulletEmbeddings.by_embedding`, then batch-joins each hit back to its
  * bullet text + metadata via `internal.mcpHelpers.getEmbeddingProjections`
  * (single round-trip instead of N).
@@ -55,7 +55,7 @@ export const searchBullets = action({
 
     let vector: number[];
     try {
-      vector = await embed(trimmed);
+      vector = await embed(trimmed, "RETRIEVAL_QUERY");
     } catch (err) {
       throw new ConvexError({
         code: "embedding_unavailable",

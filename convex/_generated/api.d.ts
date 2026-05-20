@@ -16,7 +16,7 @@ import type * as experienceRoles from "../experienceRoles.js";
 import type * as http from "../http.js";
 import type * as lib_auth from "../lib/auth.js";
 import type * as lib_hash from "../lib/hash.js";
-import type * as lib_openai from "../lib/openai.js";
+import type * as lib_gemini from "../lib/gemini.js";
 import type * as mcp from "../mcp.js";
 import type * as mcpHelpers from "../mcpHelpers.js";
 import type * as mcpQueries from "../mcpQueries.js";
@@ -46,7 +46,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   "lib/auth": typeof lib_auth;
   "lib/hash": typeof lib_hash;
-  "lib/openai": typeof lib_openai;
+  "lib/gemini": typeof lib_gemini;
   mcp: typeof mcp;
   mcpHelpers: typeof mcpHelpers;
   mcpQueries: typeof mcpQueries;
