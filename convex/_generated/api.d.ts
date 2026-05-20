@@ -16,6 +16,8 @@ import type * as http from "../http.js";
 import type * as lib_auth from "../lib/auth.js";
 import type * as lib_hash from "../lib/hash.js";
 import type * as lib_openai from "../lib/openai.js";
+import type * as mcp from "../mcp.js";
+import type * as mcpHelpers from "../mcpHelpers.js";
 import type * as media from "../media.js";
 import type * as projects from "../projects.js";
 import type * as seed from "../seed.js";
@@ -38,6 +40,8 @@ declare const fullApi: ApiFromModules<{
   "lib/auth": typeof lib_auth;
   "lib/hash": typeof lib_hash;
   "lib/openai": typeof lib_openai;
+  mcp: typeof mcp;
+  mcpHelpers: typeof mcpHelpers;
   media: typeof media;
   projects: typeof projects;
   seed: typeof seed;
