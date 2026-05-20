@@ -2,7 +2,7 @@
 import { v } from "convex/values";
 import { action, internalAction } from "./_generated/server";
 import { api, internal } from "./_generated/api";
-import { embed } from "./lib/openai";
+import { embed } from "./lib/gemini";
 import { sha256OfText } from "./lib/hash";
 
 /**
@@ -31,7 +31,7 @@ export const rebuildAll = action({
           const hash = sha256OfText(bullet.text);
           seenHashes.add(hash);
           if (existing.some((e) => e.sourceHash === hash)) continue;
-          const vector = await embed(bullet.text);
+          const vector = await embed(bullet.text, "RETRIEVAL_DOCUMENT");
           await ctx.runMutation(internal.embeddingsHelpers.upsert, {
             roleCompany: role.company,
             roleDates: role.dates,
@@ -74,7 +74,7 @@ export const refreshRole = internalAction({
           sourceHash: hash,
         });
         if (existing) continue;
-        const vector = await embed(bullet.text);
+        const vector = await embed(bullet.text, "RETRIEVAL_DOCUMENT");
         await ctx.runMutation(internal.embeddingsHelpers.upsert, {
           roleCompany: role.company,
           roleDates: role.dates,
