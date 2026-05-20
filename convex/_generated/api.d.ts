@@ -9,9 +9,13 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as embeddings from "../embeddings.js";
+import type * as embeddingsHelpers from "../embeddingsHelpers.js";
 import type * as experienceRoles from "../experienceRoles.js";
 import type * as http from "../http.js";
 import type * as lib_auth from "../lib/auth.js";
+import type * as lib_hash from "../lib/hash.js";
+import type * as lib_openai from "../lib/openai.js";
 import type * as media from "../media.js";
 import type * as projects from "../projects.js";
 import type * as seed from "../seed.js";
@@ -27,9 +31,13 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  embeddings: typeof embeddings;
+  embeddingsHelpers: typeof embeddingsHelpers;
   experienceRoles: typeof experienceRoles;
   http: typeof http;
   "lib/auth": typeof lib_auth;
+  "lib/hash": typeof lib_hash;
+  "lib/openai": typeof lib_openai;
   media: typeof media;
   projects: typeof projects;
   seed: typeof seed;
