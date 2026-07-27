@@ -2,7 +2,7 @@
 
 export function StickyResumePill({
   resumeHref = "/resume.pdf",
-  workHref = "/#experience",
+  workHref = "/#work",
 }: {
   resumeHref?: string;
   workHref?: string;

@@ -85,7 +85,7 @@ export function Hero() {
       </p>
 
       <div className="mt-[clamp(12px,2vh,20px)] flex flex-col gap-3 sm:flex-row sm:items-center">
-        <a href="#experience" className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black text-center sm:text-left">
+        <a href="#work" className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black text-center sm:text-left">
           <EditableText page="home" slot="hero.ctaPrimary" fallback="View AI projects →" as="span" singleLine />
         </a>
         <a
