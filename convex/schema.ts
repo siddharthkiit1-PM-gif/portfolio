@@ -132,6 +132,8 @@ export default defineSchema({
     loomUrl: v.optional(v.string()),
     /** PRD / spec doc link (Notion, Google Doc, Confluence, etc.). */
     prdUrl: v.optional(v.string()),
+    /** Press / article coverage link (e.g. launch feature in a publication). */
+    articleUrl: v.optional(v.string()),
 
     // metadata
     techStack: v.array(v.string()),

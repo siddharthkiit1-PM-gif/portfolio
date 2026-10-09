@@ -58,6 +58,7 @@ export const upsert = mutation({
     figmaUrl: v.optional(v.string()),
     loomUrl: v.optional(v.string()),
     prdUrl: v.optional(v.string()),
+    articleUrl: v.optional(v.string()),
     techStack: v.array(v.string()),
     heroImageStorageId: v.optional(v.id("_storage")),
     heroImageAlt: v.optional(v.string()),

@@ -164,6 +164,70 @@ export const seedPortfolioMcpProject = internalMutation({
 });
 
 /**
+ * One-shot upsert for the Rental Recourse case study. Idempotent on
+ * `slug` — re-runs patch the existing row with the latest content.
+ */
+export const seedRentalRecourseProject = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const SLUG = "rental-recourse";
+
+    const content = {
+      slug: SLUG,
+      order: 1,
+      featured: true,
+      title: "Rental Recourse — AI legal assistant for Indian tenants",
+      year: "2026",
+      role: "Solo build · PM × engineer",
+      tagline:
+        "File-ready legal notices for Indian tenants in ~30 seconds, grounded in verbatim state-law citations. Free, no login, no lawyer.",
+      liveUrl: "https://rental-recourse.vercel.app",
+      githubUrl: "https://github.com/siddharthkiit1-PM-gif/rental-recourse",
+      articleUrl:
+        "https://analyticsindiamag.com/ai-features/how-a-28-year-old-product-manager-built-an-ai-tool-to-help-tenants-recover-rental-deposits",
+      techStack: [
+        "Next.js 16",
+        "React 19",
+        "Gemini 2.5 Flash",
+        "Vercel AI SDK v6",
+        "Upstash Vector",
+        "Upstash Redis",
+        "Resend",
+        "TypeScript",
+      ],
+      problem:
+        "Indian tenants lose their deposits because filing a legal notice means ₹500–2,000 for a lawyer, days of waiting, and a document most renters don't know how to read, let alone draft. Most just give up. The friction protects landlords; the status quo is the problem.",
+      users:
+        "Indian renters with security-deposit non-return, illegal eviction threats, forced lockouts, harassment, or landlord-unreachable situations. Covers 10 state jurisdictions (7 dedicated state Rent Acts + 3 via the Model Tenancy Act) plus Consumer Protection Act, Indian Contract Act, and CPC §80 as a nationwide fallback.",
+      value:
+        "A 6-step intake feeds a live-streaming agent that classifies the situation, routes to the right forum deterministically (no LLM in the decision path), retrieves verbatim bare-act sections, verifies citations against the corpus, and drafts a filing-ready legal notice in ~30 seconds. Users edit inline, download a PDF, and send it themselves — no middleman, no ₹1,499 markup.",
+      goal: "Collapse the cost and time of filing a tenant legal notice from ₹500+ and multiple days to zero rupees and thirty seconds — while being more jurisdiction-accurate than a template and more trustworthy than a raw LLM output.",
+      approach:
+        "The retrieval layer is the trust layer. The corpus is verbatim bare-act text — Karnataka, Maharashtra, Delhi, Tamil Nadu, Telangana, West Bengal, and Rajasthan Rent Acts, plus Model Tenancy Act 2021, Consumer Protection Act 2019, Indian Contract Act 1872, and CPC §80. Nothing is summarised at index time. Gemini embeddings at 1536 dims land in Upstash Vector, namespaced v1, task-typed as RETRIEVAL_DOCUMENT.\n\nThe agent is five steps: classify (situation type) → route (forum, deterministic rule matrix in lib/agent/route.ts) → retrieve (vector + jurisdiction filter) → verify (citation verifier rejects any section number not in the corpus) → draft (Gemini 2.5 Flash with the retrieved sections pinned into context). A forbidden-terms filter catches fabricated attorney claims and promises of outcome before anything streams back.\n\nSessions are anonymous and expire in 24h. Rate limit is 30 drafts per IP per day via Upstash sliding window. Admin dashboard sits behind a custom HMAC cookie + Resend magic link — no user accounts, no PII beyond the active session. The whole thing is one Next.js 16 app on Vercel Fluid Compute (300s function budget for the agent route) talking to Upstash Vector and Redis.",
+      outcomeNarrative:
+        "Launched 2026-08-10. The launch post hit 400K impressions on LinkedIn, 8K engagements, 90+ reposts, and sent 3,000+ active users through the product on Day 1 with a 51% completion rate. Analytics India Magazine ran a dedicated feature on it.\n\nThe app shipped with 10-state coverage and verbatim-cited drafts out of the gate. Peak day — Aug 11 — saw 500 draft attempts from 383 unique IPs, with the agent route holding under single-digit-second time-to-first-token through the spike. Costs stayed inside Gemini's free tier plus Upstash's noise band — the whole stack ran sub-₹500/month at peak.\n\nThe honest take: completion rate is the real metric. 51% of users finishing a six-step legal intake form is unusual for Indian consumer products, and it's the signal that the drafting output is actually useful — not just interesting.",
+      learnings:
+        "Two things.\n\nOne, the verbatim corpus was the right call. Every tenant-facing legal product I'd seen was either a generic template dump or a lawyer marketplace — neither solves the trust problem. Pinning the LLM to real bare-act text at retrieval time, then rejecting hallucinated section numbers at verify time, let me ship a free tool that reads more credibly than paid competitors. The citation verifier earns its keep every single draft.\n\nTwo, don't gate on auth for v1. Anonymous sessions + 24h TTL + rate limits per IP gave me instrumentation, abuse protection, and launch speed in one choice. The DPDP compliance surface is almost zero because almost nothing persists. When monetization starts, auth will come with it — but shipping without it was the right trade for day one.",
+      heroMetricValue: "400K",
+      heroMetricLabel: "LinkedIn impressions · launch week",
+    };
+
+    const existing = await ctx.db
+      .query("projects")
+      .withIndex("by_slug", (q) => q.eq("slug", SLUG))
+      .unique();
+
+    const now = Date.now();
+    if (existing) {
+      await ctx.db.patch(existing._id, { ...content, updatedAt: now });
+      return { action: "patched" as const, id: existing._id };
+    }
+    const id = await ctx.db.insert("projects", { ...content, updatedAt: now });
+    return { action: "inserted" as const, id };
+  },
+});
+
+/**
  * Seed 1–2 placeholder project rows. Idempotent on `slug` — re-running
  * will not double-insert. Order is assigned from the array index.
  */

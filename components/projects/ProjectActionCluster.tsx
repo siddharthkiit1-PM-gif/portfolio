@@ -27,6 +27,7 @@
 import * as React from "react";
 import {
   ArrowUpRight,
+  ArticleMark,
   FigmaMark,
   GithubMark,
   LoomMark,
@@ -40,6 +41,7 @@ type Project = {
   figmaUrl?: string;
   loomUrl?: string;
   prdUrl?: string;
+  articleUrl?: string;
 };
 
 type Props = {
@@ -55,7 +57,8 @@ export function ProjectActionCluster({ project, density = "compact", align = "en
     project.githubUrl ||
     project.figmaUrl ||
     project.loomUrl ||
-    project.prdUrl;
+    project.prdUrl ||
+    project.articleUrl;
   if (!hasAny) return null;
 
   const labeledIconSize = density === "spread" ? 14 : 12;
@@ -73,6 +76,12 @@ export function ProjectActionCluster({ project, density = "compact", align = "en
       url: project.prdUrl,
       label: "Read the PRD",
       node: <PrdDocMark size={labeledIconSize} />,
+    });
+  if (project.articleUrl)
+    labeled.push({
+      url: project.articleUrl,
+      label: "Read the article",
+      node: <ArticleMark size={labeledIconSize} />,
     });
 
   const iconOnly: { url: string; label: string; node: React.ReactNode }[] = [];

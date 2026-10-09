@@ -32,6 +32,7 @@ import type { Doc, Id } from "@/convex/_generated/dataModel";
 import { InlineEditable } from "@/components/admin/InlineEditable";
 import {
   ArrowUpRight,
+  ArticleMark,
   FigmaMark,
   GithubMark,
   LoomMark,
@@ -53,7 +54,13 @@ const SERIF_ITALIC: React.CSSProperties = {
 const HAIRLINE_FAINT = "rgba(255,255,255,0.08)";
 
 type Project = Doc<"projects">;
-type LinkKey = "liveUrl" | "githubUrl" | "figmaUrl" | "loomUrl" | "prdUrl";
+type LinkKey =
+  | "liveUrl"
+  | "githubUrl"
+  | "figmaUrl"
+  | "loomUrl"
+  | "prdUrl"
+  | "articleUrl";
 
 const LINK_LABELS: Record<LinkKey, string> = {
   liveUrl: "Live site",
@@ -61,6 +68,7 @@ const LINK_LABELS: Record<LinkKey, string> = {
   figmaUrl: "Design · Figma",
   loomUrl: "Walkthrough · Loom",
   prdUrl: "Spec · PRD",
+  articleUrl: "Press · Article",
 };
 
 /** Build the full upsert args from a project + patch. */
@@ -81,6 +89,7 @@ function buildArgs(p: Project, patch: Partial<Project>) {
     figmaUrl: merged.figmaUrl || undefined,
     loomUrl: merged.loomUrl || undefined,
     prdUrl: merged.prdUrl || undefined,
+    articleUrl: merged.articleUrl || undefined,
     techStack: merged.techStack,
     heroImageStorageId: merged.heroImageStorageId,
     heroImageAlt: merged.heroImageAlt || undefined,
@@ -362,6 +371,8 @@ function IconForLink({
       return <LoomMark className={className} />;
     case "prdUrl":
       return <PrdDocMark className={className} />;
+    case "articleUrl":
+      return <ArticleMark className={className} />;
   }
 }
 
@@ -632,6 +643,7 @@ export function EditableProjectRow({
               <LinkButton project={p} linkKey="figmaUrl" variant="icon" />
               <LinkButton project={p} linkKey="loomUrl" variant="icon" />
               <LinkButton project={p} linkKey="prdUrl" variant="icon" />
+              <LinkButton project={p} linkKey="articleUrl" variant="icon" />
             </div>
           </div>
 

@@ -119,6 +119,28 @@ export function PrdDocMark({ size = 16, className }: Props) {
   );
 }
 
+export function ArticleMark({ size = 16, className }: Props) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      strokeLinejoin="round"
+      aria-hidden
+      className={className}
+    >
+      <rect x="3" y="4" width="18" height="16" rx="1.5" />
+      <line x1="7" y1="8" x2="14" y2="8" strokeLinecap="round" />
+      <line x1="7" y1="11.5" x2="17" y2="11.5" strokeLinecap="round" />
+      <line x1="7" y1="15" x2="17" y2="15" strokeLinecap="round" />
+      <line x1="7" y1="18" x2="13" y2="18" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function ArrowUpRight({ size = 12, className }: Props) {
   return (
     <svg
