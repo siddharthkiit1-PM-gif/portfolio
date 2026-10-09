@@ -174,7 +174,10 @@ export const seedRentalRecourseProject = internalMutation({
 
     const content = {
       slug: SLUG,
-      order: 0,
+      // -1 to sort ahead of all existing projects (Thalify is at order 0 in
+      // prod; using 0 would tie and lose on _creationTime). Admin can
+      // reorder later via /admin/edit without changing this seed.
+      order: -1,
       featured: true,
       title: "Rental Recourse — AI legal assistant for Indian tenants",
       year: "2026",
