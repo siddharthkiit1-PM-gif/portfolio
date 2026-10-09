@@ -174,7 +174,7 @@ export const seedRentalRecourseProject = internalMutation({
 
     const content = {
       slug: SLUG,
-      order: 1,
+      order: 0,
       featured: true,
       title: "Rental Recourse — AI legal assistant for Indian tenants",
       year: "2026",
